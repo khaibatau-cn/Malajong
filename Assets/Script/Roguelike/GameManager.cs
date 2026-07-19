@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public TileBag Deck { get; private set; }
     public PlayerHand Hand { get; private set; }
     public SuitAffinity Affinity { get; private set; }
+    public List<SpiritData> EquippedSpirits { get; private set; } = new List<SpiritData>();
     
     public enum GameState { StartMenu, Playing, Shop, GameOver, Victory }
     public GameState State { get; private set; }
@@ -47,6 +48,11 @@ public class GameManager : MonoBehaviour
         Hand.Tiles.Clear();
         Hand.AddTiles(Deck.Draw(PlayerHand.MaxSize));
         
+        foreach (var spirit in EquippedSpirits)
+        {
+            if (spirit != null) spirit.OnRoundStart(this);
+        }
+        
         Debug.Log($"Round Started. Target: {targetScore}. Deck: {Deck.Remaining}. Hand: {Hand.Tiles.Count}");
     }
     
@@ -79,7 +85,7 @@ public class GameManager : MonoBehaviour
         }
         
         // 3. Valid combo
-        var (chips, mult) = ScoreEngine.Calculate(combo, Hand.Tiles, Affinity);
+        var (chips, mult) = ScoreEngine.Calculate(combo, Hand.Tiles, Affinity, EquippedSpirits, this);
         int comboScore = Mathf.RoundToInt(chips * mult);
         
         CurrentScore += comboScore;
