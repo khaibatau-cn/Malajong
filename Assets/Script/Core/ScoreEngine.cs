@@ -62,6 +62,26 @@ public static class ScoreEngine
     }
     // Bracket comment removed
 
+    public static Combo DetectCombo(List<Tile> tiles)
+    {
+        Combo c = new ConcealedKong(tiles);
+        if (c.IsValid()) return c;
+        
+        c = new Kong(tiles);
+        if (c.IsValid()) return c;
+        
+        c = new Pong(tiles);
+        if (c.IsValid()) return c;
+        
+        c = new Chow(tiles);
+        if (c.IsValid()) return c;
+        
+        c = new Pair(tiles);
+        if (c.IsValid()) return c;
+        
+        return null;
+    }
+
     public static (int bonusChips, float bonusMult) EvaluateFullHand(List<Tile> fullHand)
     {
         if (IsWinningMahjongHand(fullHand))
