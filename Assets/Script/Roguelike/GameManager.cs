@@ -15,6 +15,10 @@ public class GameManager : MonoBehaviour
     public SuitAffinity Affinity { get; private set; }
     public List<SpiritData> EquippedSpirits { get; private set; } = new List<SpiritData>();
     
+    // UI Events
+    public event System.Action OnHandUpdated;
+    public event System.Action OnStateChanged;
+    
     public enum GameState { StartMenu, Playing, Shop, GameOver, Victory }
     public GameState State { get; private set; }
     
@@ -54,6 +58,9 @@ public class GameManager : MonoBehaviour
         }
         
         Debug.Log($"Round Started. Target: {targetScore}. Deck: {Deck.Remaining}. Hand: {Hand.Tiles.Count}");
+        
+        OnHandUpdated?.Invoke();
+        OnStateChanged?.Invoke();
     }
     
     // Call this from UI when player selects tiles and clicks "Play Combo"
@@ -96,6 +103,9 @@ public class GameManager : MonoBehaviour
         Hand.RemoveTiles(selectedTiles);
         RefillHand();
         CheckExitConditions();
+        
+        OnHandUpdated?.Invoke();
+        OnStateChanged?.Invoke();
     }
     
     // Call this from UI when player selects tiles and clicks "Discard"
@@ -122,6 +132,9 @@ public class GameManager : MonoBehaviour
         RefillHand();
         // Discarding does not cost a hand, but we still check exit conditions just in case
         CheckExitConditions();
+        
+        OnHandUpdated?.Invoke();
+        OnStateChanged?.Invoke();
     }
     
     private void RefillHand()
