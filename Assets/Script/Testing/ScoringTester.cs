@@ -11,6 +11,8 @@ public class ScoringTester : MonoBehaviour
         TestPureHand();
         TestAllHonors();
         TestFullMahjongHand();
+        TestSuitAffinityScale();
+        TestSuitAffinityDecay();
     }
 
     private void TestValidPong()
@@ -107,5 +109,50 @@ public class ScoringTester : MonoBehaviour
         var result = ScoreEngine.EvaluateFullHand(tiles);
         Debug.Log($"[Full Hand (14 Tiles)] Chips: {result.bonusChips} | Mult: {result.bonusMult}");
         Debug.Assert(result.bonusChips == 100 && result.bonusMult == 8.0f, "Full hand solver failed to recognize valid hand");
+    }
+
+    private void TestSuitAffinityScale()
+    {
+        SuitAffinity affinity = new SuitAffinity();
+        List<Tile> tiles = new List<Tile>
+        {
+            new Tile { Suit = TileSuit.Bamboo, Rank = 5 },
+            new Tile { Suit = TileSuit.Bamboo, Rank = 5 },
+            new Tile { Suit = TileSuit.Bamboo, Rank = 5 }
+        };
+        Pong pong = new Pong(tiles);
+
+        var firstPlay = ScoreEngine.Calculate(pong, tiles, affinity);
+        Debug.Assert(affinity.GetLevel(TileSuit.Bamboo) == pong.AffinityBonus, "Affinity should boost by Pong bonus (0.1)");
+        
+        var secondPlay = ScoreEngine.Calculate(pong, tiles, affinity);
+        Debug.Assert(affinity.GetLevel(TileSuit.Bamboo) == pong.AffinityBonus * 2, "Affinity should stack to 0.2");
+        
+        Debug.Log($"[Affinity Scale] First Mult: {firstPlay.mult} | Second Mult: {secondPlay.mult} | Bamboo Affinity: {affinity.GetLevel(TileSuit.Bamboo)}");
+    }
+
+    private void TestSuitAffinityDecay()
+    {
+        SuitAffinity affinity = new SuitAffinity();
+        
+        // Manually boost Bamboo to 0.4
+        affinity.Boost(TileSuit.Bamboo, 0.4f);
+        
+        // Play a Dots combo to see Bamboo decay
+        List<Tile> tiles = new List<Tile>
+        {
+            new Tile { Suit = TileSuit.Dots, Rank = 2 },
+            new Tile { Suit = TileSuit.Dots, Rank = 3 },
+            new Tile { Suit = TileSuit.Dots, Rank = 4 }
+        };
+        Chow chow = new Chow(tiles);
+        
+        ScoreEngine.Calculate(chow, tiles, affinity);
+        
+        // Dots gains 0.1 (Chow bonus), Bamboo should decay by 0.05
+        Debug.Assert(affinity.GetLevel(TileSuit.Dots) == chow.AffinityBonus, "Dots should gain 0.1");
+        Debug.Assert(Mathf.Approximately(affinity.GetLevel(TileSuit.Bamboo), 0.35f), "Bamboo should decay by half of 0.1 (0.05) from 0.4 to 0.35");
+        
+        Debug.Log($"[Affinity Decay] Dots: {affinity.GetLevel(TileSuit.Dots)} | Bamboo: {affinity.GetLevel(TileSuit.Bamboo)}");
     }
 }

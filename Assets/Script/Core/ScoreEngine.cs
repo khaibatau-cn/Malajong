@@ -3,7 +3,7 @@ using System.Linq;
 
 public static class ScoreEngine
 {
-    public static (int chips, float mult) Calculate(Combo combo, List<Tile> fullHand)
+    public static (int chips, float mult) Calculate(Combo combo, List<Tile> fullHand, SuitAffinity affinityManager = null)
     {
         if (!combo.IsValid())
         {
@@ -20,13 +20,17 @@ public static class ScoreEngine
         //     artifact.OnComboPlayed(combo, ref chips, ref mult);
         // }
 
-        // STUB FOR LATER: Suit Affinity
-        // foreach (var delta in combo.AffinityDeltas) {
-        //     affinityManager.Boost(delta.Key, delta.Value);
-        // }
-        // if (!combo.Tiles[0].IsHonor) {
-        //     mult *= affinityManager.GetMultiplier(combo.Tiles[0].Suit);
-        // }
+        if (affinityManager != null)
+        {
+            foreach (var delta in combo.AffinityDeltas) 
+            {
+                affinityManager.Boost(delta.Key, delta.Value);
+            }
+            if (combo.Tiles.Count > 0 && !combo.Tiles[0].IsHonor) 
+            {
+                mult *= affinityManager.GetMultiplier(combo.Tiles[0].Suit);
+            }
+        }
 
         return (chips, mult);
     }
