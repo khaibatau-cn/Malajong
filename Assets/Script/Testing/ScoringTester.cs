@@ -11,15 +11,25 @@ public class ScoringTester : MonoBehaviour
         TestPureHand();
         TestAllHonors();
         TestFullMahjongHand();
+        TestSuitAffinityScale();
+        TestSuitAffinityDecay();
+    }
+
+    private Tile CreateTile(TileSuit suit, int rank, bool isSelfDrawn = false)
+    {
+        var data = ScriptableObject.CreateInstance<TileData>();
+        data.Suit = suit;
+        data.Rank = rank;
+        return new Tile(data) { IsSelfDrawn = isSelfDrawn };
     }
 
     private void TestValidPong()
     {
         List<Tile> tiles = new List<Tile>
         {
-            new Tile { Suit = TileSuit.Bamboo, Rank = 5 },
-            new Tile { Suit = TileSuit.Bamboo, Rank = 5 },
-            new Tile { Suit = TileSuit.Bamboo, Rank = 5 }
+            CreateTile(TileSuit.Bamboo, 5),
+            CreateTile(TileSuit.Bamboo, 5),
+            CreateTile(TileSuit.Bamboo, 5)
         };
 
         Pong pong = new Pong(tiles);
@@ -34,9 +44,9 @@ public class ScoringTester : MonoBehaviour
     {
         List<Tile> tiles = new List<Tile>
         {
-            new Tile { Suit = TileSuit.Dots, Rank = 2 },
-            new Tile { Suit = TileSuit.Dots, Rank = 3 },
-            new Tile { Suit = TileSuit.Dots, Rank = 4 }
+            CreateTile(TileSuit.Dots, 2),
+            CreateTile(TileSuit.Dots, 3),
+            CreateTile(TileSuit.Dots, 4)
         };
 
         Chow chow = new Chow(tiles);
@@ -51,10 +61,10 @@ public class ScoringTester : MonoBehaviour
     {
         List<Tile> tiles = new List<Tile>
         {
-            new Tile { Suit = TileSuit.Characters, Rank = 9, IsSelfDrawn = true },
-            new Tile { Suit = TileSuit.Characters, Rank = 9, IsSelfDrawn = true },
-            new Tile { Suit = TileSuit.Characters, Rank = 9, IsSelfDrawn = true },
-            new Tile { Suit = TileSuit.Characters, Rank = 9, IsSelfDrawn = false }
+            CreateTile(TileSuit.Characters, 9, true),
+            CreateTile(TileSuit.Characters, 9, true),
+            CreateTile(TileSuit.Characters, 9, true),
+            CreateTile(TileSuit.Characters, 9, false)
         };
 
         ConcealedKong ck = new ConcealedKong(tiles);
@@ -67,7 +77,7 @@ public class ScoringTester : MonoBehaviour
     private void TestPureHand()
     {
         List<Tile> tiles = new List<Tile>();
-        for (int i = 0; i < 13; i++) tiles.Add(new Tile { Suit = TileSuit.Bamboo, Rank = 1 });
+        for (int i = 0; i < 13; i++) tiles.Add(CreateTile(TileSuit.Bamboo, 1));
 
         Pong dummyCombo = new Pong(tiles.GetRange(0, 3));
         var result = ScoreEngine.Calculate(dummyCombo, tiles);
@@ -79,7 +89,7 @@ public class ScoringTester : MonoBehaviour
     private void TestAllHonors()
     {
         List<Tile> tiles = new List<Tile>();
-        for (int i = 0; i < 13; i++) tiles.Add(new Tile { Suit = TileSuit.Honor, Rank = 0 });
+        for (int i = 0; i < 13; i++) tiles.Add(CreateTile(TileSuit.Honor, 0));
 
         Pong dummyCombo = new Pong(tiles.GetRange(0, 3));
         var result = ScoreEngine.Calculate(dummyCombo, tiles);
@@ -93,19 +103,64 @@ public class ScoringTester : MonoBehaviour
         List<Tile> tiles = new List<Tile>
         {
             // Pair
-            new Tile { Suit = TileSuit.Bamboo, Rank = 1 }, new Tile { Suit = TileSuit.Bamboo, Rank = 1 },
+            CreateTile(TileSuit.Bamboo, 1), CreateTile(TileSuit.Bamboo, 1),
             // Pong
-            new Tile { Suit = TileSuit.Dots, Rank = 2 }, new Tile { Suit = TileSuit.Dots, Rank = 2 }, new Tile { Suit = TileSuit.Dots, Rank = 2 },
+            CreateTile(TileSuit.Dots, 2), CreateTile(TileSuit.Dots, 2), CreateTile(TileSuit.Dots, 2),
             // Chow
-            new Tile { Suit = TileSuit.Characters, Rank = 4 }, new Tile { Suit = TileSuit.Characters, Rank = 5 }, new Tile { Suit = TileSuit.Characters, Rank = 6 },
+            CreateTile(TileSuit.Characters, 4), CreateTile(TileSuit.Characters, 5), CreateTile(TileSuit.Characters, 6),
             // Pong
-            new Tile { Suit = TileSuit.Honor, Rank = 1 }, new Tile { Suit = TileSuit.Honor, Rank = 1 }, new Tile { Suit = TileSuit.Honor, Rank = 1 },
+            CreateTile(TileSuit.Honor, 1), CreateTile(TileSuit.Honor, 1), CreateTile(TileSuit.Honor, 1),
             // Chow
-            new Tile { Suit = TileSuit.Bamboo, Rank = 7 }, new Tile { Suit = TileSuit.Bamboo, Rank = 8 }, new Tile { Suit = TileSuit.Bamboo, Rank = 9 }
+            CreateTile(TileSuit.Bamboo, 7), CreateTile(TileSuit.Bamboo, 8), CreateTile(TileSuit.Bamboo, 9)
         };
 
         var result = ScoreEngine.EvaluateFullHand(tiles);
         Debug.Log($"[Full Hand (14 Tiles)] Chips: {result.bonusChips} | Mult: {result.bonusMult}");
         Debug.Assert(result.bonusChips == 100 && result.bonusMult == 8.0f, "Full hand solver failed to recognize valid hand");
+    }
+
+    private void TestSuitAffinityScale()
+    {
+        SuitAffinity affinity = new SuitAffinity();
+        List<Tile> tiles = new List<Tile>
+        {
+            CreateTile(TileSuit.Bamboo, 5),
+            CreateTile(TileSuit.Bamboo, 5),
+            CreateTile(TileSuit.Bamboo, 5)
+        };
+        Pong pong = new Pong(tiles);
+
+        var firstPlay = ScoreEngine.Calculate(pong, tiles, affinity);
+        Debug.Assert(affinity.GetLevel(TileSuit.Bamboo) == pong.AffinityBonus, "Affinity should boost by Pong bonus (0.1)");
+        
+        var secondPlay = ScoreEngine.Calculate(pong, tiles, affinity);
+        Debug.Assert(affinity.GetLevel(TileSuit.Bamboo) == pong.AffinityBonus * 2, "Affinity should stack to 0.2");
+        
+        Debug.Log($"[Affinity Scale] First Mult: {firstPlay.mult} | Second Mult: {secondPlay.mult} | Bamboo Affinity: {affinity.GetLevel(TileSuit.Bamboo)}");
+    }
+
+    private void TestSuitAffinityDecay()
+    {
+        SuitAffinity affinity = new SuitAffinity();
+        
+        // Manually boost Bamboo to 0.4
+        affinity.Boost(TileSuit.Bamboo, 0.4f);
+        
+        // Play a Dots combo to see Bamboo decay
+        List<Tile> tiles = new List<Tile>
+        {
+            CreateTile(TileSuit.Dots, 2),
+            CreateTile(TileSuit.Dots, 3),
+            CreateTile(TileSuit.Dots, 4)
+        };
+        Chow chow = new Chow(tiles);
+        
+        ScoreEngine.Calculate(chow, tiles, affinity);
+        
+        // Dots gains 0.1 (Chow bonus), Bamboo should decay by 0.05
+        Debug.Assert(affinity.GetLevel(TileSuit.Dots) == chow.AffinityBonus, "Dots should gain 0.1");
+        Debug.Assert(Mathf.Approximately(affinity.GetLevel(TileSuit.Bamboo), 0.35f), "Bamboo should decay by half of 0.1 (0.05) from 0.4 to 0.35");
+        
+        Debug.Log($"[Affinity Decay] Dots: {affinity.GetLevel(TileSuit.Dots)} | Bamboo: {affinity.GetLevel(TileSuit.Bamboo)}");
     }
 }

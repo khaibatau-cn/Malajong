@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public enum TileSuit
 {
     Bamboo,
@@ -6,11 +8,20 @@ public enum TileSuit
     Honor
 }
 
-public class Tile
+public enum HonorEffect
+{
+    None,
+    PeekWall,
+    ForceRedraw,
+    FreezeTile
+}
+
+[CreateAssetMenu(fileName = "New Tile Data", menuName = "Malajong/Tile Data")]
+public class TileData : ScriptableObject
 {
     public TileSuit Suit;
     public int Rank;
-    public bool IsSelfDrawn = false; // Fix #1: Default is now false
+    public HonorEffect Effect = HonorEffect.None;
 
     public bool IsHonor => Suit == TileSuit.Honor;
 }

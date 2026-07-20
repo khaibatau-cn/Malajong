@@ -3,7 +3,7 @@ using System.Linq;
 
 public static class ScoreEngine
 {
-    public static (int chips, float mult) Calculate(Combo combo, List<Tile> fullHand)
+    public static (int chips, float mult) Calculate(Combo combo, List<Tile> fullHand, SuitAffinity affinityManager = null, IEnumerable<SpiritData> activeSpirits = null, GameManager gm = null)
     {
         if (!combo.IsValid())
         {
@@ -13,25 +13,40 @@ public static class ScoreEngine
         int chips = combo.BaseChips;
         float mult = combo.BaseMult;
 
-        ApplyPostCheckBonuses(fullHand, ref chips, ref mult);
+        ApplyPostCheckBonuses(fullHand, ref chips, ref mult, activeSpirits, gm);
 
-        // STUB FOR LATER: Artifacts
-        // foreach (var artifact in activeArtifacts) {
-        //     artifact.OnComboPlayed(combo, ref chips, ref mult);
-        // }
+        if (activeSpirits != null)
+        {
+            foreach (var spirit in activeSpirits)
+            {
+                spirit.OnComboScored(combo, ref chips, ref mult, gm);
+            }
+        }
 
-        // STUB FOR LATER: Suit Affinity
-        // foreach (var delta in combo.AffinityDeltas) {
-        //     affinityManager.Boost(delta.Key, delta.Value);
-        // }
-        // if (!combo.Tiles[0].IsHonor) {
-        //     mult *= affinityManager.GetMultiplier(combo.Tiles[0].Suit);
-        // }
+        if (affinityManager != null)
+        {
+            foreach (var delta in combo.AffinityDeltas) 
+            {
+                float boostMult = 1.0f;
+                if (activeSpirits != null)
+                {
+                    foreach (var spirit in activeSpirits)
+                    {
+                        boostMult *= spirit.OnAffinityBoosted(delta.Key, delta.Value, gm);
+                    }
+                }
+                affinityManager.Boost(delta.Key, delta.Value * boostMult);
+            }
+            if (combo.Tiles.Count > 0 && !combo.Tiles[0].IsHonor) 
+            {
+                mult *= affinityManager.GetMultiplier(combo.Tiles[0].Suit);
+            }
+        }
 
         return (chips, mult);
     }
 
-    private static void ApplyPostCheckBonuses(List<Tile> hand, ref int chips, ref float mult)
+    private static void ApplyPostCheckBonuses(List<Tile> hand, ref int chips, ref float mult, IEnumerable<SpiritData> activeSpirits, GameManager gm)
     {
         if (hand == null || hand.Count != 13) return; // Added 13 check
 
@@ -55,8 +70,36 @@ public static class ScoreEngine
                 mult *= 10.0f;
             }
         }
+
+        if (activeSpirits != null)
+        {
+            foreach (var spirit in activeSpirits)
+            {
+                spirit.OnPostCheckBonuses(hand, ref chips, ref mult, gm);
+            }
+        }
     }
     // Bracket comment removed
+
+    public static Combo DetectCombo(List<Tile> tiles)
+    {
+        Combo c = new ConcealedKong(tiles);
+        if (c.IsValid()) return c;
+        
+        c = new Kong(tiles);
+        if (c.IsValid()) return c;
+        
+        c = new Pong(tiles);
+        if (c.IsValid()) return c;
+        
+        c = new Chow(tiles);
+        if (c.IsValid()) return c;
+        
+        c = new Pair(tiles);
+        if (c.IsValid()) return c;
+        
+        return null;
+    }
 
     public static (int bonusChips, float bonusMult) EvaluateFullHand(List<Tile> fullHand)
     {
