@@ -5,7 +5,7 @@ public class GameManager : MonoBehaviour
 {
     public List<TileData> AllTileTypes; // Assign in editor
     
-    public int CurrentTargetScore = 500;
+    public int CurrentTargetScore = 150;
     public int HandsRemaining = 4;
     public int DiscardsRemaining = 3;
     public int CurrentScore = 0;
@@ -24,10 +24,27 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
-        // For testing, we won't automatically start if AllTileTypes is empty
+        if (AllTileTypes == null || AllTileTypes.Count == 0)
+        {
+#if UNITY_EDITOR
+            string[] guids = UnityEditor.AssetDatabase.FindAssets("t:TileData");
+            AllTileTypes = new List<TileData>();
+            foreach (string guid in guids)
+            {
+                string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+                TileData tile = UnityEditor.AssetDatabase.LoadAssetAtPath<TileData>(path);
+                if (tile != null) AllTileTypes.Add(tile);
+            }
+#endif
+        }
+
         if (AllTileTypes != null && AllTileTypes.Count > 0)
         {
             InitializeRun();
+        }
+        else
+        {
+            Debug.LogWarning("[GameManager] No TileData assets found! Run 'Malajong -> Generate Default Tile Data' first.");
         }
     }
     
@@ -37,7 +54,7 @@ public class GameManager : MonoBehaviour
         Hand = new PlayerHand();
         Affinity = new SuitAffinity();
         
-        StartRound(500); // Ante 1 mock target
+        StartRound(150); // Ante 1 target score
     }
     
     public void StartRound(int targetScore)

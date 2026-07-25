@@ -14,12 +14,10 @@ public abstract class Combo
     public abstract int BaseChips { get; }
     public abstract float BaseMult { get; }
 
-    // Standardized delta value for subclasses to define (Fix 4)
     public abstract float AffinityBonus { get; }
 
     public abstract bool IsValid();
 
-    // Lazily computes only if the combo is actually valid (Fix 8)
     public Dictionary<TileSuit, float> AffinityDeltas
     {
         get
@@ -34,32 +32,28 @@ public abstract class Combo
     }
 }
 
-public class Pong : Combo
+public class Pair : Combo
 {
-    public override string Name => "Pong";
-    public override int BaseChips => 20;
-    public override float BaseMult => 2.0f;
-    public override float AffinityBonus => 0.1f; // (Fix 3 & 4)
+    public override string Name => "Pair";
+    public override int BaseChips => 10;
+    public override float BaseMult => 1.5f;
+    public override float AffinityBonus => 0.0f;
 
-    public Pong(List<Tile> tiles) : base(tiles) { }
+    public Pair(List<Tile> tiles) : base(tiles) { }
 
     public override bool IsValid()
     {
-        if (Tiles.Count != 3) return false;
-
-        bool sameSuit = Tiles[0].Suit == Tiles[1].Suit && Tiles[1].Suit == Tiles[2].Suit;
-        bool sameRank = Tiles[0].Rank == Tiles[1].Rank && Tiles[1].Rank == Tiles[2].Rank;
-
-        return sameSuit && sameRank;
+        if (Tiles.Count != 2) return false;
+        return Tiles[0].Suit == Tiles[1].Suit && Tiles[0].Rank == Tiles[1].Rank;
     }
 }
 
 public class Chow : Combo
 {
     public override string Name => "Chow";
-    public override int BaseChips => 15;
-    public override float BaseMult => 2.0f;
-    public override float AffinityBonus => 0.1f; // (Fix 4)
+    public override int BaseChips => 30;
+    public override float BaseMult => 3.0f;
+    public override float AffinityBonus => 0.1f;
 
     public Chow(List<Tile> tiles) : base(tiles) { }
 
@@ -75,12 +69,32 @@ public class Chow : Combo
     }
 }
 
-public class Kong : Combo // (Fix 2)
+public class Pong : Combo
+{
+    public override string Name => "Pong";
+    public override int BaseChips => 40;
+    public override float BaseMult => 4.0f;
+    public override float AffinityBonus => 0.15f;
+
+    public Pong(List<Tile> tiles) : base(tiles) { }
+
+    public override bool IsValid()
+    {
+        if (Tiles.Count != 3) return false;
+
+        bool sameSuit = Tiles[0].Suit == Tiles[1].Suit && Tiles[1].Suit == Tiles[2].Suit;
+        bool sameRank = Tiles[0].Rank == Tiles[1].Rank && Tiles[1].Rank == Tiles[2].Rank;
+
+        return sameSuit && sameRank;
+    }
+}
+
+public class Kong : Combo
 {
     public override string Name => "Kong";
-    public override int BaseChips => 40;
-    public override float BaseMult => 3.0f;
-    public override float AffinityBonus => 0.2f; // (Fix 4)
+    public override int BaseChips => 80;
+    public override float BaseMult => 6.0f;
+    public override float AffinityBonus => 0.3f;
 
     public Kong(List<Tile> tiles) : base(tiles) { }
 
@@ -100,28 +114,12 @@ public class Kong : Combo // (Fix 2)
     }
 }
 
-public class Pair : Combo // (Fix 2)
-{
-    public override string Name => "Pair";
-    public override int BaseChips => 5;
-    public override float BaseMult => 1.0f;
-    public override float AffinityBonus => 0.0f; // Pairs don't boost affinity
-
-    public Pair(List<Tile> tiles) : base(tiles) { }
-
-    public override bool IsValid()
-    {
-        if (Tiles.Count != 2) return false;
-
-        return Tiles[0].Suit == Tiles[1].Suit && Tiles[0].Rank == Tiles[1].Rank;
-    }
-}
 public class ConcealedKong : Kong
 {
     public override string Name => "Concealed Kong";
-    public override int BaseChips => 55;
-    public override float BaseMult => 4.0f;
-    public override float AffinityBonus => 0.4f; // Fix #3: Bumped for risk/reward
+    public override int BaseChips => 100;
+    public override float BaseMult => 8.0f;
+    public override float AffinityBonus => 0.5f;
 
     public ConcealedKong(List<Tile> tiles) : base(tiles) { }
 

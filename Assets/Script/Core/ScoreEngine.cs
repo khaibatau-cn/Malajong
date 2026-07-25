@@ -10,7 +10,7 @@ public static class ScoreEngine
             return (0, 0f);
         }
 
-        int chips = combo.BaseChips;
+        int chips = combo.BaseChips + combo.Tiles.Sum(t => t.Rank);
         float mult = combo.BaseMult;
 
         ApplyPostCheckBonuses(fullHand, ref chips, ref mult, activeSpirits, gm);
@@ -183,5 +183,72 @@ public static class ScoreEngine
         }
 
         return false;
+    }
+
+    public static List<(Combo combo, List<Tile> tiles)> FindPlayableCombos(List<Tile> hand)
+    {
+        var result = new List<(Combo combo, List<Tile> tiles)>();
+        if (hand == null || hand.Count == 0) return result;
+
+        // Group tiles by suit & rank
+        var tilesByKind = hand.GroupBy(t => $"{t.Suit}_{t.Rank}").ToList();
+
+        // 1. Find Kongs (4 of a kind)
+        foreach (var group in tilesByKind)
+        {
+            if (group.Count() >= 4)
+            {
+                var tiles = group.Take(4).ToList();
+                var c = DetectCombo(tiles);
+                if (c != null) result.Add((c, tiles));
+            }
+        }
+
+        // 2. Find Pongs (3 of a kind)
+        foreach (var group in tilesByKind)
+        {
+            if (group.Count() >= 3)
+            {
+                var tiles = group.Take(3).ToList();
+                var c = DetectCombo(tiles);
+                if (c != null && !result.Any(r => r.combo.Name == c.Name && r.tiles.All(tiles.Contains)))
+                    result.Add((c, tiles));
+            }
+        }
+
+        // 3. Find Chows (3 sequential of same non-honor suit)
+        var nonHonors = hand.Where(t => !t.IsHonor).GroupBy(t => t.Suit);
+        foreach (var suitGroup in nonHonors)
+        {
+            var ordered = suitGroup.OrderBy(t => t.Rank).ToList();
+            for (int i = 0; i < ordered.Count; i++)
+            {
+                var t1 = ordered[i];
+                var t2 = ordered.FirstOrDefault(t => t.Rank == t1.Rank + 1);
+                var t3 = ordered.FirstOrDefault(t => t.Rank == t1.Rank + 2);
+                if (t2 != null && t3 != null)
+                {
+                    var tiles = new List<Tile> { t1, t2, t3 };
+                    var c = DetectCombo(tiles);
+                    if (c != null && !result.Any(r => r.tiles[0] == t1 && r.tiles[1] == t2 && r.tiles[2] == t3))
+                    {
+                        result.Add((c, tiles));
+                    }
+                }
+            }
+        }
+
+        // 4. Find Pairs (2 of a kind)
+        foreach (var group in tilesByKind)
+        {
+            if (group.Count() >= 2)
+            {
+                var tiles = group.Take(2).ToList();
+                var c = DetectCombo(tiles);
+                if (c != null) result.Add((c, tiles));
+            }
+        }
+
+        return result;
     }
 }
