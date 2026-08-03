@@ -4,9 +4,9 @@ using UnityEditor;
 
 public class MahjongAssetWiringTool
 {
-    private const string LightDeckPath = "Assets/Sprites/Assets/deck_mahjong_light_0.png";
-    private const string DarkDeckPath = "Assets/Sprites/Assets/deck_mahjong_dark_0.png";
-    private const string BacksDeckPath = "Assets/Sprites/Assets/deck_mahjong_backs.png";
+    private const string LightDeckPath = "Assets/Sprites/Tilesets/Blueeyedrat/deck_mahjong_light_0.png";
+    private const string DarkDeckPath = "Assets/Sprites/Tilesets/Blueeyedrat/deck_mahjong_dark_0.png";
+    private const string BacksDeckPath = "Assets/Sprites/Tilesets/Blueeyedrat/deck_mahjong_backs.png";
     private const string TilesFolderPath = "Assets/ScriptableObjects/Tiles";
 
     [MenuItem("Malajong/Auto-Slice Spritesheet and Wire Tiles")]
@@ -50,7 +50,7 @@ public class MahjongAssetWiringTool
         int stepX = 64;
         int stepY = 64;
         int startX = 9;
-        int startYFromTop = 1; // Top margin in pixels
+        int startYFromTop = 1;
 
         List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
 

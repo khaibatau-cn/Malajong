@@ -506,7 +506,7 @@ public class SceneSetupTool
 
         if (ttfFont == null)
         {
-            string directPath = "Assets/Sprites/m5x7(1).ttf";
+            string directPath = "Assets/Fonts/m5x7.ttf";
             AssetDatabase.ImportAsset(directPath, ImportAssetOptions.ForceUpdate);
             ttfFont = AssetDatabase.LoadAssetAtPath<Font>(directPath);
         }
@@ -514,7 +514,7 @@ public class SceneSetupTool
         // 3. Create and save TMP_FontAsset if needed
         if (ttfFont != null)
         {
-            string fontAssetPath = "Assets/Sprites/m5x7_FontAsset.asset";
+            string fontAssetPath = "Assets/Fonts/m5x7_FontAsset.asset";
             cachedPixelFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(fontAssetPath);
             if (cachedPixelFont == null)
             {
