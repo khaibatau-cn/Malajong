@@ -40,7 +40,7 @@ public class SceneSetupTool
         }
 
         // 2. Ensure Audio Manager exists
-        MalajongAudio audioManager = Object.FindFirstObjectByType<MalajongAudio>();
+        MalajongAudio audioManager = Object.FindAnyObjectByType<MalajongAudio>();
         if (audioManager == null)
         {
             GameObject audioObj = new GameObject("AudioManager");
@@ -49,7 +49,7 @@ public class SceneSetupTool
         }
 
         // 3. Ensure Canvas exists with 1920x1080 ScaleMode
-        Canvas canvas = Object.FindFirstObjectByType<Canvas>();
+        Canvas canvas = Object.FindAnyObjectByType<Canvas>();
         GameObject canvasObj;
         if (canvas == null)
         {
@@ -319,7 +319,6 @@ public class SceneSetupTool
 
         Button nextRoundBtn = CreateButton(shopPanel, "NextRoundButton", "NEXT ROUND ➔", new Color(0.2f, 0.5f, 0.85f), 32,
             new Vector2(0.35f, 0.08f), new Vector2(0.65f, 0.20f));
-        UnityEditor.Events.UnityEventTools.AddPersistentListener(nextRoundBtn.onClick, uiManager.NextRoundFromShop);
 
         // ==========================================
         // 7. Panel 4: GameOverUI
@@ -329,7 +328,6 @@ public class SceneSetupTool
             "<b>GAME OVER</b>\n\nQuota was not met.", 36, TextAlignmentOptions.Center);
         Button restartBtn = CreateButton(gameOverPanel, "RestartButton", "TRY AGAIN", new Color(0.85f, 0.3f, 0.25f), 30,
             new Vector2(0.35f, 0.2f), new Vector2(0.65f, 0.32f));
-        UnityEditor.Events.UnityEventTools.AddPersistentListener(restartBtn.onClick, uiManager.RestartRun);
 
         // ==========================================
         // 8. Panel 5: VictoryUI
@@ -339,13 +337,12 @@ public class SceneSetupTool
             "<b>VICTORY!</b>\n\nYou completed all rounds of Malajong!", 36, TextAlignmentOptions.Center);
         Button victoryRestartBtn = CreateButton(victoryPanel, "VictoryRestartButton", "MAIN MENU", new Color(0.18f, 0.65f, 0.38f), 30,
             new Vector2(0.35f, 0.2f), new Vector2(0.65f, 0.32f));
-        UnityEditor.Events.UnityEventTools.AddPersistentListener(victoryRestartBtn.onClick, uiManager.RestartRun);
 
         // 9. Generate & Save Upscaled TilePrefab (70x95)
         GameObject tilePrefab = CreateOrUpdateTilePrefab();
 
         // 10. Find or Create GameManager & UIManager
-        GameManager gameManager = Object.FindFirstObjectByType<GameManager>();
+        GameManager gameManager = Object.FindAnyObjectByType<GameManager>();
         if (gameManager == null)
         {
             GameObject gmObj = new GameObject("GameManager");
@@ -353,7 +350,7 @@ public class SceneSetupTool
             Undo.RegisterCreatedObjectUndo(gmObj, "Create GameManager");
         }
 
-        UIManager uiManager = Object.FindFirstObjectByType<UIManager>();
+        UIManager uiManager = Object.FindAnyObjectByType<UIManager>();
         if (uiManager == null)
         {
             GameObject uiObj = new GameObject("UIManager");
@@ -368,7 +365,7 @@ public class SceneSetupTool
         // 11. Wire References to UIManager
         // ==========================================
         uiManager.gameManager = gameManager;
-        uiManager.StartMenuPanel = startMenuPanel.gameObject;
+        uiManager.StartMenuPanel = startPanel.gameObject;
         uiManager.PlayingPanel = mainPanel.gameObject;
         uiManager.ShopPanel = shopPanel.gameObject;
         uiManager.GameOverPanel = gameOverPanel.gameObject;
@@ -440,8 +437,8 @@ public class SceneSetupTool
         restartBtn.onClick.RemoveAllListeners();
         UnityEditor.Events.UnityEventTools.AddPersistentListener(restartBtn.onClick, uiManager.RestartRun);
 
-        victoryPlayAgainBtn.onClick.RemoveAllListeners();
-        UnityEditor.Events.UnityEventTools.AddPersistentListener(victoryPlayAgainBtn.onClick, uiManager.RestartRun);
+        victoryRestartBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(victoryRestartBtn.onClick, uiManager.RestartRun);
 
         // Apply pixel font to all TextMeshProUGUI components in the Canvas
         TMP_FontAsset pixelFont = GetOrCreatePixelFont();
