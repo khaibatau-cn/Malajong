@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class SceneSetupTool
 {
+    private static TMP_FontAsset cachedPixelFont = null;
+
     [MenuItem("Malajong/Setup Playable Scene Placeholder")]
     public static void SetupPlayableScene()
     {
@@ -458,11 +460,75 @@ public class SceneSetupTool
         victoryPlayAgainBtn.onClick.RemoveAllListeners();
         UnityEditor.Events.UnityEventTools.AddPersistentListener(victoryPlayAgainBtn.onClick, uiManager.RestartRun);
 
+        // Apply pixel font to all TextMeshProUGUI components in the Canvas
+        TMP_FontAsset pixelFont = GetOrCreatePixelFont();
+        if (pixelFont != null)
+        {
+            foreach (var tmp in canvasObj.GetComponentsInChildren<TextMeshProUGUI>(true))
+            {
+                tmp.font = pixelFont;
+                EditorUtility.SetDirty(tmp);
+            }
+        }
+
         EditorUtility.SetDirty(gameManager);
         EditorUtility.SetDirty(uiManager);
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
 
-        Debug.Log("🎉 Upscaled Adjacent Tile UI with New Tileset Generated Successfully!");
+        Debug.Log("🎉 Upscaled Adjacent Tile UI with Retro Pixel Font Generated Successfully!");
+    }
+
+    public static TMP_FontAsset GetOrCreatePixelFont()
+    {
+        if (cachedPixelFont != null) return cachedPixelFont;
+
+        // 1. Search for existing TMP_FontAsset
+        string[] tmpGuids = AssetDatabase.FindAssets("t:TMP_FontAsset m5x7");
+        if (tmpGuids.Length > 0)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(tmpGuids[0]);
+            cachedPixelFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(path);
+            if (cachedPixelFont != null) return cachedPixelFont;
+        }
+
+        // 2. Locate the TTF font file
+        Font ttfFont = null;
+        string[] ttfGuids = AssetDatabase.FindAssets("m5x7");
+        foreach (string guid in ttfGuids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            if (path.EndsWith(".ttf") || path.EndsWith(".otf"))
+            {
+                ttfFont = AssetDatabase.LoadAssetAtPath<Font>(path);
+                if (ttfFont != null) break;
+            }
+        }
+
+        if (ttfFont == null)
+        {
+            string directPath = "Assets/Sprites/m5x7(1).ttf";
+            AssetDatabase.ImportAsset(directPath, ImportAssetOptions.ForceUpdate);
+            ttfFont = AssetDatabase.LoadAssetAtPath<Font>(directPath);
+        }
+
+        // 3. Create and save TMP_FontAsset if needed
+        if (ttfFont != null)
+        {
+            string fontAssetPath = "Assets/Sprites/m5x7_FontAsset.asset";
+            cachedPixelFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(fontAssetPath);
+            if (cachedPixelFont == null)
+            {
+                cachedPixelFont = TMP_FontAsset.CreateFontAsset(ttfFont);
+                if (cachedPixelFont != null)
+                {
+                    AssetDatabase.CreateAsset(cachedPixelFont, fontAssetPath);
+                    AssetDatabase.SaveAssets();
+                    Debug.Log($"[SceneSetupTool] Created TMP_FontAsset from '{ttfFont.name}' at '{fontAssetPath}'!");
+                }
+            }
+        }
+
+        return cachedPixelFont;
     }
 
     private static Transform CreatePanel(Transform canvas, string name, Color color)
@@ -512,6 +578,13 @@ public class SceneSetupTool
         rect.offsetMax = Vector2.zero;
 
         TextMeshProUGUI text = textObj.GetComponent<TextMeshProUGUI>();
+        
+        TMP_FontAsset pixelFont = GetOrCreatePixelFont();
+        if (pixelFont != null)
+        {
+            text.font = pixelFont;
+        }
+
         text.fontSize = fontSize;
         text.alignment = alignment;
         text.text = defaultText;
@@ -601,6 +674,11 @@ public class SceneSetupTool
         textRect.offsetMax = new Vector2(-2, -2);
 
         TextMeshProUGUI text = textObj.GetComponent<TextMeshProUGUI>();
+        TMP_FontAsset pixelFont = GetOrCreatePixelFont();
+        if (pixelFont != null)
+        {
+            text.font = pixelFont;
+        }
         text.alignment = TextAlignmentOptions.Center;
         text.color = Color.black;
         text.raycastTarget = false;
@@ -646,6 +724,11 @@ public class SceneSetupTool
         textRect.offsetMax = Vector2.zero;
 
         TextMeshProUGUI text = textObj.AddComponent<TextMeshProUGUI>();
+        TMP_FontAsset pixelFont = GetOrCreatePixelFont();
+        if (pixelFont != null)
+        {
+            text.font = pixelFont;
+        }
         text.alignment = TextAlignmentOptions.Center;
         text.fontSize = 16;
         text.fontStyle = FontStyles.Bold;

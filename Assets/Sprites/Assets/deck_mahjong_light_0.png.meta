@@ -146,6 +146,117 @@ TextureImporter:
   - first:
       213: -3267607981113107246
     second: deck_mahjong_light_0_47
+  - first:
+      213: -1960546628078278901
+    second: Characters_1
+  - first:
+      213: 8248543377919322394
+    second: Characters_2
+  - first:
+      213: 57365866442116020
+    second: Characters_3
+  - first:
+      213: 2807314771408455767
+    second: Characters_4
+  - first:
+      213: -7914586359189542566
+    second: Characters_5
+  - first:
+      213: 3112702236248781428
+    second: Characters_6
+  - first:
+      213: 115972425246325791
+    second: Characters_7
+  - first:
+      213: 1808964706522467271
+    second: Characters_8
+  - first:
+      213: 7649489486189614792
+    second: Characters_9
+  - first:
+      213: 3710542918542146900
+    second: RedDora_Characters_5
+  - first:
+      213: -2554780720562376739
+    second: Bamboo_1
+  - first:
+      213: 5846492905212174399
+    second: Bamboo_2
+  - first:
+      213: -5195449886657206636
+    second: Bamboo_3
+  - first:
+      213: -7126038478816912561
+    second: Bamboo_4
+  - first:
+      213: -131973207961556160
+    second: Bamboo_5
+  - first:
+      213: -6787199230458902249
+    second: Bamboo_6
+  - first:
+      213: -8589466087054108194
+    second: Bamboo_7
+  - first:
+      213: 7758563519914631448
+    second: Bamboo_8
+  - first:
+      213: 5455215464465996490
+    second: Bamboo_9
+  - first:
+      213: -8707127687159880064
+    second: RedDora_Bamboo_5
+  - first:
+      213: 8476583249006558516
+    second: Dots_1
+  - first:
+      213: 4279810403557804753
+    second: Dots_2
+  - first:
+      213: -6231455291340709566
+    second: Dots_3
+  - first:
+      213: 2309616951432272755
+    second: Dots_4
+  - first:
+      213: 897007327931784089
+    second: Dots_5
+  - first:
+      213: 4001068849078837699
+    second: Dots_6
+  - first:
+      213: 7916340526049241506
+    second: Dots_7
+  - first:
+      213: -7067466375787978000
+    second: Dots_8
+  - first:
+      213: -2218871824405331100
+    second: Dots_9
+  - first:
+      213: 3523817451287656404
+    second: RedDora_Dots_5
+  - first:
+      213: 1782631148662823644
+    second: Honor_1
+  - first:
+      213: -6770559095385945360
+    second: Honor_2
+  - first:
+      213: -599553561787171628
+    second: Honor_3
+  - first:
+      213: 879979721195591281
+    second: Honor_4
+  - first:
+      213: 4873257771151600735
+    second: Honor_5
+  - first:
+      213: -8581295541991305153
+    second: Honor_6
+  - first:
+      213: -814878401002445170
+    second: Honor_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -178,7 +289,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -192,7 +303,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -216,7 +327,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -241,7 +352,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: deck_mahjong_light_0_0
+      name: Characters_1
       rect:
         serializedVersion: 2
         x: 9
@@ -249,21 +360,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: af71d4c77732f10c0800000000000000
-      internalID: -4602921298055849990
+      spriteID: b07edcbaa3dbac4e0800000000000000
+      internalID: -1960546628078278901
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_1
+      name: Characters_2
       rect:
         serializedVersion: 2
         x: 73
@@ -271,21 +382,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9d48f64e7cf02fd30800000000000000
-      internalID: 4463647531883005145
+      spriteID: a192843ef76b87270800000000000000
+      internalID: 8248543377919322394
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_2
+      name: Characters_3
       rect:
         serializedVersion: 2
         x: 137
@@ -293,21 +404,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5c4d7df4ac0ee6430800000000000000
-      internalID: 3778204296937985221
+      spriteID: 4bbc38b93fdcbc000800000000000000
+      internalID: 57365866442116020
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_3
+      name: Characters_4
       rect:
         serializedVersion: 2
         x: 201
@@ -315,21 +426,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 005932280abbf4db0800000000000000
-      internalID: -4805415979328498432
+      spriteID: 758028a29e595f620800000000000000
+      internalID: 2807314771408455767
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_4
+      name: Characters_5
       rect:
         serializedVersion: 2
         x: 265
@@ -337,21 +448,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a5eae62e781fa8770800000000000000
-      internalID: 8613962803221278298
+      spriteID: a59ea5cb3adb92290800000000000000
+      internalID: -7914586359189542566
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_5
+      name: Characters_6
       rect:
         serializedVersion: 2
         x: 329
@@ -359,21 +470,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 561b635b125f26000800000000000000
-      internalID: 27854072840630629
+      spriteID: 4723c2b213a823b20800000000000000
+      internalID: 3112702236248781428
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_6
+      name: Characters_7
       rect:
         serializedVersion: 2
         x: 393
@@ -381,21 +492,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 820f1f98adcc3a2e0800000000000000
-      internalID: -2115622160944730072
+      spriteID: f1c3c8a6e440c9100800000000000000
+      internalID: 115972425246325791
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_7
+      name: Characters_8
       rect:
         serializedVersion: 2
         x: 457
@@ -403,21 +514,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b9c515a7889907720800000000000000
-      internalID: 2841940176317537435
+      spriteID: 7cb8d77f0dbba1910800000000000000
+      internalID: 1808964706522467271
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_8
+      name: Characters_9
       rect:
         serializedVersion: 2
         x: 521
@@ -425,21 +536,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b9dd30448197f0400800000000000000
-      internalID: 292585645929651611
+      spriteID: 8c6da61b822782a60800000000000000
+      internalID: 7649489486189614792
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_9
+      name: RedDora_Characters_5
       rect:
         serializedVersion: 2
         x: 585
@@ -447,21 +558,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9c9e277d19c8ed530800000000000000
-      internalID: 3881694486852725193
+      spriteID: 45dbb87002f7e7330800000000000000
+      internalID: 3710542918542146900
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_10
+      name: Bamboo_1
       rect:
         serializedVersion: 2
         x: 9
@@ -469,21 +580,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 09fd28cf08a4ee760800000000000000
-      internalID: 7489005148216418192
+      spriteID: ddfecdf68789b8cd0800000000000000
+      internalID: -2554780720562376739
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_11
+      name: Bamboo_2
       rect:
         serializedVersion: 2
         x: 73
@@ -491,21 +602,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 88603d4487ebae9e0800000000000000
-      internalID: -1591250094562015608
+      spriteID: f30630d325ae22150800000000000000
+      internalID: 5846492905212174399
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_12
+      name: Bamboo_3
       rect:
         serializedVersion: 2
         x: 137
@@ -513,21 +624,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b3a9adc23d46e7d50800000000000000
-      internalID: 6736932950746241595
+      spriteID: 4962471dadd06e7b0800000000000000
+      internalID: -5195449886657206636
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_13
+      name: Bamboo_4
       rect:
         serializedVersion: 2
         x: 201
@@ -535,21 +646,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9e3c425b8a16235a0800000000000000
-      internalID: -6543059931394423831
+      spriteID: f4b5a5642c93b1d90800000000000000
+      internalID: -7126038478816912561
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_14
+      name: Bamboo_5
       rect:
         serializedVersion: 2
         x: 265
@@ -557,21 +668,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ee8e658f24187ce80800000000000000
-      internalID: -8158410075324094226
+      spriteID: 04b259b01132b2ef0800000000000000
+      internalID: -131973207961556160
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_15
+      name: Bamboo_6
       rect:
         serializedVersion: 2
         x: 329
@@ -579,21 +690,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b655fb5b3a47e2da0800000000000000
-      internalID: -5967704209741621909
+      spriteID: 71941b092460fc1a0800000000000000
+      internalID: -6787199230458902249
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_16
+      name: Bamboo_7
       rect:
         serializedVersion: 2
         x: 393
@@ -601,21 +712,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2e3d4304b75928580800000000000000
-      internalID: -8826327963102030878
+      spriteID: ed910ee4a161cc880800000000000000
+      internalID: -8589466087054108194
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_17
+      name: Bamboo_8
       rect:
         serializedVersion: 2
         x: 457
@@ -623,21 +734,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a794f95ad8bc33b70800000000000000
-      internalID: 8877663099706886522
+      spriteID: 811e0db2a64fbab60800000000000000
+      internalID: 7758563519914631448
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_18
+      name: Bamboo_9
       rect:
         serializedVersion: 2
         x: 521
@@ -645,21 +756,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7034d8e65a60eac20800000000000000
-      internalID: 3219518091210605319
+      spriteID: aca96bcdf81d4bb40800000000000000
+      internalID: 5455215464465996490
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_19
+      name: RedDora_Bamboo_5
       rect:
         serializedVersion: 2
         x: 585
@@ -667,21 +778,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e241d2fb1eb24bfc0800000000000000
-      internalID: -3480108363475512274
+      spriteID: 086edd830811a2780800000000000000
+      internalID: -8707127687159880064
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_20
+      name: Dots_1
       rect:
         serializedVersion: 2
         x: 9
@@ -689,21 +800,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d98ef2fc7fd5de7a0800000000000000
-      internalID: -6346312980980832099
+      spriteID: 43dff0add8fd2a570800000000000000
+      internalID: 8476583249006558516
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_21
+      name: Dots_2
       rect:
         serializedVersion: 2
         x: 73
@@ -711,21 +822,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 24e9e3115364f5540800000000000000
-      internalID: 4998791305141067330
+      spriteID: 1da851af2e0f46b30800000000000000
+      internalID: 4279810403557804753
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_22
+      name: Dots_3
       rect:
         serializedVersion: 2
         x: 137
@@ -733,21 +844,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 94b773e55507e0190800000000000000
-      internalID: -7994328776580826295
+      spriteID: 241a8ed9d6c6589a0800000000000000
+      internalID: -6231455291340709566
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_23
+      name: Dots_4
       rect:
         serializedVersion: 2
         x: 201
@@ -755,21 +866,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4b32d00cb5c4b69c0800000000000000
-      internalID: -3932965892630174796
+      spriteID: 37b575561686d0020800000000000000
+      internalID: 2309616951432272755
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_24
+      name: Dots_5
       rect:
         serializedVersion: 2
         x: 265
@@ -777,21 +888,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8ba80273e66b6b6a0800000000000000
-      internalID: -6433754433164637512
+      spriteID: 99bdb46896fc27c00800000000000000
+      internalID: 897007327931784089
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_25
+      name: Dots_6
       rect:
         serializedVersion: 2
         x: 329
@@ -799,21 +910,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d1231b693a0025640800000000000000
-      internalID: 5067113233353093661
+      spriteID: 3c1a93f6be6a68730800000000000000
+      internalID: 4001068849078837699
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_26
+      name: Dots_7
       rect:
         serializedVersion: 2
         x: 393
@@ -821,21 +932,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7214673e5640e3370800000000000000
-      internalID: 8304079598572159271
+      spriteID: 2a9a13014cd7cdd60800000000000000
+      internalID: 7916340526049241506
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_27
+      name: Dots_8
       rect:
         serializedVersion: 2
         x: 457
@@ -843,21 +954,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d4c65cdfd92e1a9f0800000000000000
-      internalID: -458836518819763123
+      spriteID: 0f2e329b6c05bed90800000000000000
+      internalID: -7067466375787978000
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_28
+      name: Dots_9
       rect:
         serializedVersion: 2
         x: 521
@@ -865,21 +976,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 50fbc07e8f5d8fa70800000000000000
-      internalID: 8861067531856428805
+      spriteID: 4638230f4dbf431e0800000000000000
+      internalID: -2218871824405331100
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_29
+      name: RedDora_Dots_5
       rect:
         serializedVersion: 2
         x: 585
@@ -887,21 +998,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b6df201288a09ee00800000000000000
-      internalID: 1074401565890248043
+      spriteID: 4d7b25d4d4d17e030800000000000000
+      internalID: 3523817451287656404
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_30
+      name: Honor_1
       rect:
         serializedVersion: 2
         x: 9
@@ -909,21 +1020,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8b34a46fcb56e9f80800000000000000
-      internalID: -8097923217705253960
+      spriteID: cda189db59d2db810800000000000000
+      internalID: 1782631148662823644
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_31
+      name: Honor_2
       rect:
         serializedVersion: 2
         x: 73
@@ -931,21 +1042,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5eb489d0e77b850c0800000000000000
-      internalID: -4586714468455003163
+      spriteID: 0fa0bbcef542a02a0800000000000000
+      internalID: -6770559095385945360
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_32
+      name: Honor_3
       rect:
         serializedVersion: 2
         x: 137
@@ -953,21 +1064,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 35d944efec5c66460800000000000000
-      internalID: 7234687344237124947
+      spriteID: 4dcfadd4635fda7f0800000000000000
+      internalID: -599553561787171628
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_33
+      name: Honor_4
       rect:
         serializedVersion: 2
         x: 201
@@ -975,21 +1086,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5d19f4d9c613852a0800000000000000
-      internalID: -6748589699049221675
+      spriteID: 1761963e4e0563c00800000000000000
+      internalID: 879979721195591281
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_34
+      name: Honor_5
       rect:
         serializedVersion: 2
         x: 265
@@ -997,21 +1108,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 88975a6b6267585d0800000000000000
-      internalID: -3060910463083251320
+      spriteID: f5c276c8f1a41a340800000000000000
+      internalID: 4873257771151600735
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_35
+      name: Honor_6
       rect:
         serializedVersion: 2
         x: 329
@@ -1019,21 +1130,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c96fe530ff7731300800000000000000
-      internalID: 221652743828207260
+      spriteID: f3017f29b2d19e880800000000000000
+      internalID: -8581295541991305153
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_light_0_36
+      name: Honor_7
       rect:
         serializedVersion: 2
         x: 393
@@ -1041,257 +1152,15 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 88c3dd71b94aa0a30800000000000000
-      internalID: 4182336189994187912
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_light_0_37
-      rect:
-        serializedVersion: 2
-        x: 457
-        y: 65
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 67482491721805e20800000000000000
-      internalID: 3337309328809034870
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_light_0_38
-      rect:
-        serializedVersion: 2
-        x: 9
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b07d6373561f95250800000000000000
-      internalID: 5934039401057670923
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_light_0_39
-      rect:
-        serializedVersion: 2
-        x: 73
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 498d69ad7c524d2c0800000000000000
-      internalID: -4407856594992834412
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_light_0_40
-      rect:
-        serializedVersion: 2
-        x: 137
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9026f37ea7c79dca0800000000000000
-      internalID: -5991620961932189175
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_light_0_41
-      rect:
-        serializedVersion: 2
-        x: 201
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 588aac63559f7cf50800000000000000
-      internalID: 6901759098355361925
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_light_0_42
-      rect:
-        serializedVersion: 2
-        x: 265
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8f0fef24accc481f0800000000000000
-      internalID: -1043484044563648264
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_light_0_43
-      rect:
-        serializedVersion: 2
-        x: 329
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 51c8bceb65912d850800000000000000
-      internalID: 6400205880805788693
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_light_0_44
-      rect:
-        serializedVersion: 2
-        x: 393
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 03f110fc680d8f250800000000000000
-      internalID: 5978757782751485744
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_light_0_45
-      rect:
-        serializedVersion: 2
-        x: 457
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f5c44adfc86650520800000000000000
-      internalID: 2667651110023744607
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_light_0_46
-      rect:
-        serializedVersion: 2
-        x: 521
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: dab7dca3b0a763250800000000000000
-      internalID: 5924056548502240173
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_light_0_47
-      rect:
-        serializedVersion: 2
-        x: 585
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2dc958c8adf17a2d0800000000000000
-      internalID: -3267607981113107246
+      spriteID: e866c156968f0b4f0800000000000000
+      internalID: -814878401002445170
       vertices: []
       indices: 
       edges: []
@@ -1310,6 +1179,43 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      Bamboo_1: -2554780720562376739
+      Bamboo_2: 5846492905212174399
+      Bamboo_3: -5195449886657206636
+      Bamboo_4: -7126038478816912561
+      Bamboo_5: -131973207961556160
+      Bamboo_6: -6787199230458902249
+      Bamboo_7: -8589466087054108194
+      Bamboo_8: 7758563519914631448
+      Bamboo_9: 5455215464465996490
+      Characters_1: -1960546628078278901
+      Characters_2: 8248543377919322394
+      Characters_3: 57365866442116020
+      Characters_4: 2807314771408455767
+      Characters_5: -7914586359189542566
+      Characters_6: 3112702236248781428
+      Characters_7: 115972425246325791
+      Characters_8: 1808964706522467271
+      Characters_9: 7649489486189614792
+      Dots_1: 8476583249006558516
+      Dots_2: 4279810403557804753
+      Dots_3: -6231455291340709566
+      Dots_4: 2309616951432272755
+      Dots_5: 897007327931784089
+      Dots_6: 4001068849078837699
+      Dots_7: 7916340526049241506
+      Dots_8: -7067466375787978000
+      Dots_9: -2218871824405331100
+      Honor_1: 1782631148662823644
+      Honor_2: -6770559095385945360
+      Honor_3: -599553561787171628
+      Honor_4: 879979721195591281
+      Honor_5: 4873257771151600735
+      Honor_6: -8581295541991305153
+      Honor_7: -814878401002445170
+      RedDora_Bamboo_5: -8707127687159880064
+      RedDora_Characters_5: 3710542918542146900
+      RedDora_Dots_5: 3523817451287656404
       deck_mahjong_light_0_0: -4602921298055849990
       deck_mahjong_light_0_1: 4463647531883005145
       deck_mahjong_light_0_10: 7489005148216418192

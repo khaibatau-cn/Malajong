@@ -65,6 +65,18 @@ TextureImporter:
   - first:
       213: -6061705111847318209
     second: deck_mahjong_backs_20
+  - first:
+      213: 8208727154757944500
+    second: Tile_Back_Blue
+  - first:
+      213: 4893817959729944076
+    second: Tile_Back_Green
+  - first:
+      213: -1958455090341860374
+    second: Tile_Back_Red
+  - first:
+      213: -7670447007522255958
+    second: Tile_Back_Black
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -97,7 +109,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -111,7 +123,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -135,7 +147,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -160,7 +172,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: deck_mahjong_backs_0
+      name: Tile_Back_Blue
       rect:
         serializedVersion: 2
         x: 9
@@ -168,21 +180,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 967590856dfd32e20800000000000000
-      internalID: 3324747061622560617
+      spriteID: 4b443750bd14be170800000000000000
+      internalID: 8208727154757944500
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_backs_1
+      name: Tile_Back_Green
       rect:
         serializedVersion: 2
         x: 73
@@ -190,21 +202,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f5dc35e716f998670800000000000000
-      internalID: 8541533409364921695
+      spriteID: c06512d71855ae340800000000000000
+      internalID: 4893817959729944076
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_backs_2
+      name: Tile_Back_Red
       rect:
         serializedVersion: 2
         x: 137
@@ -212,21 +224,21 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b2671193b58ca02c0800000000000000
-      internalID: -4464535786459400661
+      spriteID: aeb2e9fb87b22d4e0800000000000000
+      internalID: -1958455090341860374
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: deck_mahjong_backs_3
+      name: Tile_Back_Black
       rect:
         serializedVersion: 2
         x: 201
@@ -234,389 +246,15 @@ TextureImporter:
         width: 46
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: dcaa863df85935cf0800000000000000
-      internalID: -264703508125013299
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_4
-      rect:
-        serializedVersion: 2
-        x: 265
-        y: 129
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f8c7c11c7580a0c70800000000000000
-      internalID: 8937965583465217167
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_5
-      rect:
-        serializedVersion: 2
-        x: 329
-        y: 129
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bcc48b5e193cea780800000000000000
-      internalID: -8669777201249891125
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_6
-      rect:
-        serializedVersion: 2
-        x: 393
-        y: 129
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d3ed06cde69221ce0800000000000000
-      internalID: -1436039775057289667
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_7
-      rect:
-        serializedVersion: 2
-        x: 9
-        y: 65
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 450d24ce6737d13d0800000000000000
-      internalID: -3234302002775011244
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_8
-      rect:
-        serializedVersion: 2
-        x: 73
-        y: 65
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: dbdebc4daf074ff60800000000000000
-      internalID: 8067197055141670333
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_9
-      rect:
-        serializedVersion: 2
-        x: 137
-        y: 65
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4c25e04d6edaae8a0800000000000000
-      internalID: -6275011923875573052
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_10
-      rect:
-        serializedVersion: 2
-        x: 201
-        y: 65
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3baa33d4358017d00800000000000000
-      internalID: 968564548731906739
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_11
-      rect:
-        serializedVersion: 2
-        x: 265
-        y: 65
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 401068bd1ae4e2f40800000000000000
-      internalID: 5705584235004690692
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_12
-      rect:
-        serializedVersion: 2
-        x: 329
-        y: 65
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7454a5ec3447bfc30800000000000000
-      internalID: 4394233696003704135
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_13
-      rect:
-        serializedVersion: 2
-        x: 393
-        y: 65
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4f058cbbdf257a750800000000000000
-      internalID: 6316108252141080820
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_14
-      rect:
-        serializedVersion: 2
-        x: 9
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e874ed33adf9b4e10800000000000000
-      internalID: 2183014203913029518
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_15
-      rect:
-        serializedVersion: 2
-        x: 73
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8666bf5baf8e3df70800000000000000
-      internalID: 9210961826395416168
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_16
-      rect:
-        serializedVersion: 2
-        x: 137
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e195586b643c7c4b0800000000000000
-      internalID: -5420148918039783138
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_17
-      rect:
-        serializedVersion: 2
-        x: 201
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 84edada34927edbd0800000000000000
-      internalID: -2603517553605419448
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_18
-      rect:
-        serializedVersion: 2
-        x: 265
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: dab37d0e07ff61d70800000000000000
-      internalID: 9013672564502248365
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_19
-      rect:
-        serializedVersion: 2
-        x: 329
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8881b13a0a74fd430800000000000000
-      internalID: 3809842565035530376
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: deck_mahjong_backs_20
-      rect:
-        serializedVersion: 2
-        x: 393
-        y: 1
-        width: 46
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f3dcb2b215f70eba0800000000000000
-      internalID: -6061705111847318209
+      spriteID: aab8d2026191d8590800000000000000
+      internalID: -7670447007522255958
       vertices: []
       indices: 
       edges: []
@@ -635,6 +273,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      Tile_Back_Black: -7670447007522255958
+      Tile_Back_Blue: 8208727154757944500
+      Tile_Back_Green: 4893817959729944076
+      Tile_Back_Red: -1958455090341860374
       deck_mahjong_backs_0: 3324747061622560617
       deck_mahjong_backs_1: 8541533409364921695
       deck_mahjong_backs_10: 968564548731906739
