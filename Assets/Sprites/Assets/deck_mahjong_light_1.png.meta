@@ -1,0 +1,1365 @@
+fileFormatVersion: 2
+guid: a9c5d1c189bc34d47a854f5f1c61dc05
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3012646009090988437
+    second: deck_mahjong_light_1_0
+  - first:
+      213: -4769987122528517077
+    second: deck_mahjong_light_1_1
+  - first:
+      213: -8672848299922894179
+    second: deck_mahjong_light_1_2
+  - first:
+      213: 4813908195560530617
+    second: deck_mahjong_light_1_3
+  - first:
+      213: -7172074135624363300
+    second: deck_mahjong_light_1_4
+  - first:
+      213: -2023653923442133235
+    second: deck_mahjong_light_1_5
+  - first:
+      213: 3347477176132369070
+    second: deck_mahjong_light_1_6
+  - first:
+      213: 208529524937295014
+    second: deck_mahjong_light_1_7
+  - first:
+      213: -8971641749773562750
+    second: deck_mahjong_light_1_8
+  - first:
+      213: -119385846255375553
+    second: deck_mahjong_light_1_9
+  - first:
+      213: 383214908739067259
+    second: deck_mahjong_light_1_10
+  - first:
+      213: -6193784195562238677
+    second: deck_mahjong_light_1_11
+  - first:
+      213: -6028371876852939981
+    second: deck_mahjong_light_1_12
+  - first:
+      213: -8945772542470550988
+    second: deck_mahjong_light_1_13
+  - first:
+      213: 263174499124203316
+    second: deck_mahjong_light_1_14
+  - first:
+      213: 3929410993216542372
+    second: deck_mahjong_light_1_15
+  - first:
+      213: -5521430280973174402
+    second: deck_mahjong_light_1_16
+  - first:
+      213: 7011619814176785067
+    second: deck_mahjong_light_1_17
+  - first:
+      213: 587118274873339533
+    second: deck_mahjong_light_1_18
+  - first:
+      213: -1539101536947027317
+    second: deck_mahjong_light_1_19
+  - first:
+      213: -5641201746595349502
+    second: deck_mahjong_light_1_20
+  - first:
+      213: 5468362212497982949
+    second: deck_mahjong_light_1_21
+  - first:
+      213: -2235788591530200253
+    second: deck_mahjong_light_1_22
+  - first:
+      213: -7035556983105478612
+    second: deck_mahjong_light_1_23
+  - first:
+      213: 3281981990941807038
+    second: deck_mahjong_light_1_24
+  - first:
+      213: 5324440816690517073
+    second: deck_mahjong_light_1_25
+  - first:
+      213: -4760539062491658234
+    second: deck_mahjong_light_1_26
+  - first:
+      213: 814988092973059418
+    second: deck_mahjong_light_1_27
+  - first:
+      213: 3495969417863142131
+    second: deck_mahjong_light_1_28
+  - first:
+      213: 7680173050696396369
+    second: deck_mahjong_light_1_29
+  - first:
+      213: 6611123224618041688
+    second: deck_mahjong_light_1_30
+  - first:
+      213: -6964479730766573905
+    second: deck_mahjong_light_1_31
+  - first:
+      213: -568064135632754452
+    second: deck_mahjong_light_1_32
+  - first:
+      213: -6640817516069286777
+    second: deck_mahjong_light_1_33
+  - first:
+      213: -5459305165278053514
+    second: deck_mahjong_light_1_34
+  - first:
+      213: -1282470184057635339
+    second: deck_mahjong_light_1_35
+  - first:
+      213: 3932525907781388514
+    second: deck_mahjong_light_1_36
+  - first:
+      213: -5123916058640152894
+    second: deck_mahjong_light_1_37
+  - first:
+      213: -915094199267817324
+    second: deck_mahjong_light_1_38
+  - first:
+      213: -6495108545613192817
+    second: deck_mahjong_light_1_39
+  - first:
+      213: -7099532524930434415
+    second: deck_mahjong_light_1_40
+  - first:
+      213: -2495914232444464871
+    second: deck_mahjong_light_1_41
+  - first:
+      213: -9158171401825577779
+    second: deck_mahjong_light_1_42
+  - first:
+      213: -5029632986311690491
+    second: deck_mahjong_light_1_43
+  - first:
+      213: -5903862264314703044
+    second: deck_mahjong_light_1_44
+  - first:
+      213: 2762406954961810624
+    second: deck_mahjong_light_1_45
+  - first:
+      213: -6869799059591090748
+    second: deck_mahjong_light_1_46
+  - first:
+      213: -8295563387293565005
+    second: deck_mahjong_light_1_47
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_0
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b66222a9a6ee036d0800000000000000
+      internalID: -3012646009090988437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_1
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b24008a0cf99dcdb0800000000000000
+      internalID: -4769987122528517077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_2
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d92de340c6ad3a780800000000000000
+      internalID: -8672848299922894179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_3
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b22ab9afff6ec240800000000000000
+      internalID: 4813908195560530617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_4
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd2d75ba29ca77c90800000000000000
+      internalID: -7172074135624363300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_5
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d07f7e87a798ae3e0800000000000000
+      internalID: -2023653923442133235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_6
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eaaf81981c0a47e20800000000000000
+      internalID: 3347477176132369070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_7
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a481138f78d4e200800000000000000
+      internalID: 208529524937295014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_8
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28ccea4cc535e7380800000000000000
+      internalID: -8971641749773562750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_9
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3b2db2943bd75ef0800000000000000
+      internalID: -119385846255375553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_10
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7d960cdde3715500800000000000000
+      internalID: 383214908739067259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_11
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2d851817124b0aa0800000000000000
+      internalID: -6193784195562238677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_12
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 333c93ab7bbe65ca0800000000000000
+      internalID: -6028371876852939981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_13
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43a8994f44b3ad380800000000000000
+      internalID: -8945772542470550988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_14
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43f4d3600dbf6a300800000000000000
+      internalID: 263174499124203316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_15
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a6df2bba72188630800000000000000
+      internalID: 3929410993216542372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_16
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e79328ac960ff53b0800000000000000
+      internalID: -5521430280973174402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_17
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba2091462174e4160800000000000000
+      internalID: 7011619814176785067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_18
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8e27f6d5fcd52800800000000000000
+      internalID: 587118274873339533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_19
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b82c3018e4304aae0800000000000000
+      internalID: -1539101536947027317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_20
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20cfedb56ec66b1b0800000000000000
+      internalID: -5641201746595349502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_21
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e58c1ba57683eb40800000000000000
+      internalID: 5468362212497982949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_22
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 343b8f82f12e8f0e0800000000000000
+      internalID: -2235788591530200253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_23
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c20aaf8233eac5e90800000000000000
+      internalID: -7035556983105478612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_24
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb1d0596b31fb8d20800000000000000
+      internalID: 3281981990941807038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_25
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 154dd6276b634e940800000000000000
+      internalID: 5324440816690517073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_26
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60840d0f1fa2fedb0800000000000000
+      internalID: -4760539062491658234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_27
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5d05d14a5b6f4b00800000000000000
+      internalID: 814988092973059418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_28
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fa9c51c9ad248030800000000000000
+      internalID: 3495969417863142131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_29
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15e6944c2b4759a60800000000000000
+      internalID: 7680173050696396369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_30
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85181b9ab8d6fbb50800000000000000
+      internalID: 6611123224618041688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_31
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fae00429592395f90800000000000000
+      internalID: -6964479730766573905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_32
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce868f9ada4dd18f0800000000000000
+      internalID: -568064135632754452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_33
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78c8f7857a317d3a0800000000000000
+      internalID: -6640817516069286777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_34
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67b752770e6ac34b0800000000000000
+      internalID: -5459305165278053514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_35
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fdf6349920c33ee0800000000000000
+      internalID: -1282470184057635339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_36
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e8845b4a73239630800000000000000
+      internalID: 3932525907781388514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_37
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c685d90e7134e8b0800000000000000
+      internalID: -5123916058640152894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_38
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4980f949caeec43f0800000000000000
+      internalID: -915094199267817324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_39
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f812f19b03dbcd5a0800000000000000
+      internalID: -6495108545613192817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_40
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19a703498c4697d90800000000000000
+      internalID: -7099532524930434415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_41
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9115e41ca3bbc5dd0800000000000000
+      internalID: -2495914232444464871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_42
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc49b02d1a3a7e080800000000000000
+      internalID: -9158171401825577779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_43
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 507fd447277233ab0800000000000000
+      internalID: -5029632986311690491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_44
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3350b4fc84411ea0800000000000000
+      internalID: -5903862264314703044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_45
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c4319b5d7a065620800000000000000
+      internalID: 2762406954961810624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_46
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cda2ce272299a0a0800000000000000
+      internalID: -6869799059591090748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_light_1_47
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bf71a01d0d30ec80800000000000000
+      internalID: -8295563387293565005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      deck_mahjong_light_1_0: -3012646009090988437
+      deck_mahjong_light_1_1: -4769987122528517077
+      deck_mahjong_light_1_10: 383214908739067259
+      deck_mahjong_light_1_11: -6193784195562238677
+      deck_mahjong_light_1_12: -6028371876852939981
+      deck_mahjong_light_1_13: -8945772542470550988
+      deck_mahjong_light_1_14: 263174499124203316
+      deck_mahjong_light_1_15: 3929410993216542372
+      deck_mahjong_light_1_16: -5521430280973174402
+      deck_mahjong_light_1_17: 7011619814176785067
+      deck_mahjong_light_1_18: 587118274873339533
+      deck_mahjong_light_1_19: -1539101536947027317
+      deck_mahjong_light_1_2: -8672848299922894179
+      deck_mahjong_light_1_20: -5641201746595349502
+      deck_mahjong_light_1_21: 5468362212497982949
+      deck_mahjong_light_1_22: -2235788591530200253
+      deck_mahjong_light_1_23: -7035556983105478612
+      deck_mahjong_light_1_24: 3281981990941807038
+      deck_mahjong_light_1_25: 5324440816690517073
+      deck_mahjong_light_1_26: -4760539062491658234
+      deck_mahjong_light_1_27: 814988092973059418
+      deck_mahjong_light_1_28: 3495969417863142131
+      deck_mahjong_light_1_29: 7680173050696396369
+      deck_mahjong_light_1_3: 4813908195560530617
+      deck_mahjong_light_1_30: 6611123224618041688
+      deck_mahjong_light_1_31: -6964479730766573905
+      deck_mahjong_light_1_32: -568064135632754452
+      deck_mahjong_light_1_33: -6640817516069286777
+      deck_mahjong_light_1_34: -5459305165278053514
+      deck_mahjong_light_1_35: -1282470184057635339
+      deck_mahjong_light_1_36: 3932525907781388514
+      deck_mahjong_light_1_37: -5123916058640152894
+      deck_mahjong_light_1_38: -915094199267817324
+      deck_mahjong_light_1_39: -6495108545613192817
+      deck_mahjong_light_1_4: -7172074135624363300
+      deck_mahjong_light_1_40: -7099532524930434415
+      deck_mahjong_light_1_41: -2495914232444464871
+      deck_mahjong_light_1_42: -9158171401825577779
+      deck_mahjong_light_1_43: -5029632986311690491
+      deck_mahjong_light_1_44: -5903862264314703044
+      deck_mahjong_light_1_45: 2762406954961810624
+      deck_mahjong_light_1_46: -6869799059591090748
+      deck_mahjong_light_1_47: -8295563387293565005
+      deck_mahjong_light_1_5: -2023653923442133235
+      deck_mahjong_light_1_6: 3347477176132369070
+      deck_mahjong_light_1_7: 208529524937295014
+      deck_mahjong_light_1_8: -8971641749773562750
+      deck_mahjong_light_1_9: -119385846255375553
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

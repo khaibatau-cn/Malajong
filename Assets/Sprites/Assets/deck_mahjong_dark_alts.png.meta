@@ -1,0 +1,1157 @@
+fileFormatVersion: 2
+guid: 68ab0829bfcf3af4ca6e42acb3d1ea62
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -91999166178150901
+    second: deck_mahjong_dark_alts_0
+  - first:
+      213: -5163605450323126081
+    second: deck_mahjong_dark_alts_1
+  - first:
+      213: 6773191502502603868
+    second: deck_mahjong_dark_alts_2
+  - first:
+      213: -6948267995692405951
+    second: deck_mahjong_dark_alts_3
+  - first:
+      213: -6255193980962466884
+    second: deck_mahjong_dark_alts_4
+  - first:
+      213: -1122454808268661781
+    second: deck_mahjong_dark_alts_5
+  - first:
+      213: -2888039115118191114
+    second: deck_mahjong_dark_alts_6
+  - first:
+      213: -7885942759853428043
+    second: deck_mahjong_dark_alts_7
+  - first:
+      213: 664918486389559887
+    second: deck_mahjong_dark_alts_8
+  - first:
+      213: -4770586482309665248
+    second: deck_mahjong_dark_alts_9
+  - first:
+      213: -4934300258913929187
+    second: deck_mahjong_dark_alts_10
+  - first:
+      213: -1731616302998185425
+    second: deck_mahjong_dark_alts_11
+  - first:
+      213: 8404457844986181892
+    second: deck_mahjong_dark_alts_12
+  - first:
+      213: 5247175634579818860
+    second: deck_mahjong_dark_alts_13
+  - first:
+      213: 7942166790798373605
+    second: deck_mahjong_dark_alts_14
+  - first:
+      213: -6801608540686162633
+    second: deck_mahjong_dark_alts_15
+  - first:
+      213: 1991084904850964658
+    second: deck_mahjong_dark_alts_16
+  - first:
+      213: -3026974656231408794
+    second: deck_mahjong_dark_alts_17
+  - first:
+      213: -6054648962403881032
+    second: deck_mahjong_dark_alts_18
+  - first:
+      213: 3187985142084539034
+    second: deck_mahjong_dark_alts_19
+  - first:
+      213: 613096814758896286
+    second: deck_mahjong_dark_alts_20
+  - first:
+      213: -5075899062092891589
+    second: deck_mahjong_dark_alts_21
+  - first:
+      213: 7296905547944298349
+    second: deck_mahjong_dark_alts_22
+  - first:
+      213: -6810669650282390037
+    second: deck_mahjong_dark_alts_23
+  - first:
+      213: 5035143914302853976
+    second: deck_mahjong_dark_alts_24
+  - first:
+      213: -2189475602350535987
+    second: deck_mahjong_dark_alts_25
+  - first:
+      213: 5004636797461593340
+    second: deck_mahjong_dark_alts_26
+  - first:
+      213: -8710448357776393628
+    second: deck_mahjong_dark_alts_27
+  - first:
+      213: 5070761119317799218
+    second: deck_mahjong_dark_alts_28
+  - first:
+      213: -1942104494288570327
+    second: deck_mahjong_dark_alts_29
+  - first:
+      213: -2119675354501003673
+    second: deck_mahjong_dark_alts_30
+  - first:
+      213: 4097794328262593780
+    second: deck_mahjong_dark_alts_31
+  - first:
+      213: -6677024133073979625
+    second: deck_mahjong_dark_alts_32
+  - first:
+      213: 550718921765011970
+    second: deck_mahjong_dark_alts_33
+  - first:
+      213: -7579036469384326243
+    second: deck_mahjong_dark_alts_34
+  - first:
+      213: 7482174415067559694
+    second: deck_mahjong_dark_alts_35
+  - first:
+      213: 8547954067405614526
+    second: deck_mahjong_dark_alts_36
+  - first:
+      213: -2272986774216210206
+    second: deck_mahjong_dark_alts_37
+  - first:
+      213: -8715801710013511065
+    second: deck_mahjong_dark_alts_38
+  - first:
+      213: 4009248274590691284
+    second: deck_mahjong_dark_alts_39
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_0
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b06b15cee3729bef0800000000000000
+      internalID: -91999166178150901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_1
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb8183d63303758b0800000000000000
+      internalID: -5163605450323126081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_2
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5cac5e19c53ffd50800000000000000
+      internalID: 6773191502502603868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_3
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14be988421bc29f90800000000000000
+      internalID: -6948267995692405951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_4
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb3129b37361139a0800000000000000
+      internalID: -6255193980962466884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_5
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: beb97b48c4d3c60f0800000000000000
+      internalID: -1122454808268661781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_6
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 257
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fd52fde9bf9be7d0800000000000000
+      internalID: -2888039115118191114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_7
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b27fd767d08f8290800000000000000
+      internalID: -7885942759853428043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_8
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4217d927d34a3900800000000000000
+      internalID: 664918486389559887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_9
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02ee6a7bed87bcdb0800000000000000
+      internalID: -4770586482309665248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_10
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d18315cbe08d58bb0800000000000000
+      internalID: -4934300258913929187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_11
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2a948c952018f7e0800000000000000
+      internalID: -1731616302998185425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_12
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 409752c91e1a2a470800000000000000
+      internalID: 8404457844986181892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_13
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c69073d5076b1d840800000000000000
+      internalID: 5247175634579818860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_14
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 193
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e2f078ed9e383e60800000000000000
+      internalID: 7942166790798373605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_15
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73563279115db91a0800000000000000
+      internalID: -6801608540686162633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_16
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b0c847fb21c1ab10800000000000000
+      internalID: 1991084904850964658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_17
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66b773776960ef5d0800000000000000
+      internalID: -3026974656231408794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_18
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bfaa3cf8d099fba0800000000000000
+      internalID: -6054648962403881032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_19
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a921c27989ffd3c20800000000000000
+      internalID: 3187985142084539034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_20
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e92a0a00e48228800800000000000000
+      internalID: 613096814758896286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_21
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3af63042b8ce89b0800000000000000
+      internalID: -5075899062092891589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_22
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 129
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d670cc86fe0d34560800000000000000
+      internalID: 7296905547944298349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_23
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bed526c9904ab71a0800000000000000
+      internalID: -6810669650282390037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_24
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 853ddf476bc60e540800000000000000
+      internalID: 5035143914302853976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_25
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dca038d3a8b6d91e0800000000000000
+      internalID: -2189475602350535987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_26
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfcfb8ec6aa047540800000000000000
+      internalID: 5004636797461593340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_27
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46a7a585e554e1780800000000000000
+      internalID: -8710448357776393628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_28
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 231bcc93f56fe5640800000000000000
+      internalID: 5070761119317799218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_29
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9287d3d80424c05e0800000000000000
+      internalID: -1942104494288570327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_30
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76641dfde766592e0800000000000000
+      internalID: -2119675354501003673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_31
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fcc3b20b3a4ed830800000000000000
+      internalID: 4097794328262593780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_32
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 65
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7173a676de17653a0800000000000000
+      internalID: -6677024133073979625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_33
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 202c3e601fb84a700800000000000000
+      internalID: 550718921765011970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_34
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d93dd9e8c7ad1d690800000000000000
+      internalID: -7579036469384326243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_35
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e073e9dfcf506d760800000000000000
+      internalID: 7482174415067559694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_36
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebd21107fee60a670800000000000000
+      internalID: 8547954067405614526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_37
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e88ea7529ab470e0800000000000000
+      internalID: -2272986774216210206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_38
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76a07e5e5804b0780800000000000000
+      internalID: -8715801710013511065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: deck_mahjong_dark_alts_39
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 1
+        width: 46
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4df63575016b3a730800000000000000
+      internalID: 4009248274590691284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      deck_mahjong_dark_alts_0: -91999166178150901
+      deck_mahjong_dark_alts_1: -5163605450323126081
+      deck_mahjong_dark_alts_10: -4934300258913929187
+      deck_mahjong_dark_alts_11: -1731616302998185425
+      deck_mahjong_dark_alts_12: 8404457844986181892
+      deck_mahjong_dark_alts_13: 5247175634579818860
+      deck_mahjong_dark_alts_14: 7942166790798373605
+      deck_mahjong_dark_alts_15: -6801608540686162633
+      deck_mahjong_dark_alts_16: 1991084904850964658
+      deck_mahjong_dark_alts_17: -3026974656231408794
+      deck_mahjong_dark_alts_18: -6054648962403881032
+      deck_mahjong_dark_alts_19: 3187985142084539034
+      deck_mahjong_dark_alts_2: 6773191502502603868
+      deck_mahjong_dark_alts_20: 613096814758896286
+      deck_mahjong_dark_alts_21: -5075899062092891589
+      deck_mahjong_dark_alts_22: 7296905547944298349
+      deck_mahjong_dark_alts_23: -6810669650282390037
+      deck_mahjong_dark_alts_24: 5035143914302853976
+      deck_mahjong_dark_alts_25: -2189475602350535987
+      deck_mahjong_dark_alts_26: 5004636797461593340
+      deck_mahjong_dark_alts_27: -8710448357776393628
+      deck_mahjong_dark_alts_28: 5070761119317799218
+      deck_mahjong_dark_alts_29: -1942104494288570327
+      deck_mahjong_dark_alts_3: -6948267995692405951
+      deck_mahjong_dark_alts_30: -2119675354501003673
+      deck_mahjong_dark_alts_31: 4097794328262593780
+      deck_mahjong_dark_alts_32: -6677024133073979625
+      deck_mahjong_dark_alts_33: 550718921765011970
+      deck_mahjong_dark_alts_34: -7579036469384326243
+      deck_mahjong_dark_alts_35: 7482174415067559694
+      deck_mahjong_dark_alts_36: 8547954067405614526
+      deck_mahjong_dark_alts_37: -2272986774216210206
+      deck_mahjong_dark_alts_38: -8715801710013511065
+      deck_mahjong_dark_alts_39: 4009248274590691284
+      deck_mahjong_dark_alts_4: -6255193980962466884
+      deck_mahjong_dark_alts_5: -1122454808268661781
+      deck_mahjong_dark_alts_6: -2888039115118191114
+      deck_mahjong_dark_alts_7: -7885942759853428043
+      deck_mahjong_dark_alts_8: 664918486389559887
+      deck_mahjong_dark_alts_9: -4770586482309665248
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

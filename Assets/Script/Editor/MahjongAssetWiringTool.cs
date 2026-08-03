@@ -4,29 +4,32 @@ using UnityEditor;
 
 public class MahjongAssetWiringTool
 {
-    private const string SheetPath = "Assets/Sprites/RiichiAssetByGambleMountain/sheet.png";
+    private const string LightDeckPath = "Assets/Sprites/Assets/deck_mahjong_light_0.png";
+    private const string DarkDeckPath = "Assets/Sprites/Assets/deck_mahjong_dark_0.png";
+    private const string BacksDeckPath = "Assets/Sprites/Assets/deck_mahjong_backs.png";
     private const string TilesFolderPath = "Assets/ScriptableObjects/Tiles";
 
     [MenuItem("Malajong/Auto-Slice Spritesheet and Wire Tiles")]
     public static void SliceAndWireAllTiles()
     {
-        // 1. Configure Texture Importer & Auto-Slice Sprites
-        SliceSpritesheet();
+        // 1. Slice and configure the new Blueeyedrat tile decks
+        SliceNewDeck(LightDeckPath);
+        SliceNewDeck(DarkDeckPath);
+        SliceBacksDeck(BacksDeckPath);
 
         // 2. Ensure TileData assets exist and link Sprites to TileData
         WireSpritesToTileData();
     }
 
-    public static void SliceSpritesheet()
+    public static void SliceNewDeck(string path)
     {
-        TextureImporter importer = AssetImporter.GetAtPath(SheetPath) as TextureImporter;
+        TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
         if (importer == null)
         {
-            Debug.LogError($"[MahjongAssetWiringTool] Could not find spritesheet at '{SheetPath}'!");
+            Debug.LogError($"[MahjongAssetWiringTool] Could not find spritesheet at '{path}'!");
             return;
         }
 
-        // Configure pixel art texture settings
         importer.textureType = TextureImporterType.Sprite;
         importer.spriteImportMode = SpriteImportMode.Multiple;
         importer.filterMode = FilterMode.Point;
@@ -34,96 +37,109 @@ public class MahjongAssetWiringTool
         importer.spritePixelsPerUnit = 32;
         importer.alphaIsTransparency = true;
 
-        // Load the texture to get its exact pixel dimensions
-        Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(SheetPath);
+        Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
         if (texture == null)
         {
-            // Force import if not loaded yet
-            AssetDatabase.ImportAsset(SheetPath, ImportAssetOptions.ForceUpdate);
-            texture = AssetDatabase.LoadAssetAtPath<Texture2D>(SheetPath);
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
+            texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
         }
 
-        int texWidth = texture != null ? texture.width : 288;
-        int texHeight = texture != null ? texture.height : 768;
-        int cellWidth = 32;
-        int cellHeight = 32;
-
-        int totalRows = texHeight / cellHeight;
-        int totalCols = texWidth / cellWidth;
+        int texHeight = texture != null ? texture.height : 320;
+        int tileW = 46;
+        int tileH = 62;
+        int stepX = 64;
+        int stepY = 64;
+        int startX = 9;
+        int startYFromTop = 1; // Top margin in pixels
 
         List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
 
-        // Row indices from top of the texture (0 = top row)
-        // In Unity Rect coordinates: y = texHeight - (topRowIndex + 1) * cellHeight
-        
-        // --- Row 2: Tile Backs & Blanks ---
-        AddSprite(metaDataList, "Tile_Back_Blue", 0, 2, cellWidth, cellHeight, texHeight);
-        AddSprite(metaDataList, "Tile_Face_Blank", 1, 2, cellWidth, cellHeight, texHeight);
-
-        // --- Row 3: Characters (Wan / 萬) 1-9 ---
+        // Row 0: Characters 1-9 (Wan / 萬) + Red 5
         for (int i = 1; i <= 9; i++)
         {
-            AddSprite(metaDataList, $"Characters_{i}", i - 1, 3, cellWidth, cellHeight, texHeight);
+            AddTileMeta(metaDataList, $"Characters_{i}", startX + (i - 1) * stepX, 0, tileW, tileH, stepY, startYFromTop, texHeight);
         }
+        AddTileMeta(metaDataList, "RedDora_Characters_5", startX + 9 * stepX, 0, tileW, tileH, stepY, startYFromTop, texHeight);
 
-        // --- Row 4: Bamboo (Sou / 索) 1-9 ---
+        // Row 1: Bamboo 1-9 (Sou / 索) + Red 5
         for (int i = 1; i <= 9; i++)
         {
-            AddSprite(metaDataList, $"Bamboo_{i}", i - 1, 4, cellWidth, cellHeight, texHeight);
+            AddTileMeta(metaDataList, $"Bamboo_{i}", startX + (i - 1) * stepX, 1, tileW, tileH, stepY, startYFromTop, texHeight);
         }
+        AddTileMeta(metaDataList, "RedDora_Bamboo_5", startX + 9 * stepX, 1, tileW, tileH, stepY, startYFromTop, texHeight);
 
-        // --- Row 5: Dots (Pin / 筒) 1-9 ---
+        // Row 2: Dots 1-9 (Pin / 筒) + Red 5
         for (int i = 1; i <= 9; i++)
         {
-            AddSprite(metaDataList, $"Dots_{i}", i - 1, 5, cellWidth, cellHeight, texHeight);
+            AddTileMeta(metaDataList, $"Dots_{i}", startX + (i - 1) * stepX, 2, tileW, tileH, stepY, startYFromTop, texHeight);
         }
+        AddTileMeta(metaDataList, "RedDora_Dots_5", startX + 9 * stepX, 2, tileW, tileH, stepY, startYFromTop, texHeight);
 
-        // --- Row 6: Honors (Winds & Dragons) ---
-        // 1=East, 2=South, 3=West, 4=North, 5=White Dragon, 6=Green Dragon, 7=Red Dragon
-        AddSprite(metaDataList, "Honor_1", 0, 6, cellWidth, cellHeight, texHeight); // East
-        AddSprite(metaDataList, "Honor_2", 1, 6, cellWidth, cellHeight, texHeight); // South
-        AddSprite(metaDataList, "Honor_3", 2, 6, cellWidth, cellHeight, texHeight); // West
-        AddSprite(metaDataList, "Honor_4", 3, 6, cellWidth, cellHeight, texHeight); // North
-        AddSprite(metaDataList, "Honor_5", 4, 6, cellWidth, cellHeight, texHeight); // White Dragon (Blank/Border)
-        AddSprite(metaDataList, "Honor_6", 5, 6, cellWidth, cellHeight, texHeight); // Green Dragon (Fa)
-        AddSprite(metaDataList, "Honor_7", 6, 6, cellWidth, cellHeight, texHeight); // Red Dragon (Chun)
-        AddSprite(metaDataList, "Tile_Mystery", 8, 6, cellWidth, cellHeight, texHeight);
+        // Row 3: Honors (1=East, 2=South, 3=West, 4=North, 5=White, 6=Green, 7=Red)
+        AddTileMeta(metaDataList, "Honor_1", startX + 0 * stepX, 3, tileW, tileH, stepY, startYFromTop, texHeight); // East
+        AddTileMeta(metaDataList, "Honor_2", startX + 1 * stepX, 3, tileW, tileH, stepY, startYFromTop, texHeight); // South
+        AddTileMeta(metaDataList, "Honor_3", startX + 2 * stepX, 3, tileW, tileH, stepY, startYFromTop, texHeight); // West
+        AddTileMeta(metaDataList, "Honor_4", startX + 3 * stepX, 3, tileW, tileH, stepY, startYFromTop, texHeight); // North
+        AddTileMeta(metaDataList, "Honor_5", startX + 4 * stepX, 3, tileW, tileH, stepY, startYFromTop, texHeight); // White Dragon (Blank)
+        AddTileMeta(metaDataList, "Honor_6", startX + 5 * stepX, 3, tileW, tileH, stepY, startYFromTop, texHeight); // Green Dragon (Fa)
+        AddTileMeta(metaDataList, "Honor_7", startX + 6 * stepX, 3, tileW, tileH, stepY, startYFromTop, texHeight); // Red Dragon (Chun)
 
-        // --- Row 7: Red Dora 5s ---
-        AddSprite(metaDataList, "RedDora_Characters_5", 0, 7, cellWidth, cellHeight, texHeight);
-        AddSprite(metaDataList, "RedDora_Bamboo_5", 1, 7, cellWidth, cellHeight, texHeight);
-        AddSprite(metaDataList, "RedDora_Dots_5", 2, 7, cellWidth, cellHeight, texHeight);
-
-        // Apply metadata to importer
         importer.spritesheet = metaDataList.ToArray();
         EditorUtility.SetDirty(importer);
         importer.SaveAndReimport();
         AssetDatabase.Refresh();
 
-        Debug.Log($"[MahjongAssetWiringTool] Sliced {metaDataList.Count} sprites from '{SheetPath}' successfully!");
+        Debug.Log($"[MahjongAssetWiringTool] Sliced {metaDataList.Count} tiles from '{path}' successfully!");
     }
 
-    private static void AddSprite(List<SpriteMetaData> list, string name, int col, int topRow, int cellW, int cellH, int texH)
+    public static void SliceBacksDeck(string path)
+    {
+        TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+        if (importer == null) return;
+
+        importer.textureType = TextureImporterType.Sprite;
+        importer.spriteImportMode = SpriteImportMode.Multiple;
+        importer.filterMode = FilterMode.Point;
+        importer.textureCompression = TextureImporterCompression.Uncompressed;
+        importer.spritePixelsPerUnit = 32;
+        importer.alphaIsTransparency = true;
+
+        Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+        int texHeight = texture != null ? texture.height : 64;
+
+        List<SpriteMetaData> metaDataList = new List<SpriteMetaData>();
+        AddTileMeta(metaDataList, "Tile_Back_Blue", 9, 0, 46, 62, 64, 1, texHeight);
+        AddTileMeta(metaDataList, "Tile_Back_Green", 9 + 64, 0, 46, 62, 64, 1, texHeight);
+        AddTileMeta(metaDataList, "Tile_Back_Red", 9 + 128, 0, 46, 62, 64, 1, texHeight);
+        AddTileMeta(metaDataList, "Tile_Back_Black", 9 + 192, 0, 46, 62, 64, 1, texHeight);
+
+        importer.spritesheet = metaDataList.ToArray();
+        EditorUtility.SetDirty(importer);
+        importer.SaveAndReimport();
+        AssetDatabase.Refresh();
+    }
+
+    private static void AddTileMeta(List<SpriteMetaData> list, string name, int x, int rowIndex, int tileW, int tileH, int stepY, int topMargin, int texHeight)
     {
         SpriteMetaData meta = new SpriteMetaData();
         meta.name = name;
         meta.alignment = (int)SpriteAlignment.Center;
         meta.pivot = new Vector2(0.5f, 0.5f);
-        
-        int x = col * cellW;
-        int y = texH - (topRow + 1) * cellH;
-        meta.rect = new Rect(x, y, cellW, cellH);
-        
+
+        int yFromTop = topMargin + rowIndex * stepY;
+        int y = texHeight - yFromTop - tileH;
+        meta.rect = new Rect(x, y, tileW, tileH);
+
         list.Add(meta);
     }
 
     public static void WireSpritesToTileData()
     {
-        // First ensure default tiles are generated
+        // First ensure default tile assets exist
         TileDataGenerator.GenerateDefaultTiles();
 
-        // Load all sub-sprites from the sliced texture
-        Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(SheetPath);
+        // Load all sub-sprites from the sliced light deck texture
+        Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(LightDeckPath);
         Dictionary<string, Sprite> spriteDict = new Dictionary<string, Sprite>();
 
         foreach (var obj in subAssets)
@@ -134,7 +150,21 @@ public class MahjongAssetWiringTool
             }
         }
 
-        Sprite tileBack = spriteDict.ContainsKey("Tile_Back_Blue") ? spriteDict["Tile_Back_Blue"] : null;
+        // Load back sprite
+        Object[] backAssets = AssetDatabase.LoadAllAssetsAtPath(BacksDeckPath);
+        Sprite tileBack = null;
+        if (backAssets != null)
+        {
+            foreach (var obj in backAssets)
+            {
+                if (obj is Sprite sp && sp.name == "Tile_Back_Blue")
+                {
+                    tileBack = sp;
+                    break;
+                }
+            }
+        }
+
         int wiredCount = 0;
 
         // Wire Characters, Bamboo, Dots
@@ -153,7 +183,7 @@ public class MahjongAssetWiringTool
                     {
                         tileData.TileSprite = sprite;
                     }
-                    tileData.TileBackSprite = tileBack;
+                    if (tileBack != null) tileData.TileBackSprite = tileBack;
                     EditorUtility.SetDirty(tileData);
                     wiredCount++;
                 }
@@ -173,7 +203,7 @@ public class MahjongAssetWiringTool
                 {
                     tileData.TileSprite = sprite;
                 }
-                tileData.TileBackSprite = tileBack;
+                if (tileBack != null) tileData.TileBackSprite = tileBack;
                 EditorUtility.SetDirty(tileData);
                 wiredCount++;
             }
@@ -181,6 +211,6 @@ public class MahjongAssetWiringTool
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log($"[MahjongAssetWiringTool] Successfully wired pixel sprites to {wiredCount} TileData assets!");
+        Debug.Log($"[MahjongAssetWiringTool] Successfully wired new high-res pixel sprites to {wiredCount} TileData assets!");
     }
 }

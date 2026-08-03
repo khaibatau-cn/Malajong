@@ -9,8 +9,9 @@ public class SceneSetupTool
     [MenuItem("Malajong/Setup Playable Scene Placeholder")]
     public static void SetupPlayableScene()
     {
-        // 0. Ensure default TileData and SpiritData assets exist
+        // 0. Ensure default TileData, SpiritData assets exist and wire newest pixel sprites
         TileDataGenerator.GenerateAllGameData();
+        MahjongAssetWiringTool.SliceAndWireAllTiles();
 
         // 1. Ensure EventSystem exists and supports New Input System (Unity 6)
         GameObject eventSystemObj = GameObject.Find("EventSystem");
@@ -198,7 +199,7 @@ public class SceneSetupTool
         Button sortRankBtn = CreateButton(sortObj.transform, "SortRankButton", "SORT RANK", new Color(0.48f, 0.25f, 0.65f));
         Button autoComboBtn = CreateButton(sortObj.transform, "AutoComboButton", "AUTO SELECT", new Color(0.20f, 0.50f, 0.75f));
 
-        // Upright Hand Container (14 Upscaled Adjacent Tiles 76x108) with Recessed Felt Backdrop
+        // Upright Hand Container (14 Adjacent Tiles 70x95) with Recessed Felt Backdrop
         Transform handTray = CreateSubPanel(centerStage, "HandTrayBackdrop", new Vector2(0.01f, 0.18f), new Vector2(0.99f, 0.58f), new Color(0.04f, 0.09f, 0.07f, 0.85f));
 
         GameObject handObj = new GameObject("HandContainer", typeof(RectTransform));
@@ -210,7 +211,7 @@ public class SceneSetupTool
         handRect.offsetMax = Vector2.zero;
 
         HorizontalLayoutGroup layout = handObj.AddComponent<HorizontalLayoutGroup>();
-        layout.spacing = -6; // Negative spacing overlaps transparent cell margins so tile faces touch adjacent!
+        layout.spacing = 0; // Seamless touching side-by-side tiles!
         layout.childAlignment = TextAnchor.MiddleCenter;
         layout.childControlWidth = false;
         layout.childControlHeight = false;
@@ -357,7 +358,7 @@ public class SceneSetupTool
             "<b>VICTORY!</b>", 32, TextAlignmentOptions.Center);
         Button victoryPlayAgainBtn = CreateButton(victoryPanel, "PlayAgainButton", "PLAY AGAIN", new Color(0.18f, 0.75f, 0.35f), new Vector2(0.35f, 0.25f), new Vector2(0.65f, 0.38f));
 
-        // 9. Generate & Save Upscaled TilePrefab (76x108)
+        // 9. Generate & Save Upscaled TilePrefab (70x95)
         GameObject tilePrefab = CreateOrUpdateTilePrefab();
 
         // 10. Find or Create GameManager & UIManager
@@ -461,7 +462,7 @@ public class SceneSetupTool
         EditorUtility.SetDirty(uiManager);
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
 
-        Debug.Log("🎉 Upscaled Chunky Adjacent Tile UI Generated Successfully!");
+        Debug.Log("🎉 Upscaled Adjacent Tile UI with New Tileset Generated Successfully!");
     }
 
     private static Transform CreatePanel(Transform canvas, string name, Color color)
@@ -553,13 +554,13 @@ public class SceneSetupTool
         GameObject rootObj = new GameObject("TilePrefab", typeof(RectTransform), typeof(LayoutElement), typeof(TileUI));
         
         RectTransform rootRect = rootObj.GetComponent<RectTransform>();
-        rootRect.sizeDelta = new Vector2(76, 108);
+        rootRect.sizeDelta = new Vector2(70, 95);
 
         LayoutElement layout = rootObj.GetComponent<LayoutElement>();
-        layout.minWidth = 76;
-        layout.preferredWidth = 76;
-        layout.minHeight = 108;
-        layout.preferredHeight = 108;
+        layout.minWidth = 70;
+        layout.preferredWidth = 70;
+        layout.minHeight = 95;
+        layout.preferredHeight = 95;
 
         GameObject faceObj = new GameObject("TileFace", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
         faceObj.transform.SetParent(rootObj.transform, false);
@@ -577,7 +578,7 @@ public class SceneSetupTool
         Button btn = faceObj.GetComponent<Button>();
         if (btn != null) btn.transition = Selectable.Transition.None;
 
-        // Pixel Art Sprite Image (Upscaled Mahjong Tile filling full card)
+        // Pixel Art Sprite Image (Scaled to fill 70x95 tile)
         GameObject spriteObj = new GameObject("TileSpriteImage", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         spriteObj.transform.SetParent(faceObj.transform, false);
         RectTransform spriteRect = spriteObj.GetComponent<RectTransform>();
@@ -587,7 +588,7 @@ public class SceneSetupTool
         spriteRect.offsetMax = Vector2.zero;
 
         Image spriteImg = spriteObj.GetComponent<Image>();
-        spriteImg.preserveAspect = false;
+        spriteImg.preserveAspect = true;
         spriteImg.raycastTarget = false;
 
         // Text Fallback
@@ -609,7 +610,7 @@ public class SceneSetupTool
         tileUI.BackgroundImage = img;
         tileUI.TileSpriteImage = spriteImg;
         tileUI.TileText = text;
-        tileUI.LiftHeight = 40f;
+        tileUI.LiftHeight = 36f;
 
         GameObject prefabAsset = PrefabUtility.SaveAsPrefabAsset(rootObj, prefabPath);
         Object.DestroyImmediate(rootObj);
