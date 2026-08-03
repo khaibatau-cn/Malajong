@@ -11,16 +11,16 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public bool IsSelected => isSelected;
 
     [Header("UI References")]
-    public Transform CardVisual;        // Child transform that gets lifted vertically when selected
+    public Transform CardVisual;        // Child transform that gets lifted vertically
     public Image BackgroundImage;
     public Image TileSpriteImage;      // Displays the pixel art sprite from sheet.png
     public Image SelectionGlow;        // Optional highlight border
     public TextMeshProUGUI TileText;   // Fallback text or badge
 
     [Header("Juice & Animation Settings")]
-    public float LiftHeight = 40f;
-    public float HoverScale = 1.05f;
-    public float SmoothSpeed = 22f;
+    public float LiftHeight = 36f;
+    public float HoverLift = 14f;
+    public float SmoothSpeed = 24f;
 
     private bool isHovered = false;
     private Vector3 targetLocalPos = Vector3.zero;
@@ -116,12 +116,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // Punch scale bounce on click
         if (CardVisual != null)
         {
-            CardVisual.localScale = Vector3.one * 1.18f;
-        }
-
-        if (isSelected)
-        {
-            transform.SetAsLastSibling();
+            CardVisual.localScale = Vector3.one * 1.15f;
         }
 
         uiManager?.OnTileSelectionChanged(this, isSelected);
@@ -131,6 +126,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void ForceDeselect()
     {
         isSelected = false;
+        isHovered = false;
         UpdateVisuals();
     }
 
@@ -138,7 +134,6 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (CardVisual != null)
         {
-            transform.SetAsLastSibling();
             CardVisual.localScale = Vector3.one * 1.25f;
             targetLocalPos = new Vector3(0, LiftHeight * 1.35f, 0);
         }
@@ -147,8 +142,8 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         isHovered = true;
-        targetScale = Vector3.one * HoverScale;
-        transform.SetAsLastSibling();
+        targetScale = Vector3.one * 1.04f;
+        UpdateVisuals();
         MalajongAudio.Instance?.PlayTileHover();
     }
 
@@ -156,12 +151,22 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         isHovered = false;
         targetScale = Vector3.one;
+        UpdateVisuals();
     }
 
     private void UpdateVisuals()
     {
-        // Lift child visual smoothly when selected
-        targetLocalPos = isSelected ? new Vector3(0, LiftHeight, 0) : Vector3.zero;
+        // Determine vertical lift smoothly: Selected = LiftHeight (36px), Hovered = HoverLift (14px), Idle = 0px
+        float targetY = 0f;
+        if (isSelected)
+        {
+            targetY = LiftHeight;
+        }
+        else if (isHovered)
+        {
+            targetY = HoverLift;
+        }
+        targetLocalPos = new Vector3(0, targetY, 0);
 
         if (TileSpriteImage == null && CardVisual != null)
         {
