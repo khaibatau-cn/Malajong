@@ -16,34 +16,39 @@ public class UIManager : MonoBehaviour
     public GameObject GameOverPanel;
     public GameObject VictoryPanel;
 
-    [Header("Gameplay UI References")]
-    public Transform HandContainer; // A Horizontal Layout Group
-    public GameObject TilePrefab;   // A UI Button with TileUI script attached
-    public TextMeshProUGUI StatusText;         // Shows score, hands, discards, round, coins
-    public Image ScoreProgressBar;            // Visual score gauge towards target
-    public TextMeshProUGUI DebugHintText;      // Shows playable hands/combos for debugging
-    public TextMeshProUGUI AffinityHUDText;   // Shows suit affinity multipliers
-    public TextMeshProUGUI SpiritsHUDText;    // Shows equipped spirits
+    [Header("Left Panel: Blind & Stakes")]
+    public TextMeshProUGUI BlindTitleText;
+    public Image BlindTileIcon;
+    public TextMeshProUGUI TargetScoreText;
+    public TextMeshProUGUI RewardText;
+    public TextMeshProUGUI CoinsText;
+    public TextMeshProUGUI AnteText;
+    public TextMeshProUGUI RoundText;
+    public Button RunInfoButton;
+    public Button OptionsButton;
 
-    [Header("Hand Management & Action Buttons")]
-    public Button PlayButton;
-    public Button DiscardButton;
+    [Header("Center Stage: Spirit Rack & Hand")]
+    public Transform SpiritRackContainer;
+    public TextMeshProUGUI SuitAffinityText;
+    public Transform HandContainer;
+    public GameObject TilePrefab;
     public Button SortSuitButton;
     public Button SortRankButton;
     public Button AutoComboButton;
+    public Button PlayButton;
+    public Button DiscardButton;
 
-    [Header("Balatro Combo Preview HUD")]
+    [Header("Right Panel: Balatro Score Engine")]
+    public TextMeshProUGUI HandsRemainingText;
+    public TextMeshProUGUI DiscardsRemainingText;
+    public TextMeshProUGUI RoundScoreText;
+    public Image ScoreProgressBar;
     public GameObject ComboPreviewBox;
     public TextMeshProUGUI PreviewComboNameText;
-    public TextMeshProUGUI PreviewChipsText;
-    public TextMeshProUGUI PreviewMultText;
+    public TextMeshProUGUI PreviewChipsBoxText;
+    public TextMeshProUGUI PreviewMultBoxText;
     public TextMeshProUGUI PreviewTotalScoreText;
-
-    [Header("Score Tally & Juice Animation")]
-    public GameObject ScoreTallyBanner;
-    public TextMeshProUGUI TallyChipsText;
-    public TextMeshProUGUI TallyMultText;
-    public TextMeshProUGUI TallyResultText;
+    public TextMeshProUGUI PlayableCombosText;
 
     [Header("Shop UI References")]
     public TextMeshProUGUI ShopStatusText;
@@ -91,14 +96,140 @@ public class UIManager : MonoBehaviour
         if (GameOverPanel != null) GameOverPanel.SetActive(gameManager.State == GameManager.GameState.GameOver);
         if (VictoryPanel != null) VictoryPanel.SetActive(gameManager.State == GameManager.GameState.Victory);
 
-        if (ScoreTallyBanner != null) ScoreTallyBanner.SetActive(false);
-
-        UpdateStatusText();
-        UpdateAffinityHUD();
-        UpdateSpiritsHUD();
+        UpdateLeftBlindPanel();
+        UpdateCenterSpiritRack();
+        UpdateCenterAffinityHUD();
+        UpdateRightScoreEngine();
         UpdateShopText();
         UpdateSummaryTexts();
         UpdateSelectionPreview();
+    }
+
+    // --- Left Panel: Blind & Stakes Updates ---
+
+    private void UpdateLeftBlindPanel()
+    {
+        if (gameManager == null) return;
+
+        string[] winds = { "East Wind", "South Wind", "West Wind", "North Wind", "Dragon Boss" };
+        int windIndex = Mathf.Clamp(gameManager.CurrentRound - 1, 0, winds.Length - 1);
+
+        if (BlindTitleText != null)
+        {
+            BlindTitleText.text = $"<b>{winds[windIndex].ToUpper()}</b>";
+        }
+
+        if (TargetScoreText != null)
+        {
+            TargetScoreText.text = $"Score at least\n<size=130%><color=#E74C3C><b>{gameManager.CurrentTargetScore}</b></color></size>";
+        }
+
+        if (RewardText != null)
+        {
+            RewardText.text = $"Reward: <color=#F1C40F><b>$5</b></color>";
+        }
+
+        if (CoinsText != null)
+        {
+            CoinsText.text = $"<color=#F1C40F><b>${gameManager.Coins}</b></color>";
+        }
+
+        if (AnteText != null)
+        {
+            AnteText.text = $"Ante\n<color=#F39C12><b>1/4</b></color>";
+        }
+
+        if (RoundText != null)
+        {
+            RoundText.text = $"Round\n<color=#F39C12><b>{gameManager.CurrentRound}/{gameManager.MaxRounds}</b></color>";
+        }
+    }
+
+    // --- Center Stage: Spirit Rack & Affinity Updates ---
+
+    private void UpdateCenterSpiritRack()
+    {
+        if (SpiritRackContainer == null || gameManager == null) return;
+
+        int maxSlots = gameManager.MaxSpirits;
+        for (int i = 0; i < maxSlots; i++)
+        {
+            Transform slot = SpiritRackContainer.Find($"SpiritSlot_{i}");
+            if (slot == null) continue;
+
+            TextMeshProUGUI label = slot.GetComponentInChildren<TextMeshProUGUI>();
+            Image bg = slot.GetComponent<Image>();
+
+            if (i < gameManager.EquippedSpirits.Count && gameManager.EquippedSpirits[i] != null)
+            {
+                SpiritData spirit = gameManager.EquippedSpirits[i];
+                if (label != null) label.text = $"<size=75%><b>{spirit.SpiritName}</b></size>";
+                if (bg != null) bg.color = new Color(0.2f, 0.45f, 0.35f, 0.95f);
+            }
+            else
+            {
+                if (label != null) label.text = "<color=#7F8C8D><size=65%>Empty</size></color>";
+                if (bg != null) bg.color = new Color(0.1f, 0.14f, 0.18f, 0.6f);
+            }
+        }
+    }
+
+    private void UpdateCenterAffinityHUD()
+    {
+        if (SuitAffinityText == null || gameManager == null || gameManager.Affinity == null) return;
+
+        float bambooMult = gameManager.Affinity.GetMultiplier(TileSuit.Bamboo);
+        float charMult = gameManager.Affinity.GetMultiplier(TileSuit.Characters);
+        float dotMult = gameManager.Affinity.GetMultiplier(TileSuit.Dots);
+
+        SuitAffinityText.text = $"<color=#2ECC71><b>🎋 Bamboo:</b> {bambooMult:F1}x</color>   |   " +
+                                $"<color=#E74C3C><b>🀄 Chars:</b> {charMult:F1}x</color>   |   " +
+                                $"<color=#3498DB><b>⚪ Dots:</b> {dotMult:F1}x</color>";
+    }
+
+    // --- Right Panel: Score Engine Updates ---
+
+    private void UpdateRightScoreEngine()
+    {
+        if (gameManager == null) return;
+
+        if (HandsRemainingText != null)
+        {
+            HandsRemainingText.text = $"Hands\n<size=140%><color=#3498DB><b>{gameManager.HandsRemaining}</b></color></size>";
+        }
+
+        if (DiscardsRemainingText != null)
+        {
+            DiscardsRemainingText.text = $"Discards\n<size=140%><color=#E67E22><b>{gameManager.DiscardsRemaining}</b></color></size>";
+        }
+
+        if (RoundScoreText != null)
+        {
+            RoundScoreText.text = $"Round score\n<size=160%><b>{gameManager.CurrentScore}</b></size>";
+        }
+
+        if (ScoreProgressBar != null && gameManager.CurrentTargetScore > 0)
+        {
+            ScoreProgressBar.fillAmount = Mathf.Clamp01((float)gameManager.CurrentScore / gameManager.CurrentTargetScore);
+        }
+
+        UpdatePlayableCombosList();
+    }
+
+    private void UpdatePlayableCombosList()
+    {
+        if (PlayableCombosText == null || gameManager == null || gameManager.Hand == null) return;
+
+        var playable = ScoreEngine.FindPlayableCombos(gameManager.Hand.Tiles);
+        if (playable.Count > 0)
+        {
+            var lines = playable.Select(p => $"• <b>{p.combo.Name}</b>: <color=#3498DB>{p.combo.BaseChips}</color> × <color=#E74C3C>{p.combo.BaseMult:F1}</color>");
+            PlayableCombosText.text = $"<b>PLAYABLE IN HAND:</b>\n" + string.Join("\n", lines);
+        }
+        else
+        {
+            PlayableCombosText.text = "<b>PLAYABLE IN HAND:</b>\n<color=#7F8C8D><i>No complete combo. Select tiles to discard or form Chow/Pong/Pair!</i></color>";
+        }
     }
 
     // --- Hand Sorting Actions ---
@@ -110,7 +241,7 @@ public class UIManager : MonoBehaviour
         gameManager.Hand.SortBySuit();
         RefreshHandDisplay();
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 100, 0), "SORTED BY SUIT", new Color(0.18f, 0.85f, 0.35f));
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 110, 0), "SORTED BY SUIT", new Color(0.18f, 0.85f, 0.35f));
     }
 
     public void SortHandByRank()
@@ -120,7 +251,7 @@ public class UIManager : MonoBehaviour
         gameManager.Hand.SortByRank();
         RefreshHandDisplay();
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 100, 0), "SORTED BY RANK", new Color(0.2f, 0.7f, 1f));
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 110, 0), "SORTED BY RANK", new Color(0.2f, 0.7f, 1f));
     }
 
     // --- UI Button Actions ---
@@ -187,30 +318,25 @@ public class UIManager : MonoBehaviour
         List<Tile> selectedTiles = selectedTileUIs.Select(t => t.BoundTile).Where(t => t != null).ToList();
         ScorePreview preview = ScoreEngine.PreviewScore(selectedTiles, gameManager.Hand.Tiles, gameManager.Affinity, gameManager.EquippedSpirits, gameManager);
 
-        if (ComboPreviewBox != null)
-        {
-            ComboPreviewBox.SetActive(selectedTiles.Count > 0);
-        }
-
         if (PreviewComboNameText != null)
         {
             string colorHex = preview.IsValid ? "#F1C40F" : "#E74C3C";
             PreviewComboNameText.text = $"<color={colorHex}><b>{preview.ComboName.ToUpper()}</b></color>";
         }
 
-        if (PreviewChipsText != null)
+        if (PreviewChipsBoxText != null)
         {
-            PreviewChipsText.text = $"<color=#3498DB><b>{preview.TotalChips}</b></color> Chips";
+            PreviewChipsBoxText.text = $"<b>{preview.TotalChips}</b>";
         }
 
-        if (PreviewMultText != null)
+        if (PreviewMultBoxText != null)
         {
-            PreviewMultText.text = $"<color=#E74C3C><b>{preview.TotalMult:F1}X</b></color> Mult";
+            PreviewMultBoxText.text = $"<b>{preview.TotalMult:F1}</b>";
         }
 
         if (PreviewTotalScoreText != null)
         {
-            PreviewTotalScoreText.text = preview.IsValid ? $"<color=#2ECC71><b>≈ {preview.ProjectedScore} PTS</b></color>" : "<color=#7F8C8D>--</color>";
+            PreviewTotalScoreText.text = preview.IsValid ? $"<color=#2ECC71><b>= {preview.ProjectedScore} PTS</b></color>" : "<color=#7F8C8D>--</color>";
         }
 
         if (PlayButton != null)
@@ -224,7 +350,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Link this to "Play Combo" UI Button
+    // Link to "Play Combo" UI Button
     public void PlaySelected()
     {
         if (isScoringSequenceActive || selectedTileUIs.Count == 0 || gameManager == null) return;
@@ -239,7 +365,7 @@ public class UIManager : MonoBehaviour
         StartCoroutine(AnimateBalatroScoringSequence(uisToPlay, tilesToPlay, preview));
     }
 
-    // Link this to "Discard" UI Button
+    // Link to "Discard" UI Button
     public void DiscardSelected()
     {
         if (isScoringSequenceActive || selectedTileUIs.Count == 0) return;
@@ -269,7 +395,6 @@ public class UIManager : MonoBehaviour
         var (combo, comboTiles) = playable[0];
         List<TileUI> remainingUIs = new List<TileUI>(spawnedTileUIs);
 
-        int soundPitchCounter = 1;
         foreach (var targetTile in comboTiles)
         {
             var uiMatch = remainingUIs.FirstOrDefault(u => u.BoundTile == targetTile);
@@ -277,7 +402,6 @@ public class UIManager : MonoBehaviour
             {
                 uiMatch.SetSelected(true);
                 remainingUIs.Remove(uiMatch);
-                soundPitchCounter++;
             }
         }
 
@@ -297,18 +421,9 @@ public class UIManager : MonoBehaviour
             if (tileUI != null) tileUI.TriggerScoreBounce();
         }
 
-        // 2. Show score tally banner
-        if (ScoreTallyBanner != null)
-        {
-            ScoreTallyBanner.SetActive(true);
-            if (TallyChipsText != null) TallyChipsText.text = $"<color=#3498DB>0</color>";
-            if (TallyMultText != null) TallyMultText.text = $"<color=#E74C3C>0.0X</color>";
-            if (TallyResultText != null) TallyResultText.text = $"<b>{preview.ComboName}</b>";
-        }
+        yield return new WaitForSeconds(0.15f);
 
-        yield return new WaitForSeconds(0.18f);
-
-        // 3. Step 1: Base Chips + Tile Chips Tally
+        // 2. Step 1: Chips Count-Up Tally
         int currentTallyChips = 0;
         int targetChips = preview.TotalChips;
         int stepChips = Mathf.Max(1, targetChips / 8);
@@ -316,42 +431,37 @@ public class UIManager : MonoBehaviour
         while (currentTallyChips < targetChips)
         {
             currentTallyChips = Mathf.Min(currentTallyChips + stepChips, targetChips);
-            if (TallyChipsText != null) TallyChipsText.text = $"<color=#3498DB><b>{currentTallyChips}</b></color>";
+            if (PreviewChipsBoxText != null) PreviewChipsBoxText.text = $"<b>{currentTallyChips}</b>";
             MalajongAudio.Instance?.PlayScoreChipTick();
             yield return new WaitForSeconds(0.04f);
         }
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(-80, 80, 0), $"+{targetChips} CHIPS", new Color(0.2f, 0.6f, 1f));
-        yield return new WaitForSeconds(0.15f);
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(-120, 90, 0), $"+{targetChips} CHIPS", new Color(0.2f, 0.6f, 1f));
+        yield return new WaitForSeconds(0.12f);
 
-        // 4. Step 2: Multiplier Tally
+        // 3. Step 2: Multiplier Tally
         float currentTallyMult = 0f;
         float targetMult = preview.TotalMult;
 
         while (currentTallyMult < targetMult)
         {
             currentTallyMult = Mathf.MoveTowards(currentTallyMult, targetMult, targetMult * 0.25f);
-            if (TallyMultText != null) TallyMultText.text = $"<color=#E74C3C><b>{currentTallyMult:F1}X</b></color>";
+            if (PreviewMultBoxText != null) PreviewMultBoxText.text = $"<b>{currentTallyMult:F1}</b>";
             MalajongAudio.Instance?.PlayMultPop();
             yield return new WaitForSeconds(0.05f);
         }
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(80, 80, 0), $"{targetMult:F1}X MULT", new Color(0.95f, 0.3f, 0.25f));
-        yield return new WaitForSeconds(0.2f);
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(120, 90, 0), $"{targetMult:F1}X MULT", new Color(0.95f, 0.3f, 0.25f));
+        yield return new WaitForSeconds(0.18f);
 
-        // 5. Step 3: Big Multiplication Crunch / Slam
+        // 4. Step 3: Big Multiplication Crunch / Slam
         int calculatedScore = Mathf.RoundToInt(targetChips * targetMult);
         MalajongAudio.Instance?.PlayScoreCrunchSlam();
 
-        if (TallyResultText != null)
-        {
-            TallyResultText.text = $"<b><color=#F1C40F>{preview.ComboName}: +{calculatedScore} PTS!</color></b>";
-        }
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 130, 0), $"+{calculatedScore} PTS!", new Color(1f, 0.85f, 0.1f), 34f);
+        yield return new WaitForSeconds(0.35f);
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 140, 0), $"+{calculatedScore} PTS!", new Color(1f, 0.85f, 0.1f), 34f);
-        yield return new WaitForSeconds(0.4f);
-
-        // 6. Step 4: Smooth Score Bar Roll-Up
+        // 5. Step 4: Smooth Score Bar Roll-Up
         int startScore = gameManager.CurrentScore;
         int endScore = startScore + calculatedScore;
         float rollDuration = 0.45f;
@@ -362,14 +472,17 @@ public class UIManager : MonoBehaviour
             rollElapsed += Time.deltaTime;
             float t = rollElapsed / rollDuration;
             int displayScore = Mathf.RoundToInt(Mathf.Lerp(startScore, endScore, t));
-            UpdateLiveScoreHUD(displayScore);
+            if (RoundScoreText != null) RoundScoreText.text = $"Round score\n<size=160%><b>{displayScore}</b></size>";
+            if (ScoreProgressBar != null && gameManager.CurrentTargetScore > 0)
+            {
+                ScoreProgressBar.fillAmount = Mathf.Clamp01((float)displayScore / gameManager.CurrentTargetScore);
+            }
             yield return null;
         }
 
-        // 7. Commit play in GameManager
+        // 6. Commit play in GameManager
         gameManager.PlaySelectedTiles(playedTiles);
 
-        if (ScoreTallyBanner != null) ScoreTallyBanner.SetActive(false);
         ClearSelection();
         isScoringSequenceActive = false;
         SetControlsInteractable(true);
@@ -434,60 +547,8 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        UpdateDebugHints();
+        UpdateRightScoreEngine();
         UpdateSelectionPreview();
-    }
-
-    private void UpdateLiveScoreHUD(int score)
-    {
-        if (StatusText != null && gameManager != null)
-        {
-            StatusText.text = $"<size=120%><b>Round {gameManager.CurrentRound} / {gameManager.MaxRounds}</b></size>\n" +
-                              $"Score: <b>{score}</b> / {gameManager.CurrentTargetScore}   |   " +
-                              $"Hands: <b>{gameManager.HandsRemaining}</b>   |   Discards: <b>{gameManager.DiscardsRemaining}</b>   |   " +
-                              $"Coins: <b><color=#F1C40F>${gameManager.Coins}</color></b>";
-        }
-
-        if (ScoreProgressBar != null && gameManager != null && gameManager.CurrentTargetScore > 0)
-        {
-            ScoreProgressBar.fillAmount = Mathf.Clamp01((float)score / gameManager.CurrentTargetScore);
-        }
-    }
-
-    private void UpdateStatusText()
-    {
-        if (gameManager == null) return;
-        UpdateLiveScoreHUD(gameManager.CurrentScore);
-        UpdateDebugHints();
-    }
-
-    private void UpdateAffinityHUD()
-    {
-        if (AffinityHUDText == null || gameManager == null || gameManager.Affinity == null) return;
-
-        float bambooMult = gameManager.Affinity.GetMultiplier(TileSuit.Bamboo);
-        float charMult = gameManager.Affinity.GetMultiplier(TileSuit.Characters);
-        float dotMult = gameManager.Affinity.GetMultiplier(TileSuit.Dots);
-
-        AffinityHUDText.text = $"<b>SUIT AFFINITY MULTIPLIERS</b>\n" +
-                               $"<color=#2ECC71>Bamboo:</color> {bambooMult:F2}x  |  " +
-                               $"<color=#E74C3C>Characters:</color> {charMult:F2}x  |  " +
-                               $"<color=#3498DB>Dots:</color> {dotMult:F2}x";
-    }
-
-    private void UpdateSpiritsHUD()
-    {
-        if (SpiritsHUDText == null || gameManager == null) return;
-
-        if (gameManager.EquippedSpirits.Count == 0)
-        {
-            SpiritsHUDText.text = "<b>EQUIPPED SPIRITS (0/5):</b> <i>None</i>";
-        }
-        else
-        {
-            var names = gameManager.EquippedSpirits.Select(s => s != null ? s.SpiritName : "Empty");
-            SpiritsHUDText.text = $"<b>EQUIPPED SPIRITS ({gameManager.EquippedSpirits.Count}/5):</b>\n<color=#F1C40F>{string.Join("  •  ", names)}</color>";
-        }
     }
 
     private void UpdateShopText()
@@ -558,22 +619,6 @@ public class UIManager : MonoBehaviour
         if (VictorySummaryText != null)
         {
             VictorySummaryText.text = $"<b>VICTORY!</b>\n\nYou successfully completed all {gameManager.MaxRounds} rounds of Malajong!\nFinal Coins: ${gameManager.Coins} | Spirits Equipped: {gameManager.EquippedSpirits.Count}";
-        }
-    }
-
-    private void UpdateDebugHints()
-    {
-        if (DebugHintText == null || gameManager == null || gameManager.Hand == null) return;
-
-        var playable = ScoreEngine.FindPlayableCombos(gameManager.Hand.Tiles);
-        if (playable.Count > 0)
-        {
-            var comboDescriptions = playable.Select(p => $"{p.combo.Name} ({string.Join("-", p.tiles.Select(t => $"{t.Suit} {t.Rank}"))})");
-            DebugHintText.text = $"<b><color=#2ECC71>PLAYABLE COMBOS IN HAND:</color></b>\n" + string.Join("  |  ", comboDescriptions);
-        }
-        else
-        {
-            DebugHintText.text = "<b><color=#E74C3C>HINT:</color></b> No complete combo in current hand. Try discarding up to 5 tiles!";
         }
     }
 }
