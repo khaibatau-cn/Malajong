@@ -458,57 +458,92 @@ public class SceneSetupTool
         Debug.Log("🎉 Upscaled Adjacent Tile UI with Large Punchy Retro Pixel Font Generated Successfully!");
     }
 
-    public static TMP_FontAsset GetOrCreatePixelFont()
+    [MenuItem("Malajong/Rebuild Pixel Font Asset")]
+    public static TMP_FontAsset RebuildPixelFontAsset()
     {
-        if (cachedPixelFont != null) return cachedPixelFont;
-
-        // 1. Search for existing TMP_FontAsset
-        string[] tmpGuids = AssetDatabase.FindAssets("t:TMP_FontAsset m5x7");
-        if (tmpGuids.Length > 0)
+        cachedPixelFont = null;
+        string fontAssetPath = "Assets/Fonts/m5x7_FontAsset.asset";
+        string directPath = "Assets/Fonts/m5x7.ttf";
+        
+        Font ttfFont = AssetDatabase.LoadAssetAtPath<Font>(directPath);
+        if (ttfFont == null)
         {
-            string path = AssetDatabase.GUIDToAssetPath(tmpGuids[0]);
-            cachedPixelFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(path);
-            if (cachedPixelFont != null) return cachedPixelFont;
-        }
-
-        // 2. Locate the TTF font file
-        Font ttfFont = null;
-        string[] ttfGuids = AssetDatabase.FindAssets("m5x7");
-        foreach (string guid in ttfGuids)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            if (path.EndsWith(".ttf") || path.EndsWith(".otf"))
+            string[] ttfGuids = AssetDatabase.FindAssets("m5x7");
+            foreach (string guid in ttfGuids)
             {
-                ttfFont = AssetDatabase.LoadAssetAtPath<Font>(path);
-                if (ttfFont != null) break;
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                if (path.EndsWith(".ttf") || path.EndsWith(".otf"))
+                {
+                    ttfFont = AssetDatabase.LoadAssetAtPath<Font>(path);
+                    if (ttfFont != null) break;
+                }
             }
         }
 
         if (ttfFont == null)
         {
-            string directPath = "Assets/Fonts/m5x7.ttf";
-            AssetDatabase.ImportAsset(directPath, ImportAssetOptions.ForceUpdate);
-            ttfFont = AssetDatabase.LoadAssetAtPath<Font>(directPath);
+            Debug.LogError("[SceneSetupTool] Could not locate m5x7.ttf font file!");
+            return null;
         }
 
-        // 3. Create and save TMP_FontAsset if needed
-        if (ttfFont != null)
+        // Delete existing corrupted font asset if present
+        if (AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(fontAssetPath) != null)
         {
-            string fontAssetPath = "Assets/Fonts/m5x7_FontAsset.asset";
-            cachedPixelFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(fontAssetPath);
-            if (cachedPixelFont == null)
+            AssetDatabase.DeleteAsset(fontAssetPath);
+        }
+
+        TMP_FontAsset newFontAsset = TMP_FontAsset.CreateFontAsset(ttfFont);
+        if (newFontAsset != null)
+        {
+            newFontAsset.name = "m5x7_FontAsset";
+            AssetDatabase.CreateAsset(newFontAsset, fontAssetPath);
+
+            // Crucial: Embed atlas textures and material as sub-assets so Unity serializes them properly
+            if (newFontAsset.atlasTextures != null)
             {
-                cachedPixelFont = TMP_FontAsset.CreateFontAsset(ttfFont);
-                if (cachedPixelFont != null)
+                for (int i = 0; i < newFontAsset.atlasTextures.Length; i++)
                 {
-                    AssetDatabase.CreateAsset(cachedPixelFont, fontAssetPath);
-                    AssetDatabase.SaveAssets();
-                    Debug.Log($"[SceneSetupTool] Created TMP_FontAsset from '{ttfFont.name}' at '{fontAssetPath}'!");
+                    var tex = newFontAsset.atlasTextures[i];
+                    if (tex != null)
+                    {
+                        tex.name = $"{ttfFont.name} Atlas";
+                        AssetDatabase.AddObjectToAsset(tex, newFontAsset);
+                    }
                 }
             }
+
+            if (newFontAsset.material != null)
+            {
+                newFontAsset.material.name = $"{ttfFont.name} Material";
+                AssetDatabase.AddObjectToAsset(newFontAsset.material, newFontAsset);
+            }
+
+            EditorUtility.SetDirty(newFontAsset);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            cachedPixelFont = newFontAsset;
+            Debug.Log($"[SceneSetupTool] Successfully created and embedded TMP_FontAsset for '{ttfFont.name}' at '{fontAssetPath}'!");
         }
 
-        return cachedPixelFont;
+        return newFontAsset;
+    }
+
+    public static TMP_FontAsset GetOrCreatePixelFont()
+    {
+        if (cachedPixelFont != null && cachedPixelFont.material != null && cachedPixelFont.atlasTextures != null && cachedPixelFont.atlasTextures.Length > 0 && cachedPixelFont.atlasTextures[0] != null)
+        {
+            return cachedPixelFont;
+        }
+
+        string fontAssetPath = "Assets/Fonts/m5x7_FontAsset.asset";
+        TMP_FontAsset fontAsset = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(fontAssetPath);
+        if (fontAsset != null && fontAsset.material != null && fontAsset.atlasTextures != null && fontAsset.atlasTextures.Length > 0 && fontAsset.atlasTextures[0] != null)
+        {
+            cachedPixelFont = fontAsset;
+            return cachedPixelFont;
+        }
+
+        return RebuildPixelFontAsset();
     }
 
     private static Transform CreatePanel(Transform canvas, string name, Color color)
