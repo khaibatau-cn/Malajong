@@ -119,6 +119,18 @@ public class UIManager : MonoBehaviour
             BlindTitleText.text = $"<b>{winds[windIndex].ToUpper()}</b>";
         }
 
+        // Set Wind Tile Icon Sprite from loaded tiles
+        if (BlindTileIcon != null && gameManager.AllTileTypes != null)
+        {
+            int targetRank = Mathf.Clamp(gameManager.CurrentRound, 1, 7);
+            TileData windData = gameManager.AllTileTypes.FirstOrDefault(t => t.Suit == TileSuit.Honor && t.Rank == targetRank);
+            if (windData != null && windData.TileSprite != null)
+            {
+                BlindTileIcon.sprite = windData.TileSprite;
+                BlindTileIcon.color = Color.white;
+            }
+        }
+
         if (TargetScoreText != null)
         {
             TargetScoreText.text = $"Score at least\n<size=130%><color=#E74C3C><b>{gameManager.CurrentTargetScore}</b></color></size>";
@@ -164,12 +176,12 @@ public class UIManager : MonoBehaviour
             {
                 SpiritData spirit = gameManager.EquippedSpirits[i];
                 if (label != null) label.text = $"<size=75%><b>{spirit.SpiritName}</b></size>";
-                if (bg != null) bg.color = new Color(0.2f, 0.45f, 0.35f, 0.95f);
+                if (bg != null) bg.color = new Color(0.18f, 0.45f, 0.32f, 0.95f);
             }
             else
             {
                 if (label != null) label.text = "<color=#7F8C8D><size=65%>Empty</size></color>";
-                if (bg != null) bg.color = new Color(0.1f, 0.14f, 0.18f, 0.6f);
+                if (bg != null) bg.color = new Color(0.10f, 0.14f, 0.18f, 0.65f);
             }
         }
     }
@@ -182,9 +194,9 @@ public class UIManager : MonoBehaviour
         float charMult = gameManager.Affinity.GetMultiplier(TileSuit.Characters);
         float dotMult = gameManager.Affinity.GetMultiplier(TileSuit.Dots);
 
-        SuitAffinityText.text = $"<color=#2ECC71><b>🎋 Bamboo:</b> {bambooMult:F1}x</color>   |   " +
-                                $"<color=#E74C3C><b>🀄 Chars:</b> {charMult:F1}x</color>   |   " +
-                                $"<color=#3498DB><b>⚪ Dots:</b> {dotMult:F1}x</color>";
+        SuitAffinityText.text = $"<color=#2ECC71><b>Bamboo:</b> {bambooMult:F1}x</color>   |   " +
+                                $"<color=#E74C3C><b>Chars:</b> {charMult:F1}x</color>   |   " +
+                                $"<color=#3498DB><b>Dots:</b> {dotMult:F1}x</color>";
     }
 
     // --- Right Panel: Score Engine Updates ---
@@ -223,7 +235,7 @@ public class UIManager : MonoBehaviour
         var playable = ScoreEngine.FindPlayableCombos(gameManager.Hand.Tiles);
         if (playable.Count > 0)
         {
-            var lines = playable.Select(p => $"• <b>{p.combo.Name}</b>: <color=#3498DB>{p.combo.BaseChips}</color> × <color=#E74C3C>{p.combo.BaseMult:F1}</color>");
+            var lines = playable.Select(p => $"* <b>{p.combo.Name}</b>: <color=#3498DB>{p.combo.BaseChips}</color> x <color=#E74C3C>{p.combo.BaseMult:F1}</color>");
             PlayableCombosText.text = $"<b>PLAYABLE IN HAND:</b>\n" + string.Join("\n", lines);
         }
         else
@@ -320,8 +332,15 @@ public class UIManager : MonoBehaviour
 
         if (PreviewComboNameText != null)
         {
-            string colorHex = preview.IsValid ? "#F1C40F" : "#E74C3C";
-            PreviewComboNameText.text = $"<color={colorHex}><b>{preview.ComboName.ToUpper()}</b></color>";
+            if (selectedTiles.Count == 0)
+            {
+                PreviewComboNameText.text = "<color=#7F8C8D><b>SELECT TILES</b></color>";
+            }
+            else
+            {
+                string colorHex = preview.IsValid ? "#F1C40F" : "#E74C3C";
+                PreviewComboNameText.text = $"<color={colorHex}><b>{preview.ComboName.ToUpper()}</b></color>";
+            }
         }
 
         if (PreviewChipsBoxText != null)
@@ -350,7 +369,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Link to "Play Combo" UI Button
     public void PlaySelected()
     {
         if (isScoringSequenceActive || selectedTileUIs.Count == 0 || gameManager == null) return;
@@ -365,7 +383,6 @@ public class UIManager : MonoBehaviour
         StartCoroutine(AnimateBalatroScoringSequence(uisToPlay, tilesToPlay, preview));
     }
 
-    // Link to "Discard" UI Button
     public void DiscardSelected()
     {
         if (isScoringSequenceActive || selectedTileUIs.Count == 0) return;
@@ -377,7 +394,6 @@ public class UIManager : MonoBehaviour
         ClearSelection();
     }
 
-    // Auto-Select Best Playable Combo
     public void AutoSelectBestCombo()
     {
         if (isScoringSequenceActive) return;
@@ -487,7 +503,6 @@ public class UIManager : MonoBehaviour
         isScoringSequenceActive = false;
         SetControlsInteractable(true);
 
-        // Check if round was won or lost
         if (gameManager.State == GameManager.GameState.Shop || gameManager.State == GameManager.GameState.Victory)
         {
             MalajongAudio.Instance?.PlayCashChime();
