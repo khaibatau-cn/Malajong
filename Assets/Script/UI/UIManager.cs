@@ -709,7 +709,7 @@ public class UIManager : MonoBehaviour
         if (gameManager.Deck != null)
         {
             sb.AppendLine();
-            sb.AppendLine($"<b>Tiles Remaining in Wall:</b> {gameManager.Deck.RemainingCount}");
+            sb.AppendLine($"<b>Tiles Remaining in Wall:</b> {gameManager.Deck.Remaining}");
         }
 
         RunInfoContentText.text = sb.ToString();
