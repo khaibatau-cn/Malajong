@@ -91,8 +91,8 @@ public class SceneSetupTool
         // ==========================================
         Transform startPanel = CreatePanel(canvasObj.transform, "StartMenuUI", new Color(0.06f, 0.08f, 0.11f, 1f));
         CreateText(startPanel, "TitleText", new Vector2(0.1f, 0.55f), new Vector2(0.9f, 0.85f),
-            "<b><size=180%><color=#F1C40F>MALAJONG</color></size></b>\n<size=90%><color=#BDC3C7>A Mahjong Roguelike Deckbuilder</color></size>", 36, TextAlignmentOptions.Center);
-        Button startRunBtn = CreateButton(startPanel, "StartRunButton", "START RUN", new Color(0.18f, 0.75f, 0.35f), new Vector2(0.38f, 0.32f), new Vector2(0.62f, 0.44f));
+            "<b><size=200%><color=#F1C40F>MALAJONG</color></size></b>\n<size=100%><color=#BDC3C7>A Mahjong Roguelike Deckbuilder</color></size>", 48, TextAlignmentOptions.Center);
+        Button startRunBtn = CreateButton(startPanel, "StartRunButton", "START RUN", new Color(0.18f, 0.75f, 0.35f), 36, new Vector2(0.38f, 0.32f), new Vector2(0.62f, 0.44f));
 
         // ==========================================
         // 5. Panel 2: MainGameUI (3-Column Balatro + Mahjong Layout)
@@ -110,7 +110,7 @@ public class SceneSetupTool
         // Gold Wind Header
         Transform blindHeader = CreateSubPanel(blindCardBox, "BlindHeader", new Vector2(0.0f, 0.84f), new Vector2(1.0f, 1.0f), new Color(0.88f, 0.68f, 0.15f, 1f));
         TextMeshProUGUI blindTitleText = CreateText(blindHeader, "BlindTitleText", Vector2.zero, Vector2.one,
-            "<color=#1A1A1A><b>EAST WIND</b></color>", 20, TextAlignmentOptions.Center);
+            "<color=#1A1A1A><b>EAST WIND</b></color>", 32, TextAlignmentOptions.Center);
 
         // Wind Icon Sprite Container (Displays actual Mahjong Wind Tile!)
         Transform windIconBox = CreateSubPanel(blindCardBox, "WindIconBox", new Vector2(0.30f, 0.45f), new Vector2(0.70f, 0.80f), new Color(0.92f, 0.92f, 0.92f, 1f));
@@ -125,28 +125,28 @@ public class SceneSetupTool
         blindTileImage.preserveAspect = true;
 
         TextMeshProUGUI targetScoreText = CreateText(blindCardBox, "TargetScoreText", new Vector2(0.05f, 0.18f), new Vector2(0.95f, 0.42f),
-            "Score at least\n<color=#E74C3C><size=130%><b>150</b></size></color>", 18, TextAlignmentOptions.Center);
+            "Score at least\n<color=#E74C3C><size=140%><b>150</b></size></color>", 26, TextAlignmentOptions.Center);
 
         TextMeshProUGUI rewardText = CreateText(blindCardBox, "RewardText", new Vector2(0.05f, 0.04f), new Vector2(0.95f, 0.18f),
-            "Reward: <color=#F1C40F><b>$5</b></color>", 16, TextAlignmentOptions.Center);
+            "Reward: <color=#F1C40F><b>$5</b></color>", 24, TextAlignmentOptions.Center);
 
         // Money Badge
         Transform moneyBox = CreateSubPanel(leftPanel, "MoneyBox", new Vector2(0.05f, 0.32f), new Vector2(0.95f, 0.43f), new Color(0.08f, 0.10f, 0.14f, 1f));
         TextMeshProUGUI coinsText = CreateText(moneyBox, "CoinsText", Vector2.zero, Vector2.one,
-            "<size=140%><color=#F1C40F><b>$5</b></color></size>", 28, TextAlignmentOptions.Center);
+            "<color=#F1C40F><b>$5</b></color>", 44, TextAlignmentOptions.Center);
 
         // Ante & Round Badges
         Transform anteBox = CreateSubPanel(leftPanel, "AnteBox", new Vector2(0.05f, 0.18f), new Vector2(0.48f, 0.30f), new Color(0.08f, 0.10f, 0.14f, 1f));
         TextMeshProUGUI anteText = CreateText(anteBox, "AnteText", Vector2.zero, Vector2.one,
-            "Ante\n<color=#F39C12><b>1/4</b></color>", 16, TextAlignmentOptions.Center);
+            "Ante\n<color=#F39C12><b>1/4</b></color>", 24, TextAlignmentOptions.Center);
 
         Transform roundBox = CreateSubPanel(leftPanel, "RoundBox", new Vector2(0.52f, 0.18f), new Vector2(0.95f, 0.30f), new Color(0.08f, 0.10f, 0.14f, 1f));
         TextMeshProUGUI roundText = CreateText(roundBox, "RoundText", Vector2.zero, Vector2.one,
-            "Round\n<color=#F39C12><b>1/5</b></color>", 16, TextAlignmentOptions.Center);
+            "Round\n<color=#F39C12><b>1/5</b></color>", 24, TextAlignmentOptions.Center);
 
         // Run Info & Option Buttons
-        Button runInfoBtn = CreateButton(leftPanel, "RunInfoButton", "RUN INFO", new Color(0.85f, 0.3f, 0.25f), new Vector2(0.05f, 0.04f), new Vector2(0.48f, 0.15f));
-        Button optionsBtn = CreateButton(leftPanel, "OptionsButton", "SHOP / OPT", new Color(0.2f, 0.5f, 0.85f), new Vector2(0.52f, 0.04f), new Vector2(0.95f, 0.15f));
+        Button runInfoBtn = CreateButton(leftPanel, "RunInfoButton", "RUN INFO", new Color(0.85f, 0.3f, 0.25f), 22, new Vector2(0.05f, 0.04f), new Vector2(0.48f, 0.15f));
+        Button optionsBtn = CreateButton(leftPanel, "OptionsButton", "SHOP / OPT", new Color(0.2f, 0.5f, 0.85f), 22, new Vector2(0.52f, 0.04f), new Vector2(0.95f, 0.15f));
 
         // ----------------------------------------------------
         // COLUMN 2: CENTER STAGE ("Mahjong Mat & Spirit Rack" - Inspired by Image 2)
@@ -175,12 +175,12 @@ public class SceneSetupTool
             Image slotImg = slotObj.GetComponent<Image>();
             slotImg.color = new Color(0.10f, 0.20f, 0.16f, 0.9f);
 
-            CreateText(slotObj.transform, "Label", Vector2.zero, Vector2.one, "<color=#7F8C8D><size=65%>Empty</size></color>", 14, TextAlignmentOptions.Center);
+            CreateText(slotObj.transform, "Label", Vector2.zero, Vector2.one, "<color=#7F8C8D>Empty</color>", 24, TextAlignmentOptions.Center);
         }
 
         // Middle-Top: Suit Affinity Multipliers Bar
-        TextMeshProUGUI suitAffinityText = CreateText(centerStage, "SuitAffinityText", new Vector2(0.05f, 0.75f), new Vector2(0.95f, 0.82f),
-            "<color=#2ECC71><b>Bamboo:</b> 1.0x</color>   |   <color=#E74C3C><b>Chars:</b> 1.0x</color>   |   <color=#3498DB><b>Dots:</b> 1.0x</color>", 16, TextAlignmentOptions.Center);
+        TextMeshProUGUI suitAffinityText = CreateText(centerStage, "SuitAffinityText", new Vector2(0.05f, 0.74f), new Vector2(0.95f, 0.82f),
+            "<color=#2ECC71><b>Bamboo:</b> 1.0x</color>   |   <color=#E74C3C><b>Chars:</b> 1.0x</color>   |   <color=#3498DB><b>Dots:</b> 1.0x</color>", 28, TextAlignmentOptions.Center);
 
         // Sorting Quick Bar
         GameObject sortObj = new GameObject("SortBarContainer", typeof(RectTransform));
@@ -197,9 +197,9 @@ public class SceneSetupTool
         sLayout.childControlWidth = true;
         sLayout.childControlHeight = true;
 
-        Button sortSuitBtn = CreateButton(sortObj.transform, "SortSuitButton", "SORT SUIT", new Color(0.14f, 0.55f, 0.42f));
-        Button sortRankBtn = CreateButton(sortObj.transform, "SortRankButton", "SORT RANK", new Color(0.48f, 0.25f, 0.65f));
-        Button autoComboBtn = CreateButton(sortObj.transform, "AutoComboButton", "AUTO SELECT", new Color(0.20f, 0.50f, 0.75f));
+        Button sortSuitBtn = CreateButton(sortObj.transform, "SortSuitButton", "SORT SUIT", new Color(0.14f, 0.55f, 0.42f), 24);
+        Button sortRankBtn = CreateButton(sortObj.transform, "SortRankButton", "SORT RANK", new Color(0.48f, 0.25f, 0.65f), 24);
+        Button autoComboBtn = CreateButton(sortObj.transform, "AutoComboButton", "AUTO SELECT", new Color(0.20f, 0.50f, 0.75f), 24);
 
         // Upright Hand Container (14 Adjacent Tiles 70x95) with Recessed Felt Backdrop
         Transform handTray = CreateSubPanel(centerStage, "HandTrayBackdrop", new Vector2(0.01f, 0.18f), new Vector2(0.99f, 0.58f), new Color(0.04f, 0.09f, 0.07f, 0.85f));
@@ -235,8 +235,8 @@ public class SceneSetupTool
         actLayout.childControlWidth = true;
         actLayout.childControlHeight = true;
 
-        Button playButton = CreateButton(actObj.transform, "PlayButton", "PLAY COMBO", new Color(0.18f, 0.75f, 0.35f));
-        Button discardButton = CreateButton(actObj.transform, "DiscardButton", "DISCARD", new Color(0.85f, 0.28f, 0.22f));
+        Button playButton = CreateButton(actObj.transform, "PlayButton", "PLAY COMBO", new Color(0.18f, 0.75f, 0.35f), 32);
+        Button discardButton = CreateButton(actObj.transform, "DiscardButton", "DISCARD", new Color(0.85f, 0.28f, 0.22f), 32);
 
         // ----------------------------------------------------
         // COLUMN 3: RIGHT PANEL ("Score Engine & Balatro Dual-Box" - Inspired by Image 1)
@@ -246,15 +246,15 @@ public class SceneSetupTool
         // Hands & Discards Pills
         Transform handsPill = CreateSubPanel(rightPanel, "HandsPill", new Vector2(0.05f, 0.85f), new Vector2(0.48f, 0.96f), new Color(0.08f, 0.18f, 0.28f, 1f));
         TextMeshProUGUI handsText = CreateText(handsPill, "HandsText", Vector2.zero, Vector2.one,
-            "Hands\n<size=130%><color=#3498DB><b>4</b></color></size>", 16, TextAlignmentOptions.Center);
+            "Hands\n<size=140%><color=#3498DB><b>4</b></color></size>", 26, TextAlignmentOptions.Center);
 
         Transform discardsPill = CreateSubPanel(rightPanel, "DiscardsPill", new Vector2(0.52f, 0.85f), new Vector2(0.95f, 0.96f), new Color(0.28f, 0.14f, 0.08f, 1f));
         TextMeshProUGUI discardsText = CreateText(discardsPill, "DiscardsText", Vector2.zero, Vector2.one,
-            "Discards\n<size=130%><color=#E67E22><b>3</b></color></size>", 16, TextAlignmentOptions.Center);
+            "Discards\n<size=140%><color=#E67E22><b>3</b></color></size>", 26, TextAlignmentOptions.Center);
 
         // Round Score
         TextMeshProUGUI roundScoreText = CreateText(rightPanel, "RoundScoreText", new Vector2(0.05f, 0.72f), new Vector2(0.95f, 0.83f),
-            "Round score\n<size=150%><b>0</b></size>", 20, TextAlignmentOptions.Center);
+            "Round score\n<size=150%><b>0</b></size>", 26, TextAlignmentOptions.Center);
 
         // Score Progress Bar
         GameObject bgObj = new GameObject("ScoreProgressBar", typeof(RectTransform), typeof(Image));
@@ -284,34 +284,34 @@ public class SceneSetupTool
         Transform comboPreviewBox = CreateSubPanel(rightPanel, "ComboPreviewBox", new Vector2(0.05f, 0.42f), new Vector2(0.95f, 0.68f), new Color(0.06f, 0.08f, 0.11f, 1f));
 
         TextMeshProUGUI previewComboNameText = CreateText(comboPreviewBox, "ComboNameText", new Vector2(0.05f, 0.68f), new Vector2(0.95f, 0.95f),
-            "<color=#7F8C8D><b>SELECT TILES</b></color>", 20, TextAlignmentOptions.Center);
+            "<color=#7F8C8D><b>SELECT TILES</b></color>", 28, TextAlignmentOptions.Center);
 
         // Blue Chips Box & Red Mult Box
         Transform chipsBox = CreateSubPanel(comboPreviewBox, "ChipsBox", new Vector2(0.08f, 0.26f), new Vector2(0.44f, 0.64f), new Color(0.11f, 0.31f, 0.55f, 1f));
         TextMeshProUGUI chipsBoxText = CreateText(chipsBox, "ChipsValue", Vector2.zero, Vector2.one,
-            "<size=130%><b>0</b></size>", 26, TextAlignmentOptions.Center);
+            "<b>0</b>", 40, TextAlignmentOptions.Center);
 
         CreateText(comboPreviewBox, "MultiplySymbol", new Vector2(0.44f, 0.26f), new Vector2(0.56f, 0.64f),
-            "<size=120%><color=#E74C3C><b>x</b></color></size>", 24, TextAlignmentOptions.Center);
+            "<color=#E74C3C><b>x</b></color>", 34, TextAlignmentOptions.Center);
 
         Transform multBox = CreateSubPanel(comboPreviewBox, "MultBox", new Vector2(0.56f, 0.26f), new Vector2(0.92f, 0.64f), new Color(0.65f, 0.18f, 0.14f, 1f));
         TextMeshProUGUI multBoxText = CreateText(multBox, "MultValue", Vector2.zero, Vector2.one,
-            "<size=130%><b>1.0</b></size>", 26, TextAlignmentOptions.Center);
+            "<b>1.0</b>", 40, TextAlignmentOptions.Center);
 
         TextMeshProUGUI previewTotalScoreText = CreateText(comboPreviewBox, "TotalScoreText", new Vector2(0.05f, 0.04f), new Vector2(0.95f, 0.24f),
-            "<color=#7F8C8D>--</color>", 18, TextAlignmentOptions.Center);
+            "<color=#7F8C8D>--</color>", 26, TextAlignmentOptions.Center);
 
         // Playable Combos List / Yaku Breakdown
         Transform comboListBox = CreateSubPanel(rightPanel, "PlayableCombosBox", new Vector2(0.05f, 0.04f), new Vector2(0.95f, 0.40f), new Color(0.07f, 0.09f, 0.12f, 0.9f));
-        TextMeshProUGUI playableCombosText = CreateText(comboListBox, "PlayableCombosText", new Vector2(0.08f, 0.05f), new Vector2(0.92f, 0.95f),
-            "<b>PLAYABLE IN HAND:</b>\n<color=#7F8C8D><i>Combos will appear here</i></color>", 14, TextAlignmentOptions.Left);
+        TextMeshProUGUI playableCombosText = CreateText(comboListBox, "PlayableCombosText", new Vector2(0.06f, 0.05f), new Vector2(0.94f, 0.95f),
+            "<b>PLAYABLE IN HAND:</b>\n<color=#7F8C8D><i>Combos will appear here</i></color>", 22, TextAlignmentOptions.Left);
 
         // ==========================================
         // 6. Panel 3: ShopUI
         // ==========================================
         Transform shopPanel = CreatePanel(canvasObj.transform, "ShopUI", new Color(0.1f, 0.12f, 0.18f, 1f));
         TextMeshProUGUI shopStatusText = CreateText(shopPanel, "ShopStatusText", new Vector2(0.1f, 0.78f), new Vector2(0.9f, 0.95f),
-            "<b>SPIRIT SHOP</b>   |   Coins: $5", 26, TextAlignmentOptions.Center);
+            "<b>SPIRIT SHOP</b>   |   Coins: $5", 38, TextAlignmentOptions.Center);
 
         GameObject catObj = new GameObject("ShopCatalogContainer", typeof(RectTransform));
         catObj.transform.SetParent(shopPanel, false);
@@ -337,28 +337,28 @@ public class SceneSetupTool
             cardImg.color = new Color(0.16f, 0.2f, 0.28f, 1f);
 
             CreateText(cardObj.transform, "CardText", new Vector2(0.05f, 0.35f), new Vector2(0.95f, 0.95f),
-                $"<b><color=#F1C40F>{spirit.SpiritName}</color></b>\n\n<size=80%>{spirit.Description}</size>", 16, TextAlignmentOptions.Center);
+                $"<b><color=#F1C40F>{spirit.SpiritName}</color></b>\n\n{spirit.Description}", 24, TextAlignmentOptions.Center);
 
-            CreateButton(cardObj.transform, "BuyButton", "BUY ($5)", new Color(0.18f, 0.75f, 0.35f), new Vector2(0.1f, 0.05f), new Vector2(0.9f, 0.3f));
+            CreateButton(cardObj.transform, "BuyButton", "BUY ($5)", new Color(0.18f, 0.75f, 0.35f), 24, new Vector2(0.1f, 0.05f), new Vector2(0.9f, 0.3f));
         }
 
-        Button nextRoundBtn = CreateButton(shopPanel, "NextRoundButton", "NEXT ROUND", new Color(0.9f, 0.6f, 0.1f), new Vector2(0.35f, 0.08f), new Vector2(0.65f, 0.22f));
+        Button nextRoundBtn = CreateButton(shopPanel, "NextRoundButton", "NEXT ROUND", new Color(0.9f, 0.6f, 0.1f), 32, new Vector2(0.35f, 0.08f), new Vector2(0.65f, 0.22f));
 
         // ==========================================
         // 7. Panel 4: GameOverUI
         // ==========================================
         Transform gameOverPanel = CreatePanel(canvasObj.transform, "GameOverUI", new Color(0.2f, 0.05f, 0.05f, 1f));
         TextMeshProUGUI gameOverText = CreateText(gameOverPanel, "GameOverSummaryText", new Vector2(0.1f, 0.45f), new Vector2(0.9f, 0.85f),
-            "<b>GAME OVER</b>", 32, TextAlignmentOptions.Center);
-        Button restartBtn = CreateButton(gameOverPanel, "RestartButton", "PLAY AGAIN", new Color(0.85f, 0.3f, 0.25f), new Vector2(0.35f, 0.25f), new Vector2(0.65f, 0.38f));
+            "<b>GAME OVER</b>", 48, TextAlignmentOptions.Center);
+        Button restartBtn = CreateButton(gameOverPanel, "RestartButton", "PLAY AGAIN", new Color(0.85f, 0.3f, 0.25f), 32, new Vector2(0.35f, 0.25f), new Vector2(0.65f, 0.38f));
 
         // ==========================================
         // 8. Panel 5: VictoryUI
         // ==========================================
         Transform victoryPanel = CreatePanel(canvasObj.transform, "VictoryUI", new Color(0.05f, 0.18f, 0.1f, 1f));
         TextMeshProUGUI victoryText = CreateText(victoryPanel, "VictorySummaryText", new Vector2(0.1f, 0.45f), new Vector2(0.9f, 0.85f),
-            "<b>VICTORY!</b>", 32, TextAlignmentOptions.Center);
-        Button victoryPlayAgainBtn = CreateButton(victoryPanel, "PlayAgainButton", "PLAY AGAIN", new Color(0.18f, 0.75f, 0.35f), new Vector2(0.35f, 0.25f), new Vector2(0.65f, 0.38f));
+            "<b>VICTORY!</b>", 48, TextAlignmentOptions.Center);
+        Button victoryPlayAgainBtn = CreateButton(victoryPanel, "PlayAgainButton", "PLAY AGAIN", new Color(0.18f, 0.75f, 0.35f), 32, new Vector2(0.35f, 0.25f), new Vector2(0.65f, 0.38f));
 
         // 9. Generate & Save Upscaled TilePrefab (70x95)
         GameObject tilePrefab = CreateOrUpdateTilePrefab();
@@ -475,7 +475,7 @@ public class SceneSetupTool
         EditorUtility.SetDirty(uiManager);
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
 
-        Debug.Log("🎉 Upscaled Adjacent Tile UI with Retro Pixel Font Generated Successfully!");
+        Debug.Log("🎉 Upscaled Adjacent Tile UI with Large Punchy Retro Pixel Font Generated Successfully!");
     }
 
     public static TMP_FontAsset GetOrCreatePixelFont()
@@ -696,7 +696,7 @@ public class SceneSetupTool
         return prefabAsset;
     }
 
-    private static Button CreateButton(Transform parent, string name, string labelText, Color color, Vector2? anchorMin = null, Vector2? anchorMax = null)
+    private static Button CreateButton(Transform parent, string name, string labelText, Color color, float fontSize = 24, Vector2? anchorMin = null, Vector2? anchorMax = null)
     {
         GameObject btnObj = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
         btnObj.transform.SetParent(parent, false);
@@ -730,7 +730,7 @@ public class SceneSetupTool
             text.font = pixelFont;
         }
         text.alignment = TextAlignmentOptions.Center;
-        text.fontSize = 16;
+        text.fontSize = fontSize;
         text.fontStyle = FontStyles.Bold;
         text.color = Color.white;
         text.raycastTarget = false;

@@ -175,12 +175,12 @@ public class UIManager : MonoBehaviour
             if (i < gameManager.EquippedSpirits.Count && gameManager.EquippedSpirits[i] != null)
             {
                 SpiritData spirit = gameManager.EquippedSpirits[i];
-                if (label != null) label.text = $"<size=75%><b>{spirit.SpiritName}</b></size>";
+                if (label != null) label.text = $"<b>{spirit.SpiritName}</b>";
                 if (bg != null) bg.color = new Color(0.18f, 0.45f, 0.32f, 0.95f);
             }
             else
             {
-                if (label != null) label.text = "<color=#7F8C8D><size=65%>Empty</size></color>";
+                if (label != null) label.text = "<color=#7F8C8D>Empty</color>";
                 if (bg != null) bg.color = new Color(0.10f, 0.14f, 0.18f, 0.65f);
             }
         }
@@ -207,17 +207,17 @@ public class UIManager : MonoBehaviour
 
         if (HandsRemainingText != null)
         {
-            HandsRemainingText.text = $"Hands\n<size=140%><color=#3498DB><b>{gameManager.HandsRemaining}</b></color></size>";
+            HandsRemainingText.text = $"Hands\n<color=#3498DB><b>{gameManager.HandsRemaining}</b></color>";
         }
 
         if (DiscardsRemainingText != null)
         {
-            DiscardsRemainingText.text = $"Discards\n<size=140%><color=#E67E22><b>{gameManager.DiscardsRemaining}</b></color></size>";
+            DiscardsRemainingText.text = $"Discards\n<color=#E67E22><b>{gameManager.DiscardsRemaining}</b></color>";
         }
 
         if (RoundScoreText != null)
         {
-            RoundScoreText.text = $"Round score\n<size=160%><b>{gameManager.CurrentScore}</b></size>";
+            RoundScoreText.text = $"Round score\n<b>{gameManager.CurrentScore}</b>";
         }
 
         if (ScoreProgressBar != null && gameManager.CurrentTargetScore > 0)
