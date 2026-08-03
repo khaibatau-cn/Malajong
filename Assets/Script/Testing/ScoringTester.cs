@@ -35,9 +35,9 @@ public class ScoringTester : MonoBehaviour
         Pong pong = new Pong(tiles);
         var result = ScoreEngine.Calculate(pong, tiles);
 
-        Debug.Log($"[Pong] Valid: {pong.IsValid()} | Chips: {result.chips} | Mult: {result.mult}");
+        Debug.Log($"[Pong] Valid: {pong.IsValid()} | Fu: {result.fu} | Fan: {result.fan}");
         Debug.Assert(pong.IsValid() == true, "Pong should be valid");
-        Debug.Assert(result.chips == 20 && result.mult == 2.0f, "Pong math wrong");
+        Debug.Assert(result.fu == 20 && result.fan == 2.0f, "Pong math wrong");
     }
 
     private void TestValidChow()
@@ -52,9 +52,9 @@ public class ScoringTester : MonoBehaviour
         Chow chow = new Chow(tiles);
         var result = ScoreEngine.Calculate(chow, tiles);
 
-        Debug.Log($"[Chow] Valid: {chow.IsValid()} | Chips: {result.chips} | Mult: {result.mult}");
+        Debug.Log($"[Chow] Valid: {chow.IsValid()} | Fu: {result.fu} | Fan: {result.fan}");
         Debug.Assert(chow.IsValid() == true, "Chow should be valid");
-        Debug.Assert(result.chips == 15 && result.mult == 2.0f, "Chow math wrong");
+        Debug.Assert(result.fu == 15 && result.fan == 2.0f, "Chow math wrong");
     }
 
     private void TestConcealedKong()
@@ -70,7 +70,7 @@ public class ScoringTester : MonoBehaviour
         ConcealedKong ck = new ConcealedKong(tiles);
         var result = ScoreEngine.Calculate(ck, tiles);
 
-        Debug.Log($"[Concealed Kong (1 Discard)] Valid: {ck.IsValid()} | Chips: {result.chips} | Mult: {result.mult}");
+        Debug.Log($"[Concealed Kong (1 Discard)] Valid: {ck.IsValid()} | Fu: {result.fu} | Fan: {result.fan}");
         Debug.Assert(ck.IsValid() == false, "Concealed Kong should be invalid with a discard");
     }
 
@@ -82,8 +82,8 @@ public class ScoringTester : MonoBehaviour
         Pong dummyCombo = new Pong(tiles.GetRange(0, 3));
         var result = ScoreEngine.Calculate(dummyCombo, tiles);
 
-        Debug.Log($"[Pure Hand] Chips: {result.chips} | Mult: {result.mult}");
-        Debug.Assert(result.chips == 170 && result.mult == 20.0f, "Pure Hand math wrong (should be 20 base + 150 bonus, 2.0 base * 10.0 bonus)");
+        Debug.Log($"[Pure Hand] Fu: {result.fu} | Fan: {result.fan}");
+        Debug.Assert(result.fu == 170 && result.fan == 20.0f, "Pure Hand math wrong (should be 20 base + 150 bonus, 2.0 base * 10.0 bonus)");
     }
 
     private void TestAllHonors()
@@ -94,8 +94,8 @@ public class ScoringTester : MonoBehaviour
         Pong dummyCombo = new Pong(tiles.GetRange(0, 3));
         var result = ScoreEngine.Calculate(dummyCombo, tiles);
 
-        Debug.Log($"[All Honors] Chips: {result.chips} | Mult: {result.mult}");
-        Debug.Assert(result.chips == 200 && result.mult == 24.0f, "All Honors math wrong (should be 20 base + 180 bonus, 2.0 base * 12.0 bonus)");
+        Debug.Log($"[All Honors] Fu: {result.fu} | Fan: {result.fan}");
+        Debug.Assert(result.fu == 200 && result.fan == 24.0f, "All Honors math wrong (should be 20 base + 180 bonus, 2.0 base * 12.0 bonus)");
     }
 
     private void TestFullMahjongHand()
@@ -115,8 +115,8 @@ public class ScoringTester : MonoBehaviour
         };
 
         var result = ScoreEngine.EvaluateFullHand(tiles);
-        Debug.Log($"[Full Hand (14 Tiles)] Chips: {result.bonusChips} | Mult: {result.bonusMult}");
-        Debug.Assert(result.bonusChips == 100 && result.bonusMult == 8.0f, "Full hand solver failed to recognize valid hand");
+        Debug.Log($"[Full Hand (14 Tiles)] Fu: {result.bonusFu} | Fan: {result.bonusFan}");
+        Debug.Assert(result.bonusFu == 100 && result.bonusFan == 8.0f, "Full hand solver failed to recognize valid hand");
     }
 
     private void TestSuitAffinityScale()
@@ -136,7 +136,7 @@ public class ScoringTester : MonoBehaviour
         var secondPlay = ScoreEngine.Calculate(pong, tiles, affinity);
         Debug.Assert(affinity.GetLevel(TileSuit.Bamboo) == pong.AffinityBonus * 2, "Affinity should stack to 0.2");
         
-        Debug.Log($"[Affinity Scale] First Mult: {firstPlay.mult} | Second Mult: {secondPlay.mult} | Bamboo Affinity: {affinity.GetLevel(TileSuit.Bamboo)}");
+        Debug.Log($"[Affinity Scale] First Fan: {firstPlay.fan} | Second Fan: {secondPlay.fan} | Bamboo Affinity: {affinity.GetLevel(TileSuit.Bamboo)}");
     }
 
     private void TestSuitAffinityDecay()

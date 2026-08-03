@@ -28,11 +28,11 @@ public class ArtifactTester : MonoBehaviour
         
         Pong combo = new Pong(hand.GetRange(0, 3));
         
-        var (chips, mult) = ScoreEngine.Calculate(combo, hand, null, new List<SpiritData> { flute }, null);
+        var (fu, fan) = ScoreEngine.Calculate(combo, hand, null, new List<SpiritData> { flute }, null);
         
-        // Base Pure Hand is +150 chips. Pong base is 20. Flute should add +100 chips. Total = 270.
-        Debug.Log($"[Artifact: Purist's Flute] Chips: {chips} | Expected: 270");
-        Debug.Assert(chips == 270, "Purist's Flute failed to add +100 chips.");
+        // Base Pure Hand is +150 fu. Pong base is 20. Flute should add +100 fu. Total = 270.
+        Debug.Log($"[Artifact: Purist's Flute] Fu: {fu} | Expected: 270");
+        Debug.Assert(fu == 270, "Purist's Flute failed to add +100 fu.");
     }
 
     private void TestImperialScholar()
@@ -44,11 +44,11 @@ public class ArtifactTester : MonoBehaviour
         
         Pong combo = new Pong(hand.GetRange(0, 3));
         
-        var (chips, mult) = ScoreEngine.Calculate(combo, hand, null, new List<SpiritData> { scholar }, null);
+        var (fu, fan) = ScoreEngine.Calculate(combo, hand, null, new List<SpiritData> { scholar }, null);
         
-        // Base All Honors is x12. Scholar upgrades it to x20. Pong base mult is 2.0x. Total mult = 40.0x.
-        Debug.Log($"[Artifact: Imperial Scholar] Mult: {mult} | Expected: 40");
-        Debug.Assert(Mathf.Approximately(mult, 40.0f), "Imperial Scholar failed to upgrade multiplier to x20.");
+        // Base All Honors is x12. Scholar upgrades it to x20. Pong base fan is 2.0x. Total fan = 40.0x.
+        Debug.Log($"[Artifact: Imperial Scholar] Fan: {fan} | Expected: 40");
+        Debug.Assert(Mathf.Approximately(fan, 40.0f), "Imperial Scholar failed to upgrade multiplier to x20.");
     }
 
     private void TestBambooWeaver()

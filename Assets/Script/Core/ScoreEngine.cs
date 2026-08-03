@@ -201,7 +201,7 @@ public static class ScoreEngine
         return null;
     }
 
-    public static (int bonusChips, float bonusMult) EvaluateFullHand(List<Tile> fullHand)
+    public static (int bonusFu, float bonusFan) EvaluateFullHand(List<Tile> fullHand)
     {
         if (IsWinningMahjongHand(fullHand))
         {
