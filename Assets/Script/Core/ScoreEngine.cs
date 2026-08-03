@@ -1,8 +1,100 @@
 using System.Collections.Generic;
 using System.Linq;
 
+public class ScorePreview
+{
+    public bool IsValid;
+    public string ComboName = "None";
+    public string DetailText = "";
+    public int BaseChips;
+    public int TileChips;
+    public int TotalChips;
+    public float BaseMult = 1f;
+    public float AffinityMult = 1f;
+    public float TotalMult = 1f;
+    public int ProjectedScore;
+    public Combo DetectedCombo;
+}
+
 public static class ScoreEngine
 {
+    public static ScorePreview PreviewScore(List<Tile> selectedTiles, List<Tile> fullHand, SuitAffinity affinityManager = null, IEnumerable<SpiritData> activeSpirits = null, GameManager gm = null)
+    {
+        var preview = new ScorePreview();
+        if (selectedTiles == null || selectedTiles.Count == 0)
+        {
+            preview.IsValid = false;
+            preview.ComboName = "No Selection";
+            preview.DetailText = "Select tiles to form a combo.";
+            return preview;
+        }
+
+        if (selectedTiles.Count == 14)
+        {
+            var (bonusChips, bonusMult) = EvaluateFullHand(selectedTiles);
+            if (bonusChips > 0)
+            {
+                preview.IsValid = true;
+                preview.ComboName = "Full Winning Hand";
+                preview.DetailText = "14-tile complete Mahjong winning hand!";
+                preview.BaseChips = bonusChips;
+                preview.TileChips = 0;
+                preview.TotalChips = bonusChips;
+                preview.BaseMult = bonusMult;
+                preview.AffinityMult = 1f;
+                preview.TotalMult = bonusMult;
+                preview.ProjectedScore = UnityEngine.Mathf.RoundToInt(preview.TotalChips * preview.TotalMult);
+                return preview;
+            }
+        }
+
+        Combo combo = DetectCombo(selectedTiles);
+        if (combo == null)
+        {
+            preview.IsValid = false;
+            preview.ComboName = "Invalid Combo";
+            preview.DetailText = $"{selectedTiles.Count} tiles selected (not a valid Chow, Pong, Kong, or Pair).";
+            return preview;
+        }
+
+        preview.IsValid = true;
+        preview.DetectedCombo = combo;
+        preview.ComboName = combo.Name;
+        preview.BaseChips = combo.BaseChips;
+        preview.TileChips = combo.Tiles.Sum(t => t.Rank);
+        preview.TotalChips = preview.BaseChips + preview.TileChips;
+        preview.BaseMult = combo.BaseMult;
+
+        int chips = preview.TotalChips;
+        float mult = preview.BaseMult;
+
+        // Simulate bonuses non-destructively
+        ApplyPostCheckBonuses(fullHand, ref chips, ref mult, activeSpirits, gm);
+
+        if (activeSpirits != null)
+        {
+            foreach (var spirit in activeSpirits)
+            {
+                spirit.OnComboScored(combo, ref chips, ref mult, gm);
+            }
+        }
+
+        float affMult = 1f;
+        if (affinityManager != null && combo.Tiles.Count > 0 && !combo.Tiles[0].IsHonor)
+        {
+            affMult = affinityManager.GetMultiplier(combo.Tiles[0].Suit);
+            mult *= affMult;
+        }
+
+        preview.TotalChips = chips;
+        preview.AffinityMult = affMult;
+        preview.TotalMult = mult;
+        preview.ProjectedScore = UnityEngine.Mathf.RoundToInt(chips * mult);
+        preview.DetailText = $"{combo.Tiles[0].Suit} {combo.Name}";
+
+        return preview;
+    }
+
     public static (int chips, float mult) Calculate(Combo combo, List<Tile> fullHand, SuitAffinity affinityManager = null, IEnumerable<SpiritData> activeSpirits = null, GameManager gm = null)
     {
         if (!combo.IsValid())

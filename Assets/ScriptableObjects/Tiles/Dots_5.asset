@@ -15,3 +15,5 @@ MonoBehaviour:
   Suit: 2
   Rank: 5
   Effect: 0
+  TileSprite: {fileID: 897007327931784089, guid: 5800c2e6fde116445982f133fea2d9ca, type: 3}
+  TileBackSprite: {fileID: 8208727154757944500, guid: 5800c2e6fde116445982f133fea2d9ca, type: 3}

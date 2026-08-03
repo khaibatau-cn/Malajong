@@ -5,10 +5,14 @@ public class GameManager : MonoBehaviour
 {
     public List<TileData> AllTileTypes; // Assign in editor
     
+    public int CurrentRound = 1;
+    public int MaxRounds = 5;
     public int CurrentTargetScore = 150;
     public int HandsRemaining = 4;
     public int DiscardsRemaining = 3;
     public int CurrentScore = 0;
+    public int Coins = 5;
+    public int MaxSpirits = 5;
     
     public TileBag Deck { get; private set; }
     public PlayerHand Hand { get; private set; }
@@ -20,7 +24,7 @@ public class GameManager : MonoBehaviour
     public event System.Action OnStateChanged;
     
     public enum GameState { StartMenu, Playing, Shop, GameOver, Victory }
-    public GameState State { get; private set; }
+    public GameState State { get; private set; } = GameState.StartMenu;
     
     void Start()
     {
@@ -44,17 +48,38 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[GameManager] No TileData assets found! Run 'Malajong -> Generate Default Tile Data' first.");
+            Debug.LogWarning("[GameManager] No TileData assets found! Run 'Malajong -> Generate All Game Data' first.");
         }
     }
     
     public void InitializeRun()
     {
+        CurrentRound = 1;
+        Coins = 5;
+        EquippedSpirits.Clear();
         Deck = new TileBag();
         Hand = new PlayerHand();
         Affinity = new SuitAffinity();
         
-        StartRound(150); // Ante 1 target score
+        StartRound(GetTargetScoreForRound(CurrentRound));
+    }
+    
+    public int GetTargetScoreForRound(int round)
+    {
+        return round switch
+        {
+            1 => 150,
+            2 => 350,
+            3 => 800,
+            4 => 1800,
+            5 => 4000,
+            _ => 4000 + (round - 5) * 3500
+        };
+    }
+    
+    public void StartGame()
+    {
+        InitializeRun();
     }
     
     public void StartRound(int targetScore)
@@ -74,10 +99,55 @@ public class GameManager : MonoBehaviour
             if (spirit != null) spirit.OnRoundStart(this);
         }
         
-        Debug.Log($"Round Started. Target: {targetScore}. Deck: {Deck.Remaining}. Hand: {Hand.Tiles.Count}");
+        Debug.Log($"Round {CurrentRound} Started. Target: {targetScore}. Deck: {Deck.Remaining}. Hand: {Hand.Tiles.Count}");
         
         OnHandUpdated?.Invoke();
         OnStateChanged?.Invoke();
+    }
+    
+    public void NextRound()
+    {
+        if (CurrentRound >= MaxRounds)
+        {
+            State = GameState.Victory;
+            OnStateChanged?.Invoke();
+            return;
+        }
+
+        CurrentRound++;
+        StartRound(GetTargetScoreForRound(CurrentRound));
+    }
+    
+    public bool BuySpirit(SpiritData spirit, int cost)
+    {
+        if (spirit == null) return false;
+        if (Coins < cost)
+        {
+            Debug.Log("[Shop] Not enough coins!");
+            return false;
+        }
+        if (EquippedSpirits.Count >= MaxSpirits)
+        {
+            Debug.Log("[Shop] Spirit slots full!");
+            return false;
+        }
+
+        Coins -= cost;
+        EquippedSpirits.Add(spirit);
+        Debug.Log($"[Shop] Purchased Spirit: {spirit.SpiritName} for ${cost}. Coins left: ${Coins}");
+        OnStateChanged?.Invoke();
+        return true;
+    }
+    
+    public void SellSpirit(SpiritData spirit, int refund = 2)
+    {
+        if (EquippedSpirits.Contains(spirit))
+        {
+            EquippedSpirits.Remove(spirit);
+            Coins += refund;
+            Debug.Log($"[Shop] Sold Spirit: {spirit.SpiritName} for ${refund}. Coins total: ${Coins}");
+            OnStateChanged?.Invoke();
+        }
     }
     
     // Call this from UI when player selects tiles and clicks "Play Combo"
@@ -94,7 +164,7 @@ public class GameManager : MonoBehaviour
                 int scoreGained = Mathf.RoundToInt(bonusChips * bonusMult);
                 CurrentScore += scoreGained;
                 Debug.Log($"FULL HAND ACHIEVED! Scored {scoreGained} bonus points.");
-                State = GameState.Shop; // Round ends instantly
+                CheckExitConditions();
                 return;
             }
         }
@@ -147,7 +217,6 @@ public class GameManager : MonoBehaviour
         DiscardsRemaining--;
         
         RefillHand();
-        // Discarding does not cost a hand, but we still check exit conditions just in case
         CheckExitConditions();
         
         OnHandUpdated?.Invoke();
@@ -168,13 +237,25 @@ public class GameManager : MonoBehaviour
     {
         if (CurrentScore >= CurrentTargetScore)
         {
-            Debug.Log("Quota Met! Proceeding to Shop...");
-            State = GameState.Shop;
+            int earnedCoins = 4 + HandsRemaining; // $4 base + $1 per unused hand
+            Coins += earnedCoins;
+            Debug.Log($"Quota Met! Earned ${earnedCoins} coins. Proceeding to Shop...");
+            
+            if (CurrentRound >= MaxRounds)
+            {
+                State = GameState.Victory;
+            }
+            else
+            {
+                State = GameState.Shop;
+            }
+            OnStateChanged?.Invoke();
         }
         else if (HandsRemaining <= 0)
         {
             Debug.Log("Out of hands! Game Over.");
             State = GameState.GameOver;
+            OnStateChanged?.Invoke();
         }
     }
 }

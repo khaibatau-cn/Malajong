@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 public class PlayerHand
 {
@@ -27,5 +28,23 @@ public class PlayerHand
         {
             t.IsSelfDrawn = false;
         }
+    }
+
+    // Sort by Suit: Bamboo -> Characters -> Dots -> Honors, sorted by Rank 1-9 ascending
+    public void SortBySuit()
+    {
+        Tiles = Tiles
+            .OrderBy(t => (int)t.Suit)
+            .ThenBy(t => t.Rank)
+            .ToList();
+    }
+
+    // Sort by Rank: 1 -> 9 across all suits, then Honors at the end
+    public void SortByRank()
+    {
+        Tiles = Tiles
+            .OrderBy(t => t.IsHonor ? 100 + t.Rank : t.Rank)
+            .ThenBy(t => (int)t.Suit)
+            .ToList();
     }
 }

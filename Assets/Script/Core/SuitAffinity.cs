@@ -61,4 +61,9 @@ public class SuitAffinity
         }
         return 0f;
     }
+
+    public Dictionary<TileSuit, float> GetAllAffinityLevels()
+    {
+        return new Dictionary<TileSuit, float>(affinityLevels);
+    }
 }

@@ -23,5 +23,9 @@ public class TileData : ScriptableObject
     public int Rank;
     public HonorEffect Effect = HonorEffect.None;
 
+    [Header("Art & Visuals")]
+    public Sprite TileSprite;
+    public Sprite TileBackSprite;
+
     public bool IsHonor => Suit == TileSuit.Honor;
 }
