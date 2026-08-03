@@ -338,10 +338,55 @@ public class SceneSetupTool
         Button victoryRestartBtn = CreateButton(victoryPanel, "VictoryRestartButton", "MAIN MENU", new Color(0.18f, 0.65f, 0.38f), 30,
             new Vector2(0.35f, 0.2f), new Vector2(0.65f, 0.32f));
 
-        // 9. Generate & Save Upscaled TilePrefab (70x95)
+        // ==========================================
+        // 9. Panel 6: RunInfoModal (Overlay)
+        // ==========================================
+        Transform runInfoModal = CreatePanel(canvasObj.transform, "RunInfoModal", new Color(0.02f, 0.04f, 0.06f, 0.85f));
+        Transform runInfoCard = CreateSubPanel(runInfoModal, "RunInfoCard", new Vector2(0.18f, 0.08f), new Vector2(0.82f, 0.92f), new Color(0.08f, 0.12f, 0.16f, 0.98f));
+        
+        TextMeshProUGUI runInfoTitle = CreateText(runInfoCard, "Title", new Vector2(0.05f, 0.88f), new Vector2(0.95f, 0.98f),
+            "<b>RUN INFORMATION & YAKU GUIDE</b>", 30, TextAlignmentOptions.Center);
+        
+        TextMeshProUGUI runInfoBody = CreateText(runInfoCard, "RunInfoContentText", new Vector2(0.06f, 0.13f), new Vector2(0.94f, 0.87f),
+            "Loading Run Info...", 22, TextAlignmentOptions.TopLeft);
+        
+        Button closeRunInfoBtn = CreateButton(runInfoCard, "CloseButton", "CLOSE [X]", new Color(0.85f, 0.3f, 0.25f), 24,
+            new Vector2(0.35f, 0.02f), new Vector2(0.65f, 0.11f));
+        
+        runInfoModal.gameObject.SetActive(false);
+
+        // ==========================================
+        // 10. Panel 7: OptionsModal (Overlay)
+        // ==========================================
+        Transform optionsModal = CreatePanel(canvasObj.transform, "OptionsModal", new Color(0.02f, 0.04f, 0.06f, 0.85f));
+        Transform optionsCard = CreateSubPanel(optionsModal, "OptionsCard", new Vector2(0.24f, 0.14f), new Vector2(0.76f, 0.86f), new Color(0.08f, 0.12f, 0.16f, 0.98f));
+        
+        TextMeshProUGUI optionsTitle = CreateText(optionsCard, "Title", new Vector2(0.05f, 0.86f), new Vector2(0.95f, 0.97f),
+            "<b>GAME OPTIONS & SETTINGS</b>", 30, TextAlignmentOptions.Center);
+        
+        Button toggleAudioBtn = CreateButton(optionsCard, "ToggleAudioButton", "SFX: ENABLED", new Color(0.18f, 0.55f, 0.35f), 26,
+            new Vector2(0.15f, 0.64f), new Vector2(0.85f, 0.78f));
+        TextMeshProUGUI toggleAudioText = toggleAudioBtn.GetComponentInChildren<TextMeshProUGUI>();
+
+        Transform rulesBox = CreateSubPanel(optionsCard, "RulesBox", new Vector2(0.08f, 0.30f), new Vector2(0.92f, 0.58f), new Color(0.05f, 0.08f, 0.11f, 1f));
+        CreateText(rulesBox, "RulesText", new Vector2(0.04f, 0.04f), new Vector2(0.96f, 0.96f),
+            "<b>HOW TO PLAY MALAJONG:</b>\n\n" +
+            "• Select tiles to form valid Mahjong Combos (Pair, Chow, Pong, Kong).\n" +
+            "• Pure Hand (all matching suits) grants huge Fu & Fan bonuses!\n" +
+            "• Beat Round Target Scores to earn Yuan and buy powerful Spirits in the Shop.", 22, TextAlignmentOptions.Center);
+
+        Button forfeitBtn = CreateButton(optionsCard, "ForfeitButton", "ABANDON RUN", new Color(0.85f, 0.25f, 0.22f), 24,
+            new Vector2(0.12f, 0.12f), new Vector2(0.48f, 0.24f));
+
+        Button closeOptionsBtn = CreateButton(optionsCard, "ResumeButton", "RESUME [X]", new Color(0.2f, 0.5f, 0.85f), 24,
+            new Vector2(0.52f, 0.12f), new Vector2(0.88f, 0.24f));
+
+        optionsModal.gameObject.SetActive(false);
+
+        // 11. Generate & Save Upscaled TilePrefab (70x95)
         GameObject tilePrefab = CreateOrUpdateTilePrefab();
 
-        // 10. Find or Create GameManager & UIManager
+        // 12. Find or Create GameManager & UIManager
         GameManager gameManager = Object.FindAnyObjectByType<GameManager>();
         if (gameManager == null)
         {
@@ -412,9 +457,38 @@ public class SceneSetupTool
         uiManager.GameOverSummaryText = gameOverText;
         uiManager.VictorySummaryText = victoryText;
 
+        // Modals & Overlays
+        uiManager.RunInfoModal = runInfoModal.gameObject;
+        uiManager.RunInfoContentText = runInfoBody;
+        uiManager.CloseRunInfoButton = closeRunInfoBtn;
+
+        uiManager.OptionsModal = optionsModal.gameObject;
+        uiManager.ToggleAudioButton = toggleAudioBtn;
+        uiManager.ToggleAudioText = toggleAudioText;
+        uiManager.ForfeitRunButton = forfeitBtn;
+        uiManager.CloseOptionsButton = closeOptionsBtn;
+
         // Wire Button Listeners
         startRunBtn.onClick.RemoveAllListeners();
         UnityEditor.Events.UnityEventTools.AddPersistentListener(startRunBtn.onClick, uiManager.StartRun);
+
+        runInfoBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(runInfoBtn.onClick, uiManager.OpenRunInfoModal);
+
+        optionsBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(optionsBtn.onClick, uiManager.OpenOptionsModal);
+
+        closeRunInfoBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(closeRunInfoBtn.onClick, uiManager.CloseRunInfoModal);
+
+        closeOptionsBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(closeOptionsBtn.onClick, uiManager.CloseOptionsModal);
+
+        toggleAudioBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(toggleAudioBtn.onClick, uiManager.ToggleAudio);
+
+        forfeitBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(forfeitBtn.onClick, uiManager.ForfeitRun);
 
         sortSuitBtn.onClick.RemoveAllListeners();
         UnityEditor.Events.UnityEventTools.AddPersistentListener(sortSuitBtn.onClick, uiManager.SortHandBySuit);

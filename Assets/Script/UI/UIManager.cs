@@ -61,6 +61,17 @@ public class UIManager : MonoBehaviour
     [Header("Game Over & Victory UI")]
     public TextMeshProUGUI GameOverSummaryText;
     public TextMeshProUGUI VictorySummaryText;
+
+    [Header("Modals & Overlays")]
+    public GameObject RunInfoModal;
+    public TextMeshProUGUI RunInfoContentText;
+    public Button CloseRunInfoButton;
+
+    public GameObject OptionsModal;
+    public Button ToggleAudioButton;
+    public TextMeshProUGUI ToggleAudioText;
+    public Button ForfeitRunButton;
+    public Button CloseOptionsButton;
     
     private List<TileUI> spawnedTileUIs = new List<TileUI>();
     private List<TileUI> selectedTileUIs = new List<TileUI>();
@@ -638,5 +649,110 @@ public class UIManager : MonoBehaviour
         {
             VictorySummaryText.text = $"<b>VICTORY!</b>\n\nYou successfully completed all {gameManager.MaxRounds} rounds of Malajong!\nFinal Yuan: ¥{gameManager.Yuan} | Spirits Equipped: {gameManager.EquippedSpirits.Count}";
         }
+    }
+
+    // --- Modal / Popup Handlers ---
+
+    public void OpenRunInfoModal()
+    {
+        if (RunInfoModal == null) return;
+        UpdateRunInfoContent();
+        RunInfoModal.SetActive(true);
+        MalajongAudio.Instance?.PlayTileSelect(0);
+    }
+
+    public void CloseRunInfoModal()
+    {
+        if (RunInfoModal == null) return;
+        RunInfoModal.SetActive(false);
+        MalajongAudio.Instance?.PlayTileDeselect();
+    }
+
+    public void UpdateRunInfoContent()
+    {
+        if (RunInfoContentText == null || gameManager == null) return;
+
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("<size=115%><b><color=#F1C40F>YAKU & COMBO SCORING GUIDE</color></b></size>");
+        sb.AppendLine("• <b>Pair (Toitsu)</b>: 2 Identical Tiles  >>  <b><color=#3498DB>+10 Fu</color></b> | <b><color=#E74C3C>x1.0 Fan</color></b>");
+        sb.AppendLine("• <b>Chow (Shuntsu)</b>: 3 Consecutive Suit Tiles  >>  <b><color=#3498DB>+20 Fu</color></b> | <b><color=#E74C3C>x1.5 Fan</color></b>");
+        sb.AppendLine("• <b>Pong (Koutsu)</b>: 3 Identical Tiles  >>  <b><color=#3498DB>+30 Fu</color></b> | <b><color=#E74C3C>x2.0 Fan</color></b>");
+        sb.AppendLine("• <b>Kong (Kantsu)</b>: 4 Identical Tiles  >>  <b><color=#3498DB>+60 Fu</color></b> | <b><color=#E74C3C>x3.0 Fan</color></b>");
+        sb.AppendLine("• <b>Pure Hand (Flush)</b>: All tiles in single suit  >>  <b><color=#3498DB>+150 Fu</color></b> | <b><color=#E74C3C>+2.0 Fan</color></b>");
+        sb.AppendLine();
+
+        sb.AppendLine("<size=115%><b><color=#F1C40F>RUN MULTIPLIERS & SPIRITS</color></b></size>");
+        if (gameManager.Affinity != null)
+        {
+            sb.AppendLine($"<color=#2ECC71>Bamboo: {gameManager.Affinity.GetMultiplier(TileSuit.Bamboo):F1}x</color>  |  " +
+                          $"<color=#E67E22>Characters: {gameManager.Affinity.GetMultiplier(TileSuit.Characters):F1}x</color>  |  " +
+                          $"<color=#3498DB>Dots: {gameManager.Affinity.GetMultiplier(TileSuit.Dots):F1}x</color>");
+        }
+
+        sb.AppendLine();
+        sb.AppendLine($"<b>Equipped Spirits ({gameManager.EquippedSpirits.Count}/{gameManager.MaxSpirits}):</b>");
+        if (gameManager.EquippedSpirits.Count == 0)
+        {
+            sb.AppendLine("<color=#7F8C8D><i>No spirits equipped. Visit the Shop between rounds!</i></color>");
+        }
+        else
+        {
+            foreach (var s in gameManager.EquippedSpirits)
+            {
+                if (s != null)
+                {
+                    sb.AppendLine($"• <color=#F1C40F><b>{s.SpiritName}</b></color>: {s.Description}");
+                }
+            }
+        }
+
+        if (gameManager.Deck != null)
+        {
+            sb.AppendLine();
+            sb.AppendLine($"<b>Tiles Remaining in Wall:</b> {gameManager.Deck.RemainingCount}");
+        }
+
+        RunInfoContentText.text = sb.ToString();
+    }
+
+    public void OpenOptionsModal()
+    {
+        if (OptionsModal == null) return;
+        UpdateOptionsUI();
+        OptionsModal.SetActive(true);
+        MalajongAudio.Instance?.PlayTileSelect(0);
+    }
+
+    public void CloseOptionsModal()
+    {
+        if (OptionsModal == null) return;
+        OptionsModal.SetActive(false);
+        MalajongAudio.Instance?.PlayTileDeselect();
+    }
+
+    public void ToggleAudio()
+    {
+        if (MalajongAudio.Instance != null)
+        {
+            bool isCurrentlyMuted = MalajongAudio.Instance.MasterVolume <= 0.001f;
+            MalajongAudio.Instance.MasterVolume = isCurrentlyMuted ? 0.8f : 0f;
+        }
+        UpdateOptionsUI();
+        MalajongAudio.Instance?.PlayTileSelect(0);
+    }
+
+    private void UpdateOptionsUI()
+    {
+        if (ToggleAudioText != null)
+        {
+            bool isMuted = MalajongAudio.Instance != null && MalajongAudio.Instance.MasterVolume <= 0.001f;
+            ToggleAudioText.text = isMuted ? "SFX: <color=#E74C3C>MUTED</color>" : "SFX: <color=#2ECC71>ENABLED</color>";
+        }
+    }
+
+    public void ForfeitRun()
+    {
+        CloseOptionsModal();
+        RestartRun();
     }
 }
