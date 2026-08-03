@@ -21,7 +21,8 @@ public class UIManager : MonoBehaviour
     public Image BlindTileIcon;
     public TextMeshProUGUI TargetScoreText;
     public TextMeshProUGUI RewardText;
-    public TextMeshProUGUI CoinsText;
+    public TextMeshProUGUI YuanText;
+    public TextMeshProUGUI CoinsText { get => YuanText; set => YuanText = value; } // Backwards-compatible alias
     public TextMeshProUGUI AnteText;
     public TextMeshProUGUI RoundText;
     public Button RunInfoButton;
@@ -45,8 +46,10 @@ public class UIManager : MonoBehaviour
     public Image ScoreProgressBar;
     public GameObject ComboPreviewBox;
     public TextMeshProUGUI PreviewComboNameText;
-    public TextMeshProUGUI PreviewChipsBoxText;
-    public TextMeshProUGUI PreviewMultBoxText;
+    public TextMeshProUGUI PreviewFuBoxText;
+    public TextMeshProUGUI PreviewChipsBoxText { get => PreviewFuBoxText; set => PreviewFuBoxText = value; } // Backwards-compatible alias
+    public TextMeshProUGUI PreviewFanBoxText;
+    public TextMeshProUGUI PreviewMultBoxText { get => PreviewFanBoxText; set => PreviewFanBoxText = value; } // Backwards-compatible alias
     public TextMeshProUGUI PreviewTotalScoreText;
     public TextMeshProUGUI PlayableCombosText;
 
@@ -138,12 +141,12 @@ public class UIManager : MonoBehaviour
 
         if (RewardText != null)
         {
-            RewardText.text = $"Reward: <color=#F1C40F><b>$5</b></color>";
+            RewardText.text = $"Reward: <color=#F1C40F><b>¥5</b></color>";
         }
 
-        if (CoinsText != null)
+        if (YuanText != null)
         {
-            CoinsText.text = $"<color=#F1C40F><b>${gameManager.Coins}</b></color>";
+            YuanText.text = $"<color=#F1C40F><b>¥{gameManager.Yuan}</b></color>";
         }
 
         if (AnteText != null)
@@ -235,7 +238,7 @@ public class UIManager : MonoBehaviour
         var playable = ScoreEngine.FindPlayableCombos(gameManager.Hand.Tiles);
         if (playable.Count > 0)
         {
-            var lines = playable.Select(p => $"* <b>{p.combo.Name}</b>: <color=#3498DB>{p.combo.BaseChips}</color> x <color=#E74C3C>{p.combo.BaseMult:F1}</color>");
+            var lines = playable.Select(p => $"* <b>{p.combo.Name}</b>: <color=#3498DB>{p.combo.BaseFu} Fu</color> x <color=#E74C3C>{p.combo.BaseFan:F1} Fan</color>");
             PlayableCombosText.text = $"<b>PLAYABLE IN HAND:</b>\n" + string.Join("\n", lines);
         }
         else
@@ -343,14 +346,14 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if (PreviewChipsBoxText != null)
+        if (PreviewFuBoxText != null)
         {
-            PreviewChipsBoxText.text = $"<b>{preview.TotalChips}</b>";
+            PreviewFuBoxText.text = $"<b>{preview.TotalFu}</b>";
         }
 
-        if (PreviewMultBoxText != null)
+        if (PreviewFanBoxText != null)
         {
-            PreviewMultBoxText.text = $"<b>{preview.TotalMult:F1}</b>";
+            PreviewFanBoxText.text = $"<b>{preview.TotalFan:F1}</b>";
         }
 
         if (PreviewTotalScoreText != null)
@@ -439,39 +442,39 @@ public class UIManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.15f);
 
-        // 2. Step 1: Chips Count-Up Tally
-        int currentTallyChips = 0;
-        int targetChips = preview.TotalChips;
-        int stepChips = Mathf.Max(1, targetChips / 8);
+        // 2. Step 1: Fu Count-Up Tally
+        int currentTallyFu = 0;
+        int targetFu = preview.TotalFu;
+        int stepFu = Mathf.Max(1, targetFu / 8);
 
-        while (currentTallyChips < targetChips)
+        while (currentTallyFu < targetFu)
         {
-            currentTallyChips = Mathf.Min(currentTallyChips + stepChips, targetChips);
-            if (PreviewChipsBoxText != null) PreviewChipsBoxText.text = $"<b>{currentTallyChips}</b>";
+            currentTallyFu = Mathf.Min(currentTallyFu + stepFu, targetFu);
+            if (PreviewFuBoxText != null) PreviewFuBoxText.text = $"<b>{currentTallyFu}</b>";
             MalajongAudio.Instance?.PlayScoreChipTick();
             yield return new WaitForSeconds(0.04f);
         }
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(-120, 90, 0), $"+{targetChips} CHIPS", new Color(0.2f, 0.6f, 1f));
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(-120, 90, 0), $"+{targetFu} FU", new Color(0.2f, 0.6f, 1f));
         yield return new WaitForSeconds(0.12f);
 
-        // 3. Step 2: Multiplier Tally
-        float currentTallyMult = 0f;
-        float targetMult = preview.TotalMult;
+        // 3. Step 2: Fan Tally
+        float currentTallyFan = 0f;
+        float targetFan = preview.TotalFan;
 
-        while (currentTallyMult < targetMult)
+        while (currentTallyFan < targetFan)
         {
-            currentTallyMult = Mathf.MoveTowards(currentTallyMult, targetMult, targetMult * 0.25f);
-            if (PreviewMultBoxText != null) PreviewMultBoxText.text = $"<b>{currentTallyMult:F1}</b>";
+            currentTallyFan = Mathf.MoveTowards(currentTallyFan, targetFan, targetFan * 0.25f);
+            if (PreviewFanBoxText != null) PreviewFanBoxText.text = $"<b>{currentTallyFan:F1}</b>";
             MalajongAudio.Instance?.PlayMultPop();
             yield return new WaitForSeconds(0.05f);
         }
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(120, 90, 0), $"{targetMult:F1}X MULT", new Color(0.95f, 0.3f, 0.25f));
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(120, 90, 0), $"{targetFan:F1}X FAN", new Color(0.95f, 0.3f, 0.25f));
         yield return new WaitForSeconds(0.18f);
 
         // 4. Step 3: Big Multiplication Crunch / Slam
-        int calculatedScore = Mathf.RoundToInt(targetChips * targetMult);
+        int calculatedScore = Mathf.RoundToInt(targetFu * targetFan);
         MalajongAudio.Instance?.PlayScoreCrunchSlam();
 
         FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 130, 0), $"+{calculatedScore} PTS!", new Color(1f, 0.85f, 0.1f), 34f);
@@ -572,9 +575,9 @@ public class UIManager : MonoBehaviour
 
         if (ShopStatusText != null)
         {
-            ShopStatusText.text = $"<b>SPIRIT SHOP</b>   |   Your Coins: <b><color=#F1C40F>${gameManager.Coins}</color></b>   |   " +
+            ShopStatusText.text = $"<b>SPIRIT SHOP</b>   |   Your Yuan: <b><color=#F1C40F>¥{gameManager.Yuan}</color></b>   |   " +
                                   $"Spirits Owned: <b>{gameManager.EquippedSpirits.Count}/{gameManager.MaxSpirits}</b>\n" +
-                                  $"<size=85%>Purchase powerful spirits ($5 each) to augment your mahjong hand combos!</size>";
+                                  $"<size=85%>Purchase powerful spirits (¥5 each) to augment your mahjong hand combos!</size>";
         }
 
         RefreshShopCards();
@@ -603,7 +606,7 @@ public class UIManager : MonoBehaviour
             if (buyBtn != null && spirit != null)
             {
                 bool owned = gameManager.EquippedSpirits.Contains(spirit);
-                bool canAfford = gameManager.Coins >= 5 && gameManager.EquippedSpirits.Count < gameManager.MaxSpirits;
+                bool canAfford = gameManager.Yuan >= 5 && gameManager.EquippedSpirits.Count < gameManager.MaxSpirits;
 
                 buyBtn.onClick.RemoveAllListeners();
                 
@@ -614,7 +617,7 @@ public class UIManager : MonoBehaviour
                 }
                 else
                 {
-                    if (buyText != null) buyText.text = "BUY ($5)";
+                    if (buyText != null) buyText.text = "BUY (¥5)";
                     buyBtn.interactable = canAfford;
                     buyBtn.onClick.AddListener(() => BuyShopItem(index));
                 }
@@ -633,7 +636,7 @@ public class UIManager : MonoBehaviour
 
         if (VictorySummaryText != null)
         {
-            VictorySummaryText.text = $"<b>VICTORY!</b>\n\nYou successfully completed all {gameManager.MaxRounds} rounds of Malajong!\nFinal Coins: ${gameManager.Coins} | Spirits Equipped: {gameManager.EquippedSpirits.Count}";
+            VictorySummaryText.text = $"<b>VICTORY!</b>\n\nYou successfully completed all {gameManager.MaxRounds} rounds of Malajong!\nFinal Yuan: ¥{gameManager.Yuan} | Spirits Equipped: {gameManager.EquippedSpirits.Count}";
         }
     }
 }

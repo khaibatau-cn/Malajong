@@ -48,13 +48,13 @@ When modifying or expanding **Malajong**, every AI Agent **MUST** adhere to the 
    ```csharp
    using UnityEngine;
 
-   public class ExampleSpirit : Spirit
+   public class ExampleSpirit : SpiritData
    {
-       public override void OnComboPlayed(Combo combo, ref int chips, ref float mult, SuitAffinity affinity, GameManager run)
+       public override void OnComboScored(Combo combo, ref int fu, ref float fan, GameManager run)
        {
            if (combo is Pong)
            {
-               chips += 30; // Adds +30 Chips on any Pong
+               fu += 30; // Adds +30 Fu on any Pong
            }
        }
    }
@@ -72,8 +72,8 @@ When modifying or expanding **Malajong**, every AI Agent **MUST** adhere to the 
    ```csharp
    public class TripleChow : Combo
    {
-       public override int BaseChips => 45;
-       public override float BaseMult => 3.5f;
+       public override int BaseFu => 45;
+       public override float BaseFan => 3.5f;
        public override float AffinityBonus => 0.3f;
 
        public TripleChow(List<Tile> tiles) : base("Triple Chow", tiles) { }

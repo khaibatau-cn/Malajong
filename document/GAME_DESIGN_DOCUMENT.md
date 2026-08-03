@@ -20,16 +20,16 @@ Instead of sitting at a 4-player table waiting for discards, the player holds a 
 
 ### 2.1 Why Balatro + Mahjong?
 * **The Problem with Standard Mahjong as a Video Game:** Traditional Mahjong requires four players, extensive memorization of 40+ complex Yaku combinations, and long games where a single defensive mistake can lead to an instant loss.
-* **The Balatro Breakthrough:** *Balatro* proved that taking a universally recognized physical game (Poker cards) and simplifying it into an escalating single-player solitaire puzzle with exponential math (`Chips × Mult`) creates an addictive, accessible, and deep roguelike experience.
+* **The Balatro Breakthrough:** *Balatro* proved that taking a universally recognized physical game (Poker cards) and simplifying it into an escalating single-player solitaire puzzle with exponential math (`Fu × Fan` / `Chips × Mult`) creates an addictive, accessible, and deep roguelike experience.
 * **The Malajong Vision:** We translate this same design magic to **Mahjong**. Mahjong tiles possess richer visual aesthetics, unique tile interactions (sequential runs vs. identical sets), and cultural charm that standard playing cards lack.
 
 ---
 
 ### 2.2 Why Aotenjo Uncapped Scoring Instead of Standard Han/Fan?
 * **Traditional Rule Limit:** In standard Mahjong, scoring caps out at *Yakuman* or *Mangan/Haneman* (often limiting the score to 8,000–32,000 points).
-* **The Aotenjo (Blue Sky / No Ceiling) Solution:** In Aotenjo rules, fan multipliers double exponentially without any limit ($2^{\text{Fan}}$).
+* **The Aotenjo (Blue Sky / No Ceiling) Solution:** In Aotenjo rules, Fan multipliers compound exponentially without any ceiling ($2^{\text{Fan}}$).
 * **Malajong Scoring Formula:** 
-  $$\text{Score} = (\text{Base Chips} + \text{Tile Chips}) \times (\text{Base Mult} \times \text{Affinity Mult}) \times \prod \text{Spirit Multipliers}$$
+  $$\text{Score} = (\text{Base Fu} + \text{Tile Fu}) \times (\text{Base Fan} \times \text{Affinity Multiplier}) \times \prod \text{Spirit Multipliers}$$
   This delivers the adrenaline rush of seeing numbers climb from $30 \text{ pts}$ to millions of points in late-game Antes.
 
 ---
@@ -55,18 +55,18 @@ Inspired by commercial arcade deckbuilders, the screen is cleanly partitioned in
 |                   |                                    |                   |
 | [ East Wind Blind ]| [ Spirit Rack: 5 Passive Slots ]   | Hands: 4 | Disc: 3|
 | [ Tile Icon & Quota]| [ Suit Affinity: 1.0x|1.0x|1.0x ]  | Round Score: 0/150|
-| [ Money: $5       ]| [ Sort Suit | Sort Rank | Auto ]   | [================]|
+| [ Yuan: ¥5        ]| [ Sort Suit | Sort Rank | Auto ]   | [================]|
 | [ Ante: 1/4       ]| [ 14 Adjacent Touching Tiles    ]  |                   |
-| [ Round: 1/5      ]|                                    | [ CHIPS ] x [MULT]|
-| [ Run Info / Shop ]| [ PLAY COMBO ]    [ DISCARD ]      | [  50   ] x [ 2.0]|
+| [ Round: 1/5      ]|                                    | [  FU   ] x [ FAN ]|
+| [ Run Info / Shop ]| [ PLAY COMBO ]    [ DISCARD ]      | [  50   ] x [ 2.0 ]|
 |                   |                                    | = 100 PTS         |
 |                   |                                    | Playable Combos   |
 +-------------------+------------------------------------+-------------------+
 ```
 
-1. **Left (Stakes & Context):** Tracks current Ante, Wind Blind target, Boss modifiers, and wallet balance.
+1. **Left (Stakes & Context):** Tracks current Ante, Wind Blind target, Boss modifiers, and wallet balance (Yuan ¥).
 2. **Center (Action & Tactile Play):** Features the 14-tile Mahjong tray with physical-feeling adjacent tiles that lift on hover/select, sorting quick-bars, and the 5-slot Spirit Rack.
-3. **Right (The Math Engine):** The iconic Balatro Dual-Box (`Chips` in Blue, `Mult` in Red) that reacts dynamically in real-time as you select tiles before you click Play.
+3. **Right (The Math Engine):** The iconic Dual-Box HUD (`Fu` in Blue, `Fan` in Red) that reacts dynamically in real-time as you select tiles before you click Play.
 
 ---
 
@@ -79,7 +79,7 @@ flowchart TD
     C --> D[Player Evaluates Hand & Selects Tiles]
     D --> E{Action Chosen?}
     
-    E -->|Play Combo| F[Calculate: Chips x Mult x Affinity x Spirits]
+    E -->|Play Combo| F[Calculate: Fu x Fan x Affinity x Spirits]
     F --> G[Accumulate Score & Deduct 1 Hand]
     G --> H[Discard Played Tiles & Draw Back to 14]
     
@@ -103,10 +103,10 @@ flowchart TD
 1. **Ante Initiation:** Quota is revealed (e.g. 150 points for East Wind Small Blind).
 2. **Draw Hand:** 14 tiles dealt from the 136-tile wall.
 3. **Player Turn Actions:**
-   - **Play Combo (Costs 1 Hand):** Select 2 to 4 tiles forming a valid set (Chow, Pong, Kong, or Pair). The combo scores, awards Suit Affinity, triggers Spirit passives, and refills back to 14 tiles.
+   - **Play Combo (Costs 1 Hand):** Select 2 to 4 tiles forming a valid set (Chow, Pong, Kong, or Pair). The combo scores Fu × Fan, awards Suit Affinity, triggers Spirit passives, and refills back to 14 tiles.
    - **Discard (Costs 1 Discard):** Select 1 to 5 unwanted tiles to discard and draw fresh tiles from the wall.
-   - **Instant Full Hand (Mahjong!):** If all 14 tiles form 4 complete sets + 1 pair, the round ends **immediately with an 8x multiplier bonus**, saving all remaining Hands!
-4. **Shop Phase:** Bank unspent Hands as bonus coins ($1 per remaining hand), then purchase new Spirits or consumables.
+   - **Instant Full Hand (Mahjong!):** If all 14 tiles form 4 complete sets + 1 pair, the round ends **immediately with an 8.0x Fan multiplier bonus**, saving all remaining Hands!
+4. **Shop Phase:** Bank unspent Hands as bonus currency (¥1 Yuan per remaining hand), then purchase new Spirits (¥5 Yuan each) or consumables.
 5. **Ante Progression:** 4 Antes (East, South, West, North), each with 5 Rounds culminating in Boss Blinds with special gameplay restrictions.
 
 ---
@@ -128,7 +128,7 @@ flowchart TD
 
 ### 4.2 Standard Combos & Scoring Base Table
 
-| Combo | Tiles Required | Description | Base Chips | Base Mult | Affinity Gain |
+| Combo | Tiles Required | Description | Base Fu | Base Fan | Affinity Gain |
 |---|---|---|---|---|---|
 | **Pair (Toitsu)** | 2 identical tiles | Eye of the hand | 5 | 1.0x | +0.0x |
 | **Chow (Shuntsu)** | 3 sequential tiles (same suit) | e.g. 3-4-5 Bamboo | 15 | 2.0x | +0.1x |
@@ -141,8 +141,8 @@ flowchart TD
 
 ### 4.3 High-Tier Hand Modifiers (Yaku Post-Checks)
 
-* **Pure Hand (Chinitsu / 清一色):** All played tiles belong to a single numbered suit (excluding Honors). Adds **+150 Chips** and **10.0x Mult**!
-* **All Honors (Tsuuissou / 字一色):** Hand is composed entirely of Winds and Dragons. Adds **+180 Chips** and **12.0x Mult**!
+* **Pure Hand (Chinitsu / 清一色):** All played tiles belong to a single numbered suit (excluding Honors). Adds **+150 Fu** and **10.0x Fan**!
+* **All Honors (Tsuuissou / 字一色):** Hand is composed entirely of Winds and Dragons. Adds **+180 Fu** and **12.0x Fan**!
 
 ---
 
@@ -157,9 +157,9 @@ Spirits are passive collectible cards (akin to Balatro's Jokers). Up to **5 Spir
 |      BAMBOO VOW       |    BROKEN COMPASS     |     COMPASS ROSE      |
 |  [ Rare Artifact ]    |  [ Uncommon Artifact] |  [ Common Artifact ]  |
 |                       |                       |                       |
-| +0.5x Mult per Chow   | Playing 2 different   | The suit with the     |
+| +0.5x Fan per Chow    | Playing 2 different   | The suit with the     |
 | or Pong played in     | suits in one turn     | highest current       |
-| Bamboo this round.    | gives +20 Flat Chips, | Affinity adds +1 Chip |
+| Bamboo this round.    | gives +20 Flat Fu,    | Affinity adds +1 Fu   |
 | Resets on off-suit.   | but zeroes Affinity.  | per tile played.      |
 +-----------------------+-----------------------+-----------------------+
 ```
@@ -178,5 +178,5 @@ Spirits are passive collectible cards (akin to Balatro's Jokers). Up to **5 Spir
 3. **Juicy Micro-Interactions:**
    - Smooth vertical `Lerp` lifts (+36px) on hover and selection without layout jitter.
    - Live color-coded preview in the Dual-Box HUD (Gold for valid combos, Red for invalid).
-   - Floating text badges on action confirmation (`SORTED BY SUIT`, `+50 CHIPS!`).
+   - Floating text badges on action confirmation (`SORTED BY SUIT`, `+50 FU!`, `2.0X FAN`).
 4. **Audio Feedback:** Authentic physical Mahjong tile clacks on select/deselect, ascending pitch blips during scoring calculations, and cash register chimes upon shop purchases.

@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
     public int HandsRemaining = 4;
     public int DiscardsRemaining = 3;
     public int CurrentScore = 0;
-    public int Coins = 5;
+    public int Yuan = 5;
+    public int Coins { get => Yuan; set => Yuan = value; } // Backwards-compatible alias
     public int MaxSpirits = 5;
     
     public TileBag Deck { get; private set; }
@@ -55,7 +56,7 @@ public class GameManager : MonoBehaviour
     public void InitializeRun()
     {
         CurrentRound = 1;
-        Coins = 5;
+        Yuan = 5;
         EquippedSpirits.Clear();
         Deck = new TileBag();
         Hand = new PlayerHand();
@@ -121,9 +122,9 @@ public class GameManager : MonoBehaviour
     public bool BuySpirit(SpiritData spirit, int cost)
     {
         if (spirit == null) return false;
-        if (Coins < cost)
+        if (Yuan < cost)
         {
-            Debug.Log("[Shop] Not enough coins!");
+            Debug.Log("[Shop] Not enough Yuan!");
             return false;
         }
         if (EquippedSpirits.Count >= MaxSpirits)
@@ -132,9 +133,9 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
-        Coins -= cost;
+        Yuan -= cost;
         EquippedSpirits.Add(spirit);
-        Debug.Log($"[Shop] Purchased Spirit: {spirit.SpiritName} for ${cost}. Coins left: ${Coins}");
+        Debug.Log($"[Shop] Purchased Spirit: {spirit.SpiritName} for ¥{cost}. Yuan left: ¥{Yuan}");
         OnStateChanged?.Invoke();
         return true;
     }
@@ -144,8 +145,8 @@ public class GameManager : MonoBehaviour
         if (EquippedSpirits.Contains(spirit))
         {
             EquippedSpirits.Remove(spirit);
-            Coins += refund;
-            Debug.Log($"[Shop] Sold Spirit: {spirit.SpiritName} for ${refund}. Coins total: ${Coins}");
+            Yuan += refund;
+            Debug.Log($"[Shop] Sold Spirit: {spirit.SpiritName} for ¥{refund}. Yuan total: ¥{Yuan}");
             OnStateChanged?.Invoke();
         }
     }
@@ -158,10 +159,10 @@ public class GameManager : MonoBehaviour
         // 1. Try to play Full Hand first (instant win)
         if (selectedTiles.Count == 14)
         {
-            var (bonusChips, bonusMult) = ScoreEngine.EvaluateFullHand(selectedTiles);
-            if (bonusChips > 0)
+            var (bonusFu, bonusFan) = ScoreEngine.EvaluateFullHand(selectedTiles);
+            if (bonusFu > 0)
             {
-                int scoreGained = Mathf.RoundToInt(bonusChips * bonusMult);
+                int scoreGained = Mathf.RoundToInt(bonusFu * bonusFan);
                 CurrentScore += scoreGained;
                 Debug.Log($"FULL HAND ACHIEVED! Scored {scoreGained} bonus points.");
                 CheckExitConditions();
@@ -179,13 +180,13 @@ public class GameManager : MonoBehaviour
         }
         
         // 3. Valid combo
-        var (chips, mult) = ScoreEngine.Calculate(combo, Hand.Tiles, Affinity, EquippedSpirits, this);
-        int comboScore = Mathf.RoundToInt(chips * mult);
+        var (fu, fan) = ScoreEngine.Calculate(combo, Hand.Tiles, Affinity, EquippedSpirits, this);
+        int comboScore = Mathf.RoundToInt(fu * fan);
         
         CurrentScore += comboScore;
         HandsRemaining--;
         
-        Debug.Log($"Played {combo.Name}. Scored {comboScore}. Total: {CurrentScore}/{CurrentTargetScore}. Hands left: {HandsRemaining}");
+        Debug.Log($"Played {combo.Name}. Scored {comboScore} (Fu: {fu}, Fan: {fan:F1}). Total: {CurrentScore}/{CurrentTargetScore}. Hands left: {HandsRemaining}");
         
         Hand.RemoveTiles(selectedTiles);
         RefillHand();
@@ -237,9 +238,9 @@ public class GameManager : MonoBehaviour
     {
         if (CurrentScore >= CurrentTargetScore)
         {
-            int earnedCoins = 4 + HandsRemaining; // $4 base + $1 per unused hand
-            Coins += earnedCoins;
-            Debug.Log($"Quota Met! Earned ${earnedCoins} coins. Proceeding to Shop...");
+            int earnedYuan = 4 + HandsRemaining; // ¥4 base + ¥1 per unused hand
+            Yuan += earnedYuan;
+            Debug.Log($"Quota Met! Earned ¥{earnedYuan} Yuan. Proceeding to Shop...");
             
             if (CurrentRound >= MaxRounds)
             {

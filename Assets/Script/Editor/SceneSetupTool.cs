@@ -128,12 +128,12 @@ public class SceneSetupTool
             "Score at least\n<color=#E74C3C><size=140%><b>150</b></size></color>", 26, TextAlignmentOptions.Center);
 
         TextMeshProUGUI rewardText = CreateText(blindCardBox, "RewardText", new Vector2(0.05f, 0.04f), new Vector2(0.95f, 0.18f),
-            "Reward: <color=#F1C40F><b>$5</b></color>", 24, TextAlignmentOptions.Center);
+            "Reward: <color=#F1C40F><b>¥5</b></color>", 24, TextAlignmentOptions.Center);
 
-        // Money Badge
+        // Money Badge (Yuan)
         Transform moneyBox = CreateSubPanel(leftPanel, "MoneyBox", new Vector2(0.05f, 0.32f), new Vector2(0.95f, 0.43f), new Color(0.08f, 0.10f, 0.14f, 1f));
-        TextMeshProUGUI coinsText = CreateText(moneyBox, "CoinsText", Vector2.zero, Vector2.one,
-            "<color=#F1C40F><b>$5</b></color>", 44, TextAlignmentOptions.Center);
+        TextMeshProUGUI yuanText = CreateText(moneyBox, "YuanText", Vector2.zero, Vector2.one,
+            "<color=#F1C40F><b>¥5</b></color>", 44, TextAlignmentOptions.Center);
 
         // Ante & Round Badges
         Transform anteBox = CreateSubPanel(leftPanel, "AnteBox", new Vector2(0.05f, 0.18f), new Vector2(0.48f, 0.30f), new Color(0.08f, 0.10f, 0.14f, 1f));
@@ -162,109 +162,83 @@ public class SceneSetupTool
         rackRect.offsetMin = Vector2.zero;
         rackRect.offsetMax = Vector2.zero;
 
-        HorizontalLayoutGroup rLayout = rackObj.AddComponent<HorizontalLayoutGroup>();
-        rLayout.spacing = 14;
-        rLayout.childAlignment = TextAnchor.MiddleCenter;
-        rLayout.childControlWidth = true;
-        rLayout.childControlHeight = true;
+        HorizontalLayoutGroup rackLayout = rackObj.AddComponent<HorizontalLayoutGroup>();
+        rackLayout.spacing = 14;
+        rackLayout.childAlignment = TextAnchor.MiddleCenter;
+        rackLayout.childControlWidth = true;
+        rackLayout.childControlHeight = true;
 
         for (int i = 0; i < 5; i++)
         {
-            GameObject slotObj = new GameObject($"SpiritSlot_{i}", typeof(RectTransform), typeof(Image));
-            slotObj.transform.SetParent(rackObj.transform, false);
-            Image slotImg = slotObj.GetComponent<Image>();
-            slotImg.color = new Color(0.10f, 0.20f, 0.16f, 0.9f);
+            GameObject slot = new GameObject($"SpiritSlot_{i}", typeof(RectTransform), typeof(Image));
+            slot.transform.SetParent(rackObj.transform, false);
+            Image slotImg = slot.GetComponent<Image>();
+            slotImg.color = new Color(0.10f, 0.14f, 0.18f, 0.65f);
 
-            CreateText(slotObj.transform, "Label", Vector2.zero, Vector2.one, "<color=#7F8C8D>Empty</color>", 24, TextAlignmentOptions.Center);
+            CreateText(slot.transform, "Label", Vector2.zero, Vector2.one,
+                "<color=#7F8C8D>Empty</color>", 24, TextAlignmentOptions.Center);
         }
 
-        // Middle-Top: Suit Affinity Multipliers Bar
-        TextMeshProUGUI suitAffinityText = CreateText(centerStage, "SuitAffinityText", new Vector2(0.05f, 0.74f), new Vector2(0.95f, 0.82f),
+        // Middle: Suit Affinity HUD
+        Transform affinityBox = CreateSubPanel(centerStage, "SuitAffinityHUD", new Vector2(0.05f, 0.72f), new Vector2(0.95f, 0.82f), new Color(0.05f, 0.08f, 0.07f, 0.8f));
+        TextMeshProUGUI suitAffinityText = CreateText(affinityBox, "AffinityText", Vector2.zero, Vector2.one,
             "<color=#2ECC71><b>Bamboo:</b> 1.0x</color>   |   <color=#E74C3C><b>Chars:</b> 1.0x</color>   |   <color=#3498DB><b>Dots:</b> 1.0x</color>", 28, TextAlignmentOptions.Center);
 
-        // Sorting Quick Bar
-        GameObject sortObj = new GameObject("SortBarContainer", typeof(RectTransform));
-        sortObj.transform.SetParent(centerStage, false);
-        RectTransform sortRect = sortObj.GetComponent<RectTransform>();
-        sortRect.anchorMin = new Vector2(0.12f, 0.60f);
-        sortRect.anchorMax = new Vector2(0.88f, 0.68f);
-        sortRect.offsetMin = Vector2.zero;
-        sortRect.offsetMax = Vector2.zero;
-
-        HorizontalLayoutGroup sLayout = sortObj.AddComponent<HorizontalLayoutGroup>();
-        sLayout.spacing = 16;
-        sLayout.childAlignment = TextAnchor.MiddleCenter;
-        sLayout.childControlWidth = true;
-        sLayout.childControlHeight = true;
-
-        Button sortSuitBtn = CreateButton(sortObj.transform, "SortSuitButton", "SORT SUIT", new Color(0.14f, 0.55f, 0.42f), 24);
-        Button sortRankBtn = CreateButton(sortObj.transform, "SortRankButton", "SORT RANK", new Color(0.48f, 0.25f, 0.65f), 24);
-        Button autoComboBtn = CreateButton(sortObj.transform, "AutoComboButton", "AUTO SELECT", new Color(0.20f, 0.50f, 0.75f), 24);
-
-        // Upright Hand Container (14 Adjacent Tiles 70x95) with Recessed Felt Backdrop
-        Transform handTray = CreateSubPanel(centerStage, "HandTrayBackdrop", new Vector2(0.01f, 0.18f), new Vector2(0.99f, 0.58f), new Color(0.04f, 0.09f, 0.07f, 0.85f));
-
+        // Center Area: Hand Container (Adjacency layout with 14 tiles)
         GameObject handObj = new GameObject("HandContainer", typeof(RectTransform));
-        handObj.transform.SetParent(handTray, false);
+        handObj.transform.SetParent(centerStage, false);
         RectTransform handRect = handObj.GetComponent<RectTransform>();
-        handRect.anchorMin = Vector2.zero;
-        handRect.anchorMax = Vector2.one;
+        handRect.anchorMin = new Vector2(0.01f, 0.32f);
+        handRect.anchorMax = new Vector2(0.99f, 0.68f);
         handRect.offsetMin = Vector2.zero;
         handRect.offsetMax = Vector2.zero;
 
-        HorizontalLayoutGroup layout = handObj.AddComponent<HorizontalLayoutGroup>();
-        layout.spacing = 0; // Seamless touching side-by-side tiles!
-        layout.childAlignment = TextAnchor.MiddleCenter;
-        layout.childControlWidth = false;
-        layout.childControlHeight = false;
-        layout.childForceExpandWidth = false;
-        layout.childForceExpandHeight = false;
+        HorizontalLayoutGroup handLayout = handObj.AddComponent<HorizontalLayoutGroup>();
+        handLayout.spacing = 0; // 0px spacing for contiguous adjacent tiles
+        handLayout.childAlignment = TextAnchor.MiddleCenter;
+        handLayout.childControlWidth = false;
+        handLayout.childControlHeight = false;
+        handLayout.childForceExpandWidth = false;
+        handLayout.childForceExpandHeight = false;
 
-        // Action Buttons Row (Play Combo & Discard)
-        GameObject actObj = new GameObject("ActionRowContainer", typeof(RectTransform));
-        actObj.transform.SetParent(centerStage, false);
-        RectTransform actRect = actObj.GetComponent<RectTransform>();
-        actRect.anchorMin = new Vector2(0.18f, 0.04f);
-        actRect.anchorMax = new Vector2(0.82f, 0.15f);
-        actRect.offsetMin = Vector2.zero;
-        actRect.offsetMax = Vector2.zero;
+        // Sorting Quick Bar
+        Button sortSuitBtn = CreateButton(centerStage, "SortSuitButton", "SORT SUIT", new Color(0.18f, 0.45f, 0.32f), 24, new Vector2(0.08f, 0.22f), new Vector2(0.34f, 0.30f));
+        Button sortRankBtn = CreateButton(centerStage, "SortRankButton", "SORT RANK", new Color(0.18f, 0.45f, 0.32f), 24, new Vector2(0.37f, 0.22f), new Vector2(0.63f, 0.30f));
+        Button autoComboBtn = CreateButton(centerStage, "AutoComboButton", "AUTO SELECT", new Color(0.25f, 0.35f, 0.55f), 24, new Vector2(0.66f, 0.22f), new Vector2(0.92f, 0.30f));
 
-        HorizontalLayoutGroup actLayout = actObj.AddComponent<HorizontalLayoutGroup>();
-        actLayout.spacing = 24;
-        actLayout.childAlignment = TextAnchor.MiddleCenter;
-        actLayout.childControlWidth = true;
-        actLayout.childControlHeight = true;
-
-        Button playButton = CreateButton(actObj.transform, "PlayButton", "PLAY COMBO", new Color(0.18f, 0.75f, 0.35f), 32);
-        Button discardButton = CreateButton(actObj.transform, "DiscardButton", "DISCARD", new Color(0.85f, 0.28f, 0.22f), 32);
+        // Bottom Action Bar: Play Combo & Discard
+        Button playButton = CreateButton(centerStage, "PlayComboButton", "PLAY COMBO", new Color(0.18f, 0.65f, 0.38f), 32, new Vector2(0.10f, 0.04f), new Vector2(0.48f, 0.18f));
+        Button discardButton = CreateButton(centerStage, "DiscardButton", "DISCARD", new Color(0.85f, 0.3f, 0.25f), 32, new Vector2(0.52f, 0.04f), new Vector2(0.90f, 0.18f));
 
         // ----------------------------------------------------
-        // COLUMN 3: RIGHT PANEL ("Score Engine & Balatro Dual-Box" - Inspired by Image 1)
+        // COLUMN 3: RIGHT PANEL ("Score Engine & Dual-Box HUD" - Balatro Style)
         // ----------------------------------------------------
-        Transform rightPanel = CreateSubPanel(mainPanel, "RightScoreEnginePanel", new Vector2(0.78f, 0.025f), new Vector2(0.985f, 0.975f), new Color(0.10f, 0.13f, 0.17f, 0.95f));
+        Transform rightPanel = CreateSubPanel(mainPanel, "RightScorePanel", new Vector2(0.78f, 0.025f), new Vector2(0.985f, 0.975f), new Color(0.08f, 0.10f, 0.14f, 0.98f));
 
-        // Hands & Discards Pills
-        Transform handsPill = CreateSubPanel(rightPanel, "HandsPill", new Vector2(0.05f, 0.85f), new Vector2(0.48f, 0.96f), new Color(0.08f, 0.18f, 0.28f, 1f));
-        TextMeshProUGUI handsText = CreateText(handsPill, "HandsText", Vector2.zero, Vector2.one,
-            "Hands\n<size=140%><color=#3498DB><b>4</b></color></size>", 26, TextAlignmentOptions.Center);
+        // Hands & Discards Badges
+        Transform handsBox = CreateSubPanel(rightPanel, "HandsRemainingBox", new Vector2(0.05f, 0.86f), new Vector2(0.48f, 0.96f), new Color(0.11f, 0.31f, 0.55f, 1f));
+        TextMeshProUGUI handsText = CreateText(handsBox, "HandsText", Vector2.zero, Vector2.one,
+            "Hands\n<color=#3498DB><b>4</b></color>", 24, TextAlignmentOptions.Center);
 
-        Transform discardsPill = CreateSubPanel(rightPanel, "DiscardsPill", new Vector2(0.52f, 0.85f), new Vector2(0.95f, 0.96f), new Color(0.28f, 0.14f, 0.08f, 1f));
-        TextMeshProUGUI discardsText = CreateText(discardsPill, "DiscardsText", Vector2.zero, Vector2.one,
-            "Discards\n<size=140%><color=#E67E22><b>3</b></color></size>", 26, TextAlignmentOptions.Center);
+        Transform discardsBox = CreateSubPanel(rightPanel, "DiscardsRemainingBox", new Vector2(0.52f, 0.86f), new Vector2(0.95f, 0.96f), new Color(0.65f, 0.35f, 0.12f, 1f));
+        TextMeshProUGUI discardsText = CreateText(discardsBox, "DiscardsText", Vector2.zero, Vector2.one,
+            "Discards\n<color=#E67E22><b>3</b></color>", 24, TextAlignmentOptions.Center);
 
-        // Round Score
-        TextMeshProUGUI roundScoreText = CreateText(rightPanel, "RoundScoreText", new Vector2(0.05f, 0.72f), new Vector2(0.95f, 0.83f),
-            "Round score\n<size=150%><b>0</b></size>", 26, TextAlignmentOptions.Center);
+        // Round Score & Progress Bar
+        Transform roundScoreBox = CreateSubPanel(rightPanel, "RoundScoreBox", new Vector2(0.05f, 0.70f), new Vector2(0.95f, 0.84f), new Color(0.06f, 0.08f, 0.11f, 1f));
+        TextMeshProUGUI roundScoreText = CreateText(roundScoreBox, "RoundScoreText", new Vector2(0.05f, 0.28f), new Vector2(0.95f, 0.95f),
+            "Round score\n<b>0</b>", 24, TextAlignmentOptions.Center);
 
-        // Score Progress Bar
-        GameObject bgObj = new GameObject("ScoreProgressBar", typeof(RectTransform), typeof(Image));
-        bgObj.transform.SetParent(rightPanel, false);
+        // Progress Bar
+        GameObject bgObj = new GameObject("ScoreProgressBarBG", typeof(RectTransform), typeof(Image));
+        bgObj.transform.SetParent(roundScoreBox, false);
         RectTransform bgRect = bgObj.GetComponent<RectTransform>();
-        bgRect.anchorMin = new Vector2(0.08f, 0.70f);
-        bgRect.anchorMax = new Vector2(0.92f, 0.715f);
+        bgRect.anchorMin = new Vector2(0.08f, 0.08f);
+        bgRect.anchorMax = new Vector2(0.92f, 0.24f);
         bgRect.offsetMin = Vector2.zero;
         bgRect.offsetMax = Vector2.zero;
-        bgObj.GetComponent<Image>().color = new Color(0.2f, 0.25f, 0.35f, 0.8f);
+        Image bgImg = bgObj.GetComponent<Image>();
+        bgImg.color = new Color(0.15f, 0.18f, 0.24f, 1f);
 
         GameObject fillObj = new GameObject("Fill", typeof(RectTransform), typeof(Image));
         fillObj.transform.SetParent(bgObj.transform, false);
@@ -286,16 +260,16 @@ public class SceneSetupTool
         TextMeshProUGUI previewComboNameText = CreateText(comboPreviewBox, "ComboNameText", new Vector2(0.05f, 0.68f), new Vector2(0.95f, 0.95f),
             "<color=#7F8C8D><b>SELECT TILES</b></color>", 28, TextAlignmentOptions.Center);
 
-        // Blue Chips Box & Red Mult Box
-        Transform chipsBox = CreateSubPanel(comboPreviewBox, "ChipsBox", new Vector2(0.08f, 0.26f), new Vector2(0.44f, 0.64f), new Color(0.11f, 0.31f, 0.55f, 1f));
-        TextMeshProUGUI chipsBoxText = CreateText(chipsBox, "ChipsValue", Vector2.zero, Vector2.one,
+        // Blue Fu Box & Red Fan Box
+        Transform fuBox = CreateSubPanel(comboPreviewBox, "FuBox", new Vector2(0.08f, 0.26f), new Vector2(0.44f, 0.64f), new Color(0.11f, 0.31f, 0.55f, 1f));
+        TextMeshProUGUI fuBoxText = CreateText(fuBox, "FuValue", Vector2.zero, Vector2.one,
             "<b>0</b>", 40, TextAlignmentOptions.Center);
 
         CreateText(comboPreviewBox, "MultiplySymbol", new Vector2(0.44f, 0.26f), new Vector2(0.56f, 0.64f),
             "<color=#E74C3C><b>x</b></color>", 34, TextAlignmentOptions.Center);
 
-        Transform multBox = CreateSubPanel(comboPreviewBox, "MultBox", new Vector2(0.56f, 0.26f), new Vector2(0.92f, 0.64f), new Color(0.65f, 0.18f, 0.14f, 1f));
-        TextMeshProUGUI multBoxText = CreateText(multBox, "MultValue", Vector2.zero, Vector2.one,
+        Transform fanBox = CreateSubPanel(comboPreviewBox, "FanBox", new Vector2(0.56f, 0.26f), new Vector2(0.92f, 0.64f), new Color(0.65f, 0.18f, 0.14f, 1f));
+        TextMeshProUGUI fanBoxText = CreateText(fanBox, "FanValue", Vector2.zero, Vector2.one,
             "<b>1.0</b>", 40, TextAlignmentOptions.Center);
 
         TextMeshProUGUI previewTotalScoreText = CreateText(comboPreviewBox, "TotalScoreText", new Vector2(0.05f, 0.04f), new Vector2(0.95f, 0.24f),
@@ -311,7 +285,7 @@ public class SceneSetupTool
         // ==========================================
         Transform shopPanel = CreatePanel(canvasObj.transform, "ShopUI", new Color(0.1f, 0.12f, 0.18f, 1f));
         TextMeshProUGUI shopStatusText = CreateText(shopPanel, "ShopStatusText", new Vector2(0.1f, 0.78f), new Vector2(0.9f, 0.95f),
-            "<b>SPIRIT SHOP</b>   |   Coins: $5", 38, TextAlignmentOptions.Center);
+            "<b>SPIRIT SHOP</b>   |   Yuan: ¥5", 38, TextAlignmentOptions.Center);
 
         GameObject catObj = new GameObject("ShopCatalogContainer", typeof(RectTransform));
         catObj.transform.SetParent(shopPanel, false);
@@ -339,26 +313,33 @@ public class SceneSetupTool
             CreateText(cardObj.transform, "CardText", new Vector2(0.05f, 0.35f), new Vector2(0.95f, 0.95f),
                 $"<b><color=#F1C40F>{spirit.SpiritName}</color></b>\n\n{spirit.Description}", 24, TextAlignmentOptions.Center);
 
-            CreateButton(cardObj.transform, "BuyButton", "BUY ($5)", new Color(0.18f, 0.75f, 0.35f), 24, new Vector2(0.1f, 0.05f), new Vector2(0.9f, 0.3f));
+            Button buyBtn = CreateButton(cardObj.transform, "BuyButton", "BUY (¥5)", new Color(0.18f, 0.65f, 0.38f), 24,
+                new Vector2(0.1f, 0.08f), new Vector2(0.9f, 0.28f));
         }
 
-        Button nextRoundBtn = CreateButton(shopPanel, "NextRoundButton", "NEXT ROUND", new Color(0.9f, 0.6f, 0.1f), 32, new Vector2(0.35f, 0.08f), new Vector2(0.65f, 0.22f));
+        Button nextRoundBtn = CreateButton(shopPanel, "NextRoundButton", "NEXT ROUND ➔", new Color(0.2f, 0.5f, 0.85f), 32,
+            new Vector2(0.35f, 0.08f), new Vector2(0.65f, 0.20f));
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(nextRoundBtn.onClick, uiManager.NextRoundFromShop);
 
         // ==========================================
         // 7. Panel 4: GameOverUI
         // ==========================================
-        Transform gameOverPanel = CreatePanel(canvasObj.transform, "GameOverUI", new Color(0.2f, 0.05f, 0.05f, 1f));
-        TextMeshProUGUI gameOverText = CreateText(gameOverPanel, "GameOverSummaryText", new Vector2(0.1f, 0.45f), new Vector2(0.9f, 0.85f),
-            "<b>GAME OVER</b>", 48, TextAlignmentOptions.Center);
-        Button restartBtn = CreateButton(gameOverPanel, "RestartButton", "PLAY AGAIN", new Color(0.85f, 0.3f, 0.25f), 32, new Vector2(0.35f, 0.25f), new Vector2(0.65f, 0.38f));
+        Transform gameOverPanel = CreatePanel(canvasObj.transform, "GameOverUI", new Color(0.12f, 0.04f, 0.04f, 1f));
+        TextMeshProUGUI gameOverText = CreateText(gameOverPanel, "GameOverSummaryText", new Vector2(0.2f, 0.4f), new Vector2(0.8f, 0.8f),
+            "<b>GAME OVER</b>\n\nQuota was not met.", 36, TextAlignmentOptions.Center);
+        Button restartBtn = CreateButton(gameOverPanel, "RestartButton", "TRY AGAIN", new Color(0.85f, 0.3f, 0.25f), 30,
+            new Vector2(0.35f, 0.2f), new Vector2(0.65f, 0.32f));
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(restartBtn.onClick, uiManager.RestartRun);
 
         // ==========================================
         // 8. Panel 5: VictoryUI
         // ==========================================
-        Transform victoryPanel = CreatePanel(canvasObj.transform, "VictoryUI", new Color(0.05f, 0.18f, 0.1f, 1f));
-        TextMeshProUGUI victoryText = CreateText(victoryPanel, "VictorySummaryText", new Vector2(0.1f, 0.45f), new Vector2(0.9f, 0.85f),
-            "<b>VICTORY!</b>", 48, TextAlignmentOptions.Center);
-        Button victoryPlayAgainBtn = CreateButton(victoryPanel, "PlayAgainButton", "PLAY AGAIN", new Color(0.18f, 0.75f, 0.35f), 32, new Vector2(0.35f, 0.25f), new Vector2(0.65f, 0.38f));
+        Transform victoryPanel = CreatePanel(canvasObj.transform, "VictoryUI", new Color(0.04f, 0.12f, 0.06f, 1f));
+        TextMeshProUGUI victoryText = CreateText(victoryPanel, "VictorySummaryText", new Vector2(0.2f, 0.4f), new Vector2(0.8f, 0.8f),
+            "<b>VICTORY!</b>\n\nYou completed all rounds of Malajong!", 36, TextAlignmentOptions.Center);
+        Button victoryRestartBtn = CreateButton(victoryPanel, "VictoryRestartButton", "MAIN MENU", new Color(0.18f, 0.65f, 0.38f), 30,
+            new Vector2(0.35f, 0.2f), new Vector2(0.65f, 0.32f));
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(victoryRestartBtn.onClick, uiManager.RestartRun);
 
         // 9. Generate & Save Upscaled TilePrefab (70x95)
         GameObject tilePrefab = CreateOrUpdateTilePrefab();
@@ -383,9 +364,11 @@ public class SceneSetupTool
         // Assign Tile Assets to GameManager
         gameManager.AllTileTypes = LoadAllTileAssets();
 
-        // Wire up UIManager references
+        // ==========================================
+        // 11. Wire References to UIManager
+        // ==========================================
         uiManager.gameManager = gameManager;
-        uiManager.StartMenuPanel = startPanel.gameObject;
+        uiManager.StartMenuPanel = startMenuPanel.gameObject;
         uiManager.PlayingPanel = mainPanel.gameObject;
         uiManager.ShopPanel = shopPanel.gameObject;
         uiManager.GameOverPanel = gameOverPanel.gameObject;
@@ -396,7 +379,7 @@ public class SceneSetupTool
         uiManager.BlindTileIcon = blindTileImage;
         uiManager.TargetScoreText = targetScoreText;
         uiManager.RewardText = rewardText;
-        uiManager.CoinsText = coinsText;
+        uiManager.YuanText = yuanText;
         uiManager.AnteText = anteText;
         uiManager.RoundText = roundText;
         uiManager.RunInfoButton = runInfoBtn;
@@ -420,8 +403,8 @@ public class SceneSetupTool
         uiManager.ScoreProgressBar = scoreFillImage;
         uiManager.ComboPreviewBox = comboPreviewBox.gameObject;
         uiManager.PreviewComboNameText = previewComboNameText;
-        uiManager.PreviewChipsBoxText = chipsBoxText;
-        uiManager.PreviewMultBoxText = multBoxText;
+        uiManager.PreviewFuBoxText = fuBoxText;
+        uiManager.PreviewFanBoxText = fanBoxText;
         uiManager.PreviewTotalScoreText = previewTotalScoreText;
         uiManager.PlayableCombosText = playableCombosText;
 

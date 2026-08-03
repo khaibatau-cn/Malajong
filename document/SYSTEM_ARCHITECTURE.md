@@ -142,8 +142,8 @@ Assets/
 * **Base Class:** `public abstract class Combo`
   - `public string Name { get; }`
   - `public List<Tile> Tiles { get; }`
-  - `public abstract int BaseChips { get; }`
-  - `public abstract float BaseMult { get; }`
+  - `public abstract int BaseFu { get; }` (Aliased to `BaseChips`)
+  - `public abstract float BaseFan { get; }` (Aliased to `BaseMult`)
   - `public abstract float AffinityBonus { get; }`
   - `public abstract bool IsValid();`
 * **Subclasses:**
@@ -156,10 +156,10 @@ Assets/
 ---
 
 ### 3.3 `Spirit` Hierarchy (Lifecycle Hook Hooks)
-* **Base Class:** `public abstract class Spirit`
+* **Base Class:** `public abstract class SpiritData : ScriptableObject`
 * **Lifecycle Virtual Hooks:**
   ```csharp
-  public virtual void OnComboPlayed(Combo combo, ref int chips, ref float mult, SuitAffinity affinity, GameManager run);
+  public virtual void OnComboScored(Combo combo, ref int fu, ref float fan, GameManager run);
   public virtual void OnTileDrawn(Tile tile, GameManager run);
   public virtual void OnRoundStart(GameManager run);
   public virtual void OnRoundEnd(GameManager run);

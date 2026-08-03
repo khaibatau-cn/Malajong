@@ -6,7 +6,7 @@ public class MVPGameLoopTester : MonoBehaviour
     void Start()
     {
         TestGameInit();
-        TestRoundProgressionAndCoins();
+        TestRoundProgressionAndYuan();
         TestSpiritPurchase();
         TestVictoryCondition();
         TestHandSorting();
@@ -50,7 +50,7 @@ public class MVPGameLoopTester : MonoBehaviour
         gm.StartGame();
 
         Debug.Assert(gm.CurrentRound == 1, "Initial round should be 1");
-        Debug.Assert(gm.Coins == 5, "Initial coins should be 5");
+        Debug.Assert(gm.Yuan == 5, "Initial Yuan should be 5");
         Debug.Assert(gm.State == GameManager.GameState.Playing, "Initial state should be Playing");
         Debug.Assert(gm.Hand.Tiles.Count == 14, "Initial hand count should be 14");
         Debug.Assert(gm.CurrentTargetScore == 150, "Round 1 target score should be 150");
@@ -58,7 +58,7 @@ public class MVPGameLoopTester : MonoBehaviour
         DestroyImmediate(gmObj);
     }
 
-    private void TestRoundProgressionAndCoins()
+    private void TestRoundProgressionAndYuan()
     {
         GameObject gmObj = new GameObject("TestGM");
         GameManager gm = gmObj.AddComponent<GameManager>();
@@ -85,15 +85,15 @@ public class MVPGameLoopTester : MonoBehaviour
         SpiritData spirit = CreateMockSpirit("Bamboo Master");
         bool success = gm.BuySpirit(spirit, 5);
 
-        Debug.Assert(success == true, "Spirit purchase should succeed when player has $5");
-        Debug.Assert(gm.Coins == 0, "Coins should be 0 after buying $5 spirit");
+        Debug.Assert(success == true, "Spirit purchase should succeed when player has ¥5");
+        Debug.Assert(gm.Yuan == 0, "Yuan should be 0 after buying ¥5 spirit");
         Debug.Assert(gm.EquippedSpirits.Count == 1, "Equipped spirits count should be 1");
         Debug.Assert(gm.EquippedSpirits[0].SpiritName == "Bamboo Master", "Equipped spirit name should match");
 
-        // Try buying without coins
+        // Try buying without Yuan
         SpiritData spirit2 = CreateMockSpirit("Second Spirit");
         bool failBuy = gm.BuySpirit(spirit2, 5);
-        Debug.Assert(failBuy == false, "Spirit purchase should fail when player has 0 coins");
+        Debug.Assert(failBuy == false, "Spirit purchase should fail when player has 0 Yuan");
 
         DestroyImmediate(gmObj);
     }
@@ -151,8 +151,8 @@ public class MVPGameLoopTester : MonoBehaviour
         var preview = ScoreEngine.PreviewScore(chowTiles, chowTiles);
         Debug.Assert(preview.IsValid == true, "Chow 1-2-3 Bamboo should be valid preview");
         Debug.Assert(preview.ComboName == "Chow", "Combo name should be Chow");
-        Debug.Assert(preview.TotalChips == 36, "Total chips should be 30 + 1 + 2 + 3 = 36");
-        Debug.Assert(preview.TotalMult == 3.0f, "Base mult for Chow should be 3.0f");
+        Debug.Assert(preview.TotalFu == 36, "Total Fu should be 30 + 1 + 2 + 3 = 36");
+        Debug.Assert(preview.TotalFan == 3.0f, "Base Fan for Chow should be 3.0f");
         Debug.Assert(preview.ProjectedScore == 108, "Projected score should be 36 * 3 = 108");
 
         var invalidTiles = new List<Tile>

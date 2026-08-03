@@ -6,14 +6,22 @@ public class ScorePreview
     public bool IsValid;
     public string ComboName = "None";
     public string DetailText = "";
-    public int BaseChips;
-    public int TileChips;
-    public int TotalChips;
-    public float BaseMult = 1f;
-    public float AffinityMult = 1f;
-    public float TotalMult = 1f;
+    public int BaseFu;
+    public int TileFu;
+    public int TotalFu;
+    public float BaseFan = 1f;
+    public float AffinityFan = 1f;
+    public float TotalFan = 1f;
     public int ProjectedScore;
     public Combo DetectedCombo;
+
+    // Backwards-compatible aliases
+    public int BaseChips { get => BaseFu; set => BaseFu = value; }
+    public int TileChips { get => TileFu; set => TileFu = value; }
+    public int TotalChips { get => TotalFu; set => TotalFu = value; }
+    public float BaseMult { get => BaseFan; set => BaseFan = value; }
+    public float AffinityMult { get => AffinityFan; set => AffinityFan = value; }
+    public float TotalMult { get => TotalFan; set => TotalFan = value; }
 }
 
 public static class ScoreEngine
@@ -31,19 +39,19 @@ public static class ScoreEngine
 
         if (selectedTiles.Count == 14)
         {
-            var (bonusChips, bonusMult) = EvaluateFullHand(selectedTiles);
-            if (bonusChips > 0)
+            var (bonusFu, bonusFan) = EvaluateFullHand(selectedTiles);
+            if (bonusFu > 0)
             {
                 preview.IsValid = true;
                 preview.ComboName = "Full Winning Hand";
                 preview.DetailText = "14-tile complete Mahjong winning hand!";
-                preview.BaseChips = bonusChips;
-                preview.TileChips = 0;
-                preview.TotalChips = bonusChips;
-                preview.BaseMult = bonusMult;
-                preview.AffinityMult = 1f;
-                preview.TotalMult = bonusMult;
-                preview.ProjectedScore = UnityEngine.Mathf.RoundToInt(preview.TotalChips * preview.TotalMult);
+                preview.BaseFu = bonusFu;
+                preview.TileFu = 0;
+                preview.TotalFu = bonusFu;
+                preview.BaseFan = bonusFan;
+                preview.AffinityFan = 1f;
+                preview.TotalFan = bonusFan;
+                preview.ProjectedScore = UnityEngine.Mathf.RoundToInt(preview.TotalFu * preview.TotalFan);
                 return preview;
             }
         }
@@ -60,22 +68,22 @@ public static class ScoreEngine
         preview.IsValid = true;
         preview.DetectedCombo = combo;
         preview.ComboName = combo.Name;
-        preview.BaseChips = combo.BaseChips;
-        preview.TileChips = combo.Tiles.Sum(t => t.Rank);
-        preview.TotalChips = preview.BaseChips + preview.TileChips;
-        preview.BaseMult = combo.BaseMult;
+        preview.BaseFu = combo.BaseFu;
+        preview.TileFu = combo.Tiles.Sum(t => t.Rank);
+        preview.TotalFu = preview.BaseFu + preview.TileFu;
+        preview.BaseFan = combo.BaseFan;
 
-        int chips = preview.TotalChips;
-        float mult = preview.BaseMult;
+        int fu = preview.TotalFu;
+        float fan = preview.BaseFan;
 
         // Simulate bonuses non-destructively
-        ApplyPostCheckBonuses(fullHand, ref chips, ref mult, activeSpirits, gm);
+        ApplyPostCheckBonuses(fullHand, ref fu, ref fan, activeSpirits, gm);
 
         if (activeSpirits != null)
         {
             foreach (var spirit in activeSpirits)
             {
-                spirit.OnComboScored(combo, ref chips, ref mult, gm);
+                spirit.OnComboScored(combo, ref fu, ref fan, gm);
             }
         }
 
@@ -83,35 +91,35 @@ public static class ScoreEngine
         if (affinityManager != null && combo.Tiles.Count > 0 && !combo.Tiles[0].IsHonor)
         {
             affMult = affinityManager.GetMultiplier(combo.Tiles[0].Suit);
-            mult *= affMult;
+            fan *= affMult;
         }
 
-        preview.TotalChips = chips;
-        preview.AffinityMult = affMult;
-        preview.TotalMult = mult;
-        preview.ProjectedScore = UnityEngine.Mathf.RoundToInt(chips * mult);
+        preview.TotalFu = fu;
+        preview.AffinityFan = affMult;
+        preview.TotalFan = fan;
+        preview.ProjectedScore = UnityEngine.Mathf.RoundToInt(fu * fan);
         preview.DetailText = $"{combo.Tiles[0].Suit} {combo.Name}";
 
         return preview;
     }
 
-    public static (int chips, float mult) Calculate(Combo combo, List<Tile> fullHand, SuitAffinity affinityManager = null, IEnumerable<SpiritData> activeSpirits = null, GameManager gm = null)
+    public static (int fu, float fan) Calculate(Combo combo, List<Tile> fullHand, SuitAffinity affinityManager = null, IEnumerable<SpiritData> activeSpirits = null, GameManager gm = null)
     {
         if (!combo.IsValid())
         {
             return (0, 0f);
         }
 
-        int chips = combo.BaseChips + combo.Tiles.Sum(t => t.Rank);
-        float mult = combo.BaseMult;
+        int fu = combo.BaseFu + combo.Tiles.Sum(t => t.Rank);
+        float fan = combo.BaseFan;
 
-        ApplyPostCheckBonuses(fullHand, ref chips, ref mult, activeSpirits, gm);
+        ApplyPostCheckBonuses(fullHand, ref fu, ref fan, activeSpirits, gm);
 
         if (activeSpirits != null)
         {
             foreach (var spirit in activeSpirits)
             {
-                spirit.OnComboScored(combo, ref chips, ref mult, gm);
+                spirit.OnComboScored(combo, ref fu, ref fan, gm);
             }
         }
 
@@ -131,22 +139,22 @@ public static class ScoreEngine
             }
             if (combo.Tiles.Count > 0 && !combo.Tiles[0].IsHonor) 
             {
-                mult *= affinityManager.GetMultiplier(combo.Tiles[0].Suit);
+                fan *= affinityManager.GetMultiplier(combo.Tiles[0].Suit);
             }
         }
 
-        return (chips, mult);
+        return (fu, fan);
     }
 
-    private static void ApplyPostCheckBonuses(List<Tile> hand, ref int chips, ref float mult, IEnumerable<SpiritData> activeSpirits, GameManager gm)
+    private static void ApplyPostCheckBonuses(List<Tile> hand, ref int fu, ref float fan, IEnumerable<SpiritData> activeSpirits, GameManager gm)
     {
         if (hand == null || hand.Count != 13) return; // Added 13 check
 
         bool isAllHonors = hand.All(t => t.IsHonor);
         if (isAllHonors)
         {
-            chips += 180;
-            mult *= 12.0f;
+            fu += 180;
+            fan *= 12.0f;
             return;
         }
 
@@ -158,8 +166,8 @@ public static class ScoreEngine
 
             if (isPureHand)
             {
-                chips += 150;
-                mult *= 10.0f;
+                fu += 150;
+                fan *= 10.0f;
             }
         }
 
@@ -167,7 +175,7 @@ public static class ScoreEngine
         {
             foreach (var spirit in activeSpirits)
             {
-                spirit.OnPostCheckBonuses(hand, ref chips, ref mult, gm);
+                spirit.OnPostCheckBonuses(hand, ref fu, ref fan, gm);
             }
         }
     }
