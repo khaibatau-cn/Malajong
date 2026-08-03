@@ -317,7 +317,7 @@ public class SceneSetupTool
                 new Vector2(0.1f, 0.08f), new Vector2(0.9f, 0.28f));
         }
 
-        Button nextRoundBtn = CreateButton(shopPanel, "NextRoundButton", "NEXT ROUND ➔", new Color(0.2f, 0.5f, 0.85f), 32,
+        Button nextRoundBtn = CreateButton(shopPanel, "NextRoundButton", "NEXT ROUND >>", new Color(0.2f, 0.5f, 0.85f), 32,
             new Vector2(0.35f, 0.08f), new Vector2(0.65f, 0.20f));
 
         // ==========================================
@@ -516,6 +516,20 @@ public class SceneSetupTool
             {
                 newFontAsset.material.name = $"{ttfFont.name} Material";
                 AssetDatabase.AddObjectToAsset(newFontAsset.material, newFontAsset);
+            }
+
+            // Assign default LiberationSans SDF as fallback for any rare unicode symbols
+            TMP_FontAsset defaultFallback = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset");
+            if (defaultFallback != null)
+            {
+                if (newFontAsset.fallbackFontAssetTable == null)
+                {
+                    newFontAsset.fallbackFontAssetTable = new List<TMP_FontAsset>();
+                }
+                if (!newFontAsset.fallbackFontAssetTable.Contains(defaultFallback))
+                {
+                    newFontAsset.fallbackFontAssetTable.Add(defaultFallback);
+                }
             }
 
             EditorUtility.SetDirty(newFontAsset);
