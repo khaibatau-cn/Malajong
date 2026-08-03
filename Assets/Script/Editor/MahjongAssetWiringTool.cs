@@ -84,7 +84,9 @@ public class MahjongAssetWiringTool
         AddTileMeta(metaDataList, "Honor_6", startX + 5 * stepX, 3, tileW, tileH, stepY, startYFromTop, texHeight); // Green Dragon (Fa)
         AddTileMeta(metaDataList, "Honor_7", startX + 6 * stepX, 3, tileW, tileH, stepY, startYFromTop, texHeight); // Red Dragon (Chun)
 
+#pragma warning disable 0618
         importer.spritesheet = metaDataList.ToArray();
+#pragma warning restore 0618
         EditorUtility.SetDirty(importer);
         importer.SaveAndReimport();
         AssetDatabase.Refresh();
@@ -113,7 +115,9 @@ public class MahjongAssetWiringTool
         AddTileMeta(metaDataList, "Tile_Back_Red", 9 + 128, 0, 46, 62, 64, 1, texHeight);
         AddTileMeta(metaDataList, "Tile_Back_Black", 9 + 192, 0, 46, 62, 64, 1, texHeight);
 
+#pragma warning disable 0618
         importer.spritesheet = metaDataList.ToArray();
+#pragma warning restore 0618
         EditorUtility.SetDirty(importer);
         importer.SaveAndReimport();
         AssetDatabase.Refresh();
