@@ -198,8 +198,8 @@ public class SceneSetupTool
         Button sortRankBtn = CreateButton(sortObj.transform, "SortRankButton", "SORT RANK", new Color(0.48f, 0.25f, 0.65f));
         Button autoComboBtn = CreateButton(sortObj.transform, "AutoComboButton", "AUTO SELECT", new Color(0.20f, 0.50f, 0.75f));
 
-        // Upright Hand Container (14 Upscaled Adjacent Tiles) with Recessed Felt Backdrop
-        Transform handTray = CreateSubPanel(centerStage, "HandTrayBackdrop", new Vector2(0.015f, 0.20f), new Vector2(0.985f, 0.56f), new Color(0.04f, 0.09f, 0.07f, 0.85f));
+        // Upright Hand Container (14 Upscaled Adjacent Tiles 76x108) with Recessed Felt Backdrop
+        Transform handTray = CreateSubPanel(centerStage, "HandTrayBackdrop", new Vector2(0.01f, 0.18f), new Vector2(0.99f, 0.58f), new Color(0.04f, 0.09f, 0.07f, 0.85f));
 
         GameObject handObj = new GameObject("HandContainer", typeof(RectTransform));
         handObj.transform.SetParent(handTray, false);
@@ -210,7 +210,7 @@ public class SceneSetupTool
         handRect.offsetMax = Vector2.zero;
 
         HorizontalLayoutGroup layout = handObj.AddComponent<HorizontalLayoutGroup>();
-        layout.spacing = 0; // Adjacent side-by-side tiles touching shoulder-to-shoulder!
+        layout.spacing = -6; // Negative spacing overlaps transparent cell margins so tile faces touch adjacent!
         layout.childAlignment = TextAnchor.MiddleCenter;
         layout.childControlWidth = false;
         layout.childControlHeight = false;
@@ -221,8 +221,8 @@ public class SceneSetupTool
         GameObject actObj = new GameObject("ActionRowContainer", typeof(RectTransform));
         actObj.transform.SetParent(centerStage, false);
         RectTransform actRect = actObj.GetComponent<RectTransform>();
-        actRect.anchorMin = new Vector2(0.18f, 0.05f);
-        actRect.anchorMax = new Vector2(0.82f, 0.16f);
+        actRect.anchorMin = new Vector2(0.18f, 0.04f);
+        actRect.anchorMax = new Vector2(0.82f, 0.15f);
         actRect.offsetMin = Vector2.zero;
         actRect.offsetMax = Vector2.zero;
 
@@ -357,7 +357,7 @@ public class SceneSetupTool
             "<b>VICTORY!</b>", 32, TextAlignmentOptions.Center);
         Button victoryPlayAgainBtn = CreateButton(victoryPanel, "PlayAgainButton", "PLAY AGAIN", new Color(0.18f, 0.75f, 0.35f), new Vector2(0.35f, 0.25f), new Vector2(0.65f, 0.38f));
 
-        // 9. Generate & Save Upscaled TilePrefab (72x100)
+        // 9. Generate & Save Upscaled TilePrefab (76x108)
         GameObject tilePrefab = CreateOrUpdateTilePrefab();
 
         // 10. Find or Create GameManager & UIManager
@@ -461,7 +461,7 @@ public class SceneSetupTool
         EditorUtility.SetDirty(uiManager);
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
 
-        Debug.Log("🎉 Upscaled Adjacent Tile UI Generated Successfully!");
+        Debug.Log("🎉 Upscaled Chunky Adjacent Tile UI Generated Successfully!");
     }
 
     private static Transform CreatePanel(Transform canvas, string name, Color color)
@@ -553,13 +553,13 @@ public class SceneSetupTool
         GameObject rootObj = new GameObject("TilePrefab", typeof(RectTransform), typeof(LayoutElement), typeof(TileUI));
         
         RectTransform rootRect = rootObj.GetComponent<RectTransform>();
-        rootRect.sizeDelta = new Vector2(72, 100);
+        rootRect.sizeDelta = new Vector2(76, 108);
 
         LayoutElement layout = rootObj.GetComponent<LayoutElement>();
-        layout.minWidth = 72;
-        layout.preferredWidth = 72;
-        layout.minHeight = 100;
-        layout.preferredHeight = 100;
+        layout.minWidth = 76;
+        layout.preferredWidth = 76;
+        layout.minHeight = 108;
+        layout.preferredHeight = 108;
 
         GameObject faceObj = new GameObject("TileFace", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
         faceObj.transform.SetParent(rootObj.transform, false);
@@ -577,7 +577,7 @@ public class SceneSetupTool
         Button btn = faceObj.GetComponent<Button>();
         if (btn != null) btn.transition = Selectable.Transition.None;
 
-        // Pixel Art Sprite Image (Upscaled Mahjong Tile)
+        // Pixel Art Sprite Image (Upscaled Mahjong Tile filling full card)
         GameObject spriteObj = new GameObject("TileSpriteImage", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         spriteObj.transform.SetParent(faceObj.transform, false);
         RectTransform spriteRect = spriteObj.GetComponent<RectTransform>();
@@ -587,7 +587,7 @@ public class SceneSetupTool
         spriteRect.offsetMax = Vector2.zero;
 
         Image spriteImg = spriteObj.GetComponent<Image>();
-        spriteImg.preserveAspect = true;
+        spriteImg.preserveAspect = false;
         spriteImg.raycastTarget = false;
 
         // Text Fallback
@@ -609,7 +609,7 @@ public class SceneSetupTool
         tileUI.BackgroundImage = img;
         tileUI.TileSpriteImage = spriteImg;
         tileUI.TileText = text;
-        tileUI.LiftHeight = 36f;
+        tileUI.LiftHeight = 40f;
 
         GameObject prefabAsset = PrefabUtility.SaveAsPrefabAsset(rootObj, prefabPath);
         Object.DestroyImmediate(rootObj);

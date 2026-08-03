@@ -18,8 +18,8 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public TextMeshProUGUI TileText;   // Fallback text or badge
 
     [Header("Juice & Animation Settings")]
-    public float LiftHeight = 36f;
-    public float HoverScale = 1.06f;
+    public float LiftHeight = 40f;
+    public float HoverScale = 1.05f;
     public float SmoothSpeed = 22f;
 
     private bool isHovered = false;
@@ -62,11 +62,16 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 spriteRect.offsetMax = Vector2.zero;
 
                 TileSpriteImage = spriteObj.GetComponent<Image>();
-                TileSpriteImage.preserveAspect = true;
+                TileSpriteImage.preserveAspect = false;
                 TileSpriteImage.raycastTarget = false;
             }
         }
         
+        if (TileSpriteImage != null)
+        {
+            TileSpriteImage.preserveAspect = false;
+        }
+
         if (TileText == null && CardVisual != null) TileText = CardVisual.GetComponentInChildren<TextMeshProUGUI>();
         
         Button btn = GetComponent<Button>();
@@ -111,7 +116,12 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // Punch scale bounce on click
         if (CardVisual != null)
         {
-            CardVisual.localScale = Vector3.one * 1.22f;
+            CardVisual.localScale = Vector3.one * 1.18f;
+        }
+
+        if (isSelected)
+        {
+            transform.SetAsLastSibling();
         }
 
         uiManager?.OnTileSelectionChanged(this, isSelected);
@@ -128,8 +138,9 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (CardVisual != null)
         {
-            CardVisual.localScale = Vector3.one * 1.30f;
-            targetLocalPos = new Vector3(0, LiftHeight * 1.4f, 0);
+            transform.SetAsLastSibling();
+            CardVisual.localScale = Vector3.one * 1.25f;
+            targetLocalPos = new Vector3(0, LiftHeight * 1.35f, 0);
         }
     }
 
@@ -137,6 +148,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         isHovered = true;
         targetScale = Vector3.one * HoverScale;
+        transform.SetAsLastSibling();
         MalajongAudio.Instance?.PlayTileHover();
     }
 
@@ -167,7 +179,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 TileSpriteImage.gameObject.SetActive(true);
                 TileSpriteImage.sprite = BoundTile.Data.TileSprite;
                 TileSpriteImage.color = isSelected ? new Color(1f, 1f, 0.7f, 1f) : Color.white;
-                TileSpriteImage.preserveAspect = true;
+                TileSpriteImage.preserveAspect = false; // Stretch to fill full rectangular card!
             }
 
             // Hide fallback text since pixel sprite is actively rendered
