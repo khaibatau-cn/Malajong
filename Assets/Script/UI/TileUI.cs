@@ -18,9 +18,9 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public TextMeshProUGUI TileText;   // Fallback text or badge
 
     [Header("Juice & Animation Settings")]
-    public float LiftHeight = 28f;
-    public float HoverScale = 1.08f;
-    public float SmoothSpeed = 20f;
+    public float LiftHeight = 36f;
+    public float HoverScale = 1.06f;
+    public float SmoothSpeed = 22f;
 
     private bool isHovered = false;
     private Vector3 targetLocalPos = Vector3.zero;
@@ -58,8 +58,8 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 RectTransform spriteRect = spriteObj.GetComponent<RectTransform>();
                 spriteRect.anchorMin = Vector2.zero;
                 spriteRect.anchorMax = Vector2.one;
-                spriteRect.offsetMin = new Vector2(4, 4);
-                spriteRect.offsetMax = new Vector2(-4, -4);
+                spriteRect.offsetMin = Vector2.zero;
+                spriteRect.offsetMax = Vector2.zero;
 
                 TileSpriteImage = spriteObj.GetComponent<Image>();
                 TileSpriteImage.preserveAspect = true;
@@ -111,7 +111,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // Punch scale bounce on click
         if (CardVisual != null)
         {
-            CardVisual.localScale = Vector3.one * 1.25f;
+            CardVisual.localScale = Vector3.one * 1.22f;
         }
 
         uiManager?.OnTileSelectionChanged(this, isSelected);
@@ -128,8 +128,8 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (CardVisual != null)
         {
-            CardVisual.localScale = Vector3.one * 1.35f;
-            targetLocalPos = new Vector3(0, LiftHeight * 1.5f, 0);
+            CardVisual.localScale = Vector3.one * 1.30f;
+            targetLocalPos = new Vector3(0, LiftHeight * 1.4f, 0);
         }
     }
 
@@ -166,7 +166,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 TileSpriteImage.gameObject.SetActive(true);
                 TileSpriteImage.sprite = BoundTile.Data.TileSprite;
-                TileSpriteImage.color = isSelected ? new Color(1f, 1f, 0.75f, 1f) : Color.white;
+                TileSpriteImage.color = isSelected ? new Color(1f, 1f, 0.7f, 1f) : Color.white;
                 TileSpriteImage.preserveAspect = true;
             }
 
@@ -176,10 +176,9 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 TileText.gameObject.SetActive(false);
             }
 
-            // Make outer card background transparent so the pixel tile doesn't have an awkward outer box
             if (BackgroundImage != null)
             {
-                BackgroundImage.color = isSelected ? new Color(0.18f, 0.85f, 0.35f, 0.4f) : Color.clear;
+                BackgroundImage.color = isSelected ? new Color(0.18f, 0.85f, 0.35f, 0.35f) : Color.clear;
             }
         }
         else
