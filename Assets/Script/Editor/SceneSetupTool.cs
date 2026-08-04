@@ -812,10 +812,10 @@ public class SceneSetupTool
         tRect.anchorMin = new Vector2(0.5f, 1f);
         tRect.anchorMax = new Vector2(0.5f, 1f);
         tRect.pivot = new Vector2(0.5f, 0f);
-        tRect.anchoredPosition = new Vector2(0, 20);
-        tRect.sizeDelta = new Vector2(160, 80);
+        tRect.anchoredPosition = new Vector2(0, 8);
+        tRect.sizeDelta = new Vector2(160, 72);
 
-        // Outline Box (Outer Dark Frame)
+        // Frame (Dark Crisp Outer Border)
         GameObject frameObj = new GameObject("Frame", typeof(RectTransform), typeof(Image));
         frameObj.transform.SetParent(tooltipObj.transform, false);
         RectTransform fRect = frameObj.GetComponent<RectTransform>();
@@ -823,34 +823,34 @@ public class SceneSetupTool
         fRect.anchorMax = Vector2.one;
         fRect.offsetMin = Vector2.zero;
         fRect.offsetMax = Vector2.zero;
-        frameObj.GetComponent<Image>().color = new Color(0.17f, 0.24f, 0.31f, 1f);
+        frameObj.GetComponent<Image>().color = new Color(0.12f, 0.15f, 0.20f, 1f);
 
-        // Header Box (Rank of Suit)
+        // Header Box (Pure Plain White Container)
         GameObject headerObj = new GameObject("HeaderBox", typeof(RectTransform), typeof(Image));
         headerObj.transform.SetParent(frameObj.transform, false);
         RectTransform hRect = headerObj.GetComponent<RectTransform>();
-        hRect.anchorMin = new Vector2(0.04f, 0.52f);
-        hRect.anchorMax = new Vector2(0.96f, 0.94f);
+        hRect.anchorMin = new Vector2(0.03f, 0.51f);
+        hRect.anchorMax = new Vector2(0.97f, 0.95f);
         hRect.offsetMin = Vector2.zero;
         hRect.offsetMax = Vector2.zero;
         headerObj.GetComponent<Image>().color = Color.white;
 
         TextMeshProUGUI headerText = CreateText(headerObj.transform, "HeaderTitleText", Vector2.zero, Vector2.one,
-            "<b>Rank</b> of <color=#E74C3C>Suit</color>", 20, TextAlignmentOptions.Center);
-        headerText.color = new Color(0.17f, 0.24f, 0.31f, 1f);
+            "<b>Rank</b> of <color=#E74C3C>Suit</color>", 22, TextAlignmentOptions.Center);
+        headerText.color = new Color(0.12f, 0.15f, 0.20f, 1f);
 
-        // Body Box (+Fu Score & Edition)
+        // Body Box (Pure Plain White Container)
         GameObject bodyObj = new GameObject("BodyBox", typeof(RectTransform), typeof(Image));
         bodyObj.transform.SetParent(frameObj.transform, false);
         RectTransform bRect = bodyObj.GetComponent<RectTransform>();
-        bRect.anchorMin = new Vector2(0.04f, 0.06f);
-        bRect.anchorMax = new Vector2(0.96f, 0.48f);
+        bRect.anchorMin = new Vector2(0.03f, 0.05f);
+        bRect.anchorMax = new Vector2(0.97f, 0.49f);
         bRect.offsetMin = Vector2.zero;
         bRect.offsetMax = Vector2.zero;
-        bodyObj.GetComponent<Image>().color = new Color(0.97f, 0.98f, 0.99f, 1f);
+        bodyObj.GetComponent<Image>().color = Color.white;
 
-        TextMeshProUGUI bodyText = CreateText(bodyObj.transform, "BodyScoreText", new Vector2(0.02f, 0.35f), new Vector2(0.98f, 0.95f),
-            "<color=#3498DB><b>+5 Fu</b></color>", 22, TextAlignmentOptions.Center);
+        TextMeshProUGUI bodyText = CreateText(bodyObj.transform, "BodyScoreText", new Vector2(0.02f, 0.10f), new Vector2(0.98f, 0.90f),
+            "<color=#2980B9><b>+5 Fu</b></color>", 24, TextAlignmentOptions.Center);
 
         TextMeshProUGUI editionText = CreateText(bodyObj.transform, "EditionText", new Vector2(0.02f, 0.05f), new Vector2(0.98f, 0.40f),
             "", 16, TextAlignmentOptions.Center);

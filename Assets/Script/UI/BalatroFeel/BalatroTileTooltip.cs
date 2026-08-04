@@ -15,8 +15,8 @@ public class BalatroTileTooltip : MonoBehaviour
     [SerializeField] private TextMeshProUGUI editionText;
 
     [Header("Animation Settings")]
-    [SerializeField] private float smoothSpeed = 18f;
-    [SerializeField] private Vector3 hoverOffset = new Vector3(0f, 62f, 0f);
+    [SerializeField] private float smoothSpeed = 22f;
+    [SerializeField] private Vector3 hoverOffset = new Vector3(0f, 56f, 0f);
 
     private CanvasGroup canvasGroup;
     private Vector3 targetScale = Vector3.zero;
@@ -37,25 +37,31 @@ public class BalatroTileTooltip : MonoBehaviour
     {
         if (headerTitleText == null)
         {
-            Transform headerTrans = transform.Find("HeaderBox/HeaderTitleText");
+            Transform headerTrans = transform.Find("Frame/HeaderBox/HeaderTitleText");
+            if (headerTrans == null) headerTrans = transform.Find("HeaderBox/HeaderTitleText");
             if (headerTrans != null) headerTitleText = headerTrans.GetComponent<TextMeshProUGUI>();
         }
 
         if (bodyScoreText == null)
         {
-            Transform bodyTrans = transform.Find("BodyBox/BodyScoreText");
+            Transform bodyTrans = transform.Find("Frame/BodyBox/BodyScoreText");
+            if (bodyTrans == null) bodyTrans = transform.Find("BodyBox/BodyScoreText");
             if (bodyTrans != null) bodyScoreText = bodyTrans.GetComponent<TextMeshProUGUI>();
         }
 
         if (editionText == null)
         {
-            Transform editionTrans = transform.Find("BodyBox/EditionText");
+            Transform editionTrans = transform.Find("Frame/BodyBox/EditionText");
+            if (editionTrans == null) editionTrans = transform.Find("BodyBox/EditionText");
             if (editionTrans != null) editionText = editionTrans.GetComponent<TextMeshProUGUI>();
         }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
+        // CRITICAL: Lock rotation upright to screen to eliminate 3D tilt slanting/blurriness!
+        transform.rotation = Quaternion.identity;
+
         if (!isShowing && transform.localScale.x <= 0.01f) return;
 
         // Smooth scale pop-in & fade

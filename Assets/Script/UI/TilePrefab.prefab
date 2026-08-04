@@ -1149,4 +1149,4 @@ MonoBehaviour:
   bodyScoreText: {fileID: 0}
   editionText: {fileID: 0}
   smoothSpeed: 18
-  hoverOffset: {x: 0, y: 115, z: 0}
+  hoverOffset: {x: 0, y: 62, z: 0}
