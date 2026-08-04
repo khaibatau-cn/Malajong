@@ -567,20 +567,6 @@ public class UIManager : MonoBehaviour
             {
                 tileUI.Initialize(tile, this);
                 spawnedTileUIs.Add(tileUI);
-                
-                // Demo: Assign special Balatro holographic card edition to Honor tiles or random lucky tiles!
-                if (tile.Suit == TileSuit.Honor || (index % 5 == 2))
-                {
-                    var editions = new[] {
-                        BalatroCardVisual.CardEdition.Foil,
-                        BalatroCardVisual.CardEdition.Polychrome,
-                        BalatroCardVisual.CardEdition.Negative
-                    };
-                    if (tileUI.BalatroVisual != null)
-                    {
-                        tileUI.BalatroVisual.Edition = editions[index % editions.Length];
-                    }
-                }
 
                 Button btn = newTileObj.GetComponentInChildren<Button>();
                 if (btn != null)

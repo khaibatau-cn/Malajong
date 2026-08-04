@@ -16,7 +16,7 @@ public class BalatroTileTooltip : MonoBehaviour
 
     [Header("Animation Settings")]
     [SerializeField] private float smoothSpeed = 18f;
-    [SerializeField] private Vector3 hoverOffset = new Vector3(0f, 115f, 0f);
+    [SerializeField] private Vector3 hoverOffset = new Vector3(0f, 62f, 0f);
 
     private CanvasGroup canvasGroup;
     private Vector3 targetScale = Vector3.zero;
