@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 3387203019874754528}
   - component: {fileID: 4742390081142335339}
   - component: {fileID: 3308568586184131355}
+  - component: {fileID: 7869379568416858485}
   m_Layer: 0
   m_Name: TileFace
   m_TagString: Untagged
@@ -200,6 +201,33 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7869379568416858485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4824578665397152138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bb9e7b650d8df3439c45f0d517045f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BalatroCardVisual
+  edition: 0
+  cardShaderMaterial: {fileID: 0}
+  enable3DTilt: 1
+  manualTiltAmount: 18
+  autoTiltAmount: 2.5
+  tiltSpeed: 14
+  rotationAmount: 15
+  rotationSpeed: 18
+  hoverPunchAngle: 6
+  selectPunchScale: 1.18
+  scorePunchScale: 1.28
+  punchRecoverySpeed: 12
+  shadowTransform: {fileID: 0}
+  defaultShadowOffset: {x: 8, y: -12, z: 0}
+  pressedShadowOffset: {x: 2, y: -4, z: 0}
 --- !u!1 &5471621760661056388
 GameObject:
   m_ObjectHideFlags: 0

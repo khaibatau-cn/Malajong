@@ -16,6 +16,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public Image TileSpriteImage;      // Displays the pixel art sprite from sheet.png
     public Image SelectionGlow;        // Optional highlight border
     public TextMeshProUGUI TileText;   // Fallback text or badge
+    public BalatroCardVisual BalatroVisual { get; private set; }
 
     [Header("Juice & Animation Settings")]
     public float LiftHeight = 36f;
@@ -38,6 +39,16 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             Transform visualChild = transform.Find("TileFace");
             CardVisual = visualChild != null ? visualChild : transform;
+        }
+
+        // Auto-attach BalatroCardVisual for iconic 3D tilt, spring animations & edition shaders
+        if (CardVisual != null)
+        {
+            BalatroVisual = CardVisual.GetComponent<BalatroCardVisual>();
+            if (BalatroVisual == null)
+            {
+                BalatroVisual = CardVisual.gameObject.AddComponent<BalatroCardVisual>();
+            }
         }
 
         if (BackgroundImage == null && CardVisual != null) BackgroundImage = CardVisual.GetComponent<Image>();
@@ -119,6 +130,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             CardVisual.localScale = Vector3.one * 1.15f;
         }
 
+        BalatroVisual?.TriggerSelectPunch();
         uiManager?.OnTileSelectionChanged(this, isSelected);
         UpdateVisuals();
     }
@@ -137,12 +149,14 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             CardVisual.localScale = Vector3.one * 1.25f;
             targetLocalPos = new Vector3(0, LiftHeight * 1.35f, 0);
         }
+        BalatroVisual?.TriggerScorePunch();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         isHovered = true;
         targetScale = Vector3.one * 1.04f;
+        BalatroVisual?.TriggerHoverPunch();
         UpdateVisuals();
         MalajongAudio.Instance?.PlayTileHover();
     }

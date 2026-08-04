@@ -306,7 +306,7 @@ public class UIManager : MonoBehaviour
         if (success)
         {
             MalajongAudio.Instance?.PlayCashChime();
-            FloatingBadge.Spawn(ShopPanel.transform, Input.mousePosition, $"BOUGHT {targetSpirit.SpiritName}!", new Color(0.95f, 0.8f, 0.1f));
+            FloatingBadge.Spawn(ShopPanel.transform, GetMousePosition(), $"BOUGHT {targetSpirit.SpiritName}!", new Color(0.95f, 0.8f, 0.1f));
         }
         else
         {
@@ -558,6 +558,7 @@ public class UIManager : MonoBehaviour
         
         if (gameManager == null || gameManager.Hand == null) return;
 
+        int index = 0;
         foreach (var tile in gameManager.Hand.Tiles)
         {
             GameObject newTileObj = Instantiate(TilePrefab, HandContainer);
@@ -567,6 +568,20 @@ public class UIManager : MonoBehaviour
                 tileUI.Initialize(tile, this);
                 spawnedTileUIs.Add(tileUI);
                 
+                // Demo: Assign special Balatro holographic card edition to Honor tiles or random lucky tiles!
+                if (tile.Suit == TileSuit.Honor || (index % 5 == 2))
+                {
+                    var editions = new[] {
+                        BalatroCardVisual.CardEdition.Foil,
+                        BalatroCardVisual.CardEdition.Polychrome,
+                        BalatroCardVisual.CardEdition.Negative
+                    };
+                    if (tileUI.BalatroVisual != null)
+                    {
+                        tileUI.BalatroVisual.Edition = editions[index % editions.Length];
+                    }
+                }
+
                 Button btn = newTileObj.GetComponentInChildren<Button>();
                 if (btn != null)
                 {
@@ -574,6 +589,14 @@ public class UIManager : MonoBehaviour
                     btn.onClick.AddListener(tileUI.OnTileClicked);
                 }
             }
+            index++;
+        }
+
+        // Apply Balatro Fan Curve hand layout if component is attached
+        var handLayout = HandContainer != null ? HandContainer.GetComponent<BalatroHandLayout>() : null;
+        if (handLayout != null)
+        {
+            handLayout.ArrangeHand(spawnedTileUIs);
         }
 
         UpdateRightScoreEngine();
@@ -754,5 +777,24 @@ public class UIManager : MonoBehaviour
     {
         CloseOptionsModal();
         RestartRun();
+    }
+
+    private Vector3 GetMousePosition()
+    {
+#if ENABLE_INPUT_SYSTEM
+        if (UnityEngine.InputSystem.Mouse.current != null)
+        {
+            Vector2 pos = UnityEngine.InputSystem.Mouse.current.position.ReadValue();
+            return new Vector3(pos.x, pos.y, 0f);
+        }
+#endif
+        try
+        {
+            return Input.mousePosition;
+        }
+        catch
+        {
+            return new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
+        }
     }
 }

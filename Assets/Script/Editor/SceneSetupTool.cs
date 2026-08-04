@@ -193,6 +193,9 @@ public class SceneSetupTool
         handRect.offsetMin = Vector2.zero;
         handRect.offsetMax = Vector2.zero;
 
+        // Attach Balatro Fan Curve hand layout component
+        handObj.AddComponent<BalatroHandLayout>();
+
         HorizontalLayoutGroup handLayout = handObj.AddComponent<HorizontalLayoutGroup>();
         handLayout.spacing = 0; // 0px spacing for contiguous adjacent tiles
         handLayout.childAlignment = TextAnchor.MiddleCenter;
@@ -738,7 +741,7 @@ public class SceneSetupTool
         layout.minHeight = 95;
         layout.preferredHeight = 95;
 
-        GameObject faceObj = new GameObject("TileFace", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+        GameObject faceObj = new GameObject("TileFace", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button), typeof(BalatroCardVisual));
         faceObj.transform.SetParent(rootObj.transform, false);
         
         RectTransform faceRect = faceObj.GetComponent<RectTransform>();
