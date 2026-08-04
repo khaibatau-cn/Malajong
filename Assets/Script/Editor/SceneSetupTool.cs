@@ -787,7 +787,8 @@ public class SceneSetupTool
         }
         text.alignment = TextAlignmentOptions.Center;
         text.color = Color.black;
-        text.raycastTarget = false;
+        // Attach Balatro Retro Tooltip popup
+        CreateTooltipUI(faceObj.transform);
 
         TileUI tileUI = rootObj.GetComponent<TileUI>();
         tileUI.CardVisual = faceObj.transform;
@@ -800,6 +801,60 @@ public class SceneSetupTool
         Object.DestroyImmediate(rootObj);
 
         return prefabAsset;
+    }
+
+    private static void CreateTooltipUI(Transform parent)
+    {
+        GameObject tooltipObj = new GameObject("BalatroTooltip", typeof(RectTransform), typeof(CanvasGroup), typeof(BalatroTileTooltip));
+        tooltipObj.transform.SetParent(parent, false);
+
+        RectTransform tRect = tooltipObj.GetComponent<RectTransform>();
+        tRect.anchorMin = new Vector2(0.5f, 1f);
+        tRect.anchorMax = new Vector2(0.5f, 1f);
+        tRect.pivot = new Vector2(0.5f, 0f);
+        tRect.anchoredPosition = new Vector2(0, 20);
+        tRect.sizeDelta = new Vector2(160, 80);
+
+        // Outline Box (Outer Dark Frame)
+        GameObject frameObj = new GameObject("Frame", typeof(RectTransform), typeof(Image));
+        frameObj.transform.SetParent(tooltipObj.transform, false);
+        RectTransform fRect = frameObj.GetComponent<RectTransform>();
+        fRect.anchorMin = Vector2.zero;
+        fRect.anchorMax = Vector2.one;
+        fRect.offsetMin = Vector2.zero;
+        fRect.offsetMax = Vector2.zero;
+        frameObj.GetComponent<Image>().color = new Color(0.17f, 0.24f, 0.31f, 1f);
+
+        // Header Box (Rank of Suit)
+        GameObject headerObj = new GameObject("HeaderBox", typeof(RectTransform), typeof(Image));
+        headerObj.transform.SetParent(frameObj.transform, false);
+        RectTransform hRect = headerObj.GetComponent<RectTransform>();
+        hRect.anchorMin = new Vector2(0.04f, 0.52f);
+        hRect.anchorMax = new Vector2(0.96f, 0.94f);
+        hRect.offsetMin = Vector2.zero;
+        hRect.offsetMax = Vector2.zero;
+        headerObj.GetComponent<Image>().color = Color.white;
+
+        TextMeshProUGUI headerText = CreateText(headerObj.transform, "HeaderTitleText", Vector2.zero, Vector2.one,
+            "<b>Rank</b> of <color=#E74C3C>Suit</color>", 20, TextAlignmentOptions.Center);
+        headerText.color = new Color(0.17f, 0.24f, 0.31f, 1f);
+
+        // Body Box (+Fu Score & Edition)
+        GameObject bodyObj = new GameObject("BodyBox", typeof(RectTransform), typeof(Image));
+        bodyObj.transform.SetParent(frameObj.transform, false);
+        RectTransform bRect = bodyObj.GetComponent<RectTransform>();
+        bRect.anchorMin = new Vector2(0.04f, 0.06f);
+        bRect.anchorMax = new Vector2(0.96f, 0.48f);
+        bRect.offsetMin = Vector2.zero;
+        bRect.offsetMax = Vector2.zero;
+        bodyObj.GetComponent<Image>().color = new Color(0.97f, 0.98f, 0.99f, 1f);
+
+        TextMeshProUGUI bodyText = CreateText(bodyObj.transform, "BodyScoreText", new Vector2(0.02f, 0.35f), new Vector2(0.98f, 0.95f),
+            "<color=#3498DB><b>+5 Fu</b></color>", 22, TextAlignmentOptions.Center);
+
+        TextMeshProUGUI editionText = CreateText(bodyObj.transform, "EditionText", new Vector2(0.02f, 0.05f), new Vector2(0.98f, 0.40f),
+            "", 16, TextAlignmentOptions.Center);
+        editionText.gameObject.SetActive(false);
     }
 
     private static Button CreateButton(Transform parent, string name, string labelText, Color color, float fontSize = 24, Vector2? anchorMin = null, Vector2? anchorMax = null)

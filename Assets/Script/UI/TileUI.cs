@@ -17,6 +17,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public Image SelectionGlow;        // Optional highlight border
     public TextMeshProUGUI TileText;   // Fallback text or badge
     public BalatroCardVisual BalatroVisual { get; private set; }
+    public BalatroTileTooltip Tooltip { get; private set; }
 
     [Header("Juice & Animation Settings")]
     public float LiftHeight = 36f;
@@ -49,6 +50,13 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 BalatroVisual = CardVisual.gameObject.AddComponent<BalatroCardVisual>();
             }
+        }
+
+        // Auto-find or attach BalatroTileTooltip
+        Tooltip = GetComponentInChildren<BalatroTileTooltip>();
+        if (Tooltip == null && CardVisual != null)
+        {
+            Tooltip = CardVisual.GetComponentInChildren<BalatroTileTooltip>();
         }
 
         if (BackgroundImage == null && CardVisual != null) BackgroundImage = CardVisual.GetComponent<Image>();
@@ -157,6 +165,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         isHovered = true;
         targetScale = Vector3.one * 1.04f;
         BalatroVisual?.TriggerHoverPunch();
+        Tooltip?.Show(BoundTile, BalatroVisual != null ? BalatroVisual.Edition : BalatroCardVisual.CardEdition.Regular);
         UpdateVisuals();
         MalajongAudio.Instance?.PlayTileHover();
     }
@@ -165,6 +174,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         isHovered = false;
         targetScale = Vector3.one;
+        Tooltip?.Hide();
         UpdateVisuals();
     }
 
