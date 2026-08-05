@@ -183,27 +183,27 @@ public class UIManager : MonoBehaviour
 
         if (TargetScoreText != null)
         {
-            TargetScoreText.text = $"Score at least\n<size=130%><color=#E74C3C><b>{gameManager.CurrentTargetScore}</b></color></size>";
+            TargetScoreText.text = $"Score at least\n<size=130%><color=#D8402E><b>{gameManager.CurrentTargetScore}</b></color></size>";
         }
 
         if (RewardText != null)
         {
-            RewardText.text = $"Reward: <color=#F1C40F><b>¥5</b></color>";
+            RewardText.text = $"Reward: <color=#D9A93A><b>¥5</b></color>";
         }
 
         if (YuanText != null)
         {
-            YuanText.text = $"<color=#F1C40F><b>¥{gameManager.Yuan}</b></color>";
+            YuanText.text = $"<color=#D9A93A><b>¥{gameManager.Yuan}</b></color>";
         }
 
         if (AnteText != null)
         {
-            AnteText.text = $"Ante\n<color=#F39C12><b>1/4</b></color>";
+            AnteText.text = $"Ante\n<color=#D9A93A><b>1/4</b></color>";
         }
 
         if (RoundText != null)
         {
-            RoundText.text = $"Round\n<color=#F39C12><b>{gameManager.CurrentRound}/{gameManager.MaxRounds}</b></color>";
+            RoundText.text = $"Round\n<color=#D9A93A><b>{gameManager.CurrentRound}/{gameManager.MaxRounds}</b></color>";
         }
     }
 
@@ -226,12 +226,12 @@ public class UIManager : MonoBehaviour
             {
                 SpiritData spirit = gameManager.EquippedSpirits[i];
                 if (label != null) label.text = $"<b>{spirit.SpiritName}</b>";
-                if (bg != null) bg.color = new Color(0.18f, 0.45f, 0.32f, 0.95f);
+                if (bg != null) bg.color = MalajongTheme.MalachiteDeep;
             }
             else
             {
-                if (label != null) label.text = "<color=#7F8C8D>Empty</color>";
-                if (bg != null) bg.color = new Color(0.10f, 0.14f, 0.18f, 0.65f);
+                if (label != null) label.text = "<color=#96826F>Empty</color>";
+                if (bg != null) bg.color = MalajongTheme.SlotEmpty;
             }
         }
     }
@@ -244,9 +244,9 @@ public class UIManager : MonoBehaviour
         float charMult = gameManager.Affinity.GetMultiplier(TileSuit.Characters);
         float dotMult = gameManager.Affinity.GetMultiplier(TileSuit.Dots);
 
-        SuitAffinityText.text = $"<color=#2ECC71><b>Bamboo:</b> {bambooMult:F1}x</color>   |   " +
-                                $"<color=#E74C3C><b>Chars:</b> {charMult:F1}x</color>   |   " +
-                                $"<color=#3498DB><b>Dots:</b> {dotMult:F1}x</color>";
+        SuitAffinityText.text = $"<color=#43B87A><b>Bamboo:</b> {bambooMult:F1}x</color>   |   " +
+                                $"<color=#D8402E><b>Chars:</b> {charMult:F1}x</color>   |   " +
+                                $"<color=#6FB8EE><b>Dots:</b> {dotMult:F1}x</color>";
     }
 
     // --- Right Panel: Score Engine Updates ---
@@ -257,12 +257,12 @@ public class UIManager : MonoBehaviour
 
         if (HandsRemainingText != null)
         {
-            HandsRemainingText.text = $"Hands\n<color=#3498DB><b>{gameManager.HandsRemaining}</b></color>";
+            HandsRemainingText.text = $"Hands\n<color=#6FB8EE><b>{gameManager.HandsRemaining}</b></color>";
         }
 
         if (DiscardsRemainingText != null)
         {
-            DiscardsRemainingText.text = $"Discards\n<color=#E67E22><b>{gameManager.DiscardsRemaining}</b></color>";
+            DiscardsRemainingText.text = $"Discards\n<color=#D9A93A><b>{gameManager.DiscardsRemaining}</b></color>";
         }
 
         if (RoundScoreText != null)
@@ -285,12 +285,12 @@ public class UIManager : MonoBehaviour
         var playable = ScoreEngine.FindPlayableCombos(gameManager.Hand.Tiles);
         if (playable.Count > 0)
         {
-            var lines = playable.Select(p => $"* <b>{p.combo.Name}</b>: <color=#3498DB>{p.combo.BaseFu} Fu</color> x <color=#E74C3C>{p.combo.BaseFan:F1} Fan</color>");
+            var lines = playable.Select(p => $"* <b>{p.combo.Name}</b>: <color=#6FB8EE>{p.combo.BaseFu} Fu</color> x <color=#D8402E>{p.combo.BaseFan:F1} Fan</color>");
             PlayableCombosText.text = $"<b>PLAYABLE IN HAND:</b>\n" + string.Join("\n", lines);
         }
         else
         {
-            PlayableCombosText.text = "<b>PLAYABLE IN HAND:</b>\n<color=#7F8C8D><i>No complete combo. Select tiles to discard or form Chow/Pong/Pair!</i></color>";
+            PlayableCombosText.text = "<b>PLAYABLE IN HAND:</b>\n<color=#96826F><i>No complete combo. Select tiles to discard or form Chow/Pong/Pair!</i></color>";
         }
     }
 
@@ -303,7 +303,7 @@ public class UIManager : MonoBehaviour
         gameManager.Hand.SortBySuit();
         RefreshHandDisplay();
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 110, 0), "SORTED BY SUIT", new Color(0.18f, 0.85f, 0.35f));
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 110, 0), "SORTED BY SUIT", MalajongTheme.MalachiteBright);
     }
 
     public void SortHandByRank()
@@ -313,7 +313,7 @@ public class UIManager : MonoBehaviour
         gameManager.Hand.SortByRank();
         RefreshHandDisplay();
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 110, 0), "SORTED BY RANK", new Color(0.2f, 0.7f, 1f));
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 110, 0), "SORTED BY RANK", MalajongTheme.FuText);
     }
 
     // --- UI Button Actions ---
@@ -342,7 +342,7 @@ public class UIManager : MonoBehaviour
         if (success)
         {
             MalajongAudio.Instance?.PlayCashChime();
-            FloatingBadge.Spawn(ShopPanel.transform, GetMousePosition(), $"BOUGHT {targetSpirit.SpiritName}!", new Color(0.95f, 0.8f, 0.1f));
+            FloatingBadge.Spawn(ShopPanel.transform, GetMousePosition(), $"BOUGHT {targetSpirit.SpiritName}!", MalajongTheme.Gold);
         }
         else
         {
@@ -384,11 +384,11 @@ public class UIManager : MonoBehaviour
         {
             if (selectedTiles.Count == 0)
             {
-                PreviewComboNameText.text = "<color=#7F8C8D><b>SELECT TILES</b></color>";
+                PreviewComboNameText.text = "<color=#96826F><b>SELECT TILES</b></color>";
             }
             else
             {
-                string colorHex = preview.IsValid ? "#F1C40F" : "#E74C3C";
+                string colorHex = preview.IsValid ? "#D9A93A" : "#D8402E";
                 PreviewComboNameText.text = $"<color={colorHex}><b>{preview.ComboName.ToUpper()}</b></color>";
             }
         }
@@ -405,7 +405,7 @@ public class UIManager : MonoBehaviour
 
         if (PreviewTotalScoreText != null)
         {
-            PreviewTotalScoreText.text = preview.IsValid ? $"<color=#2ECC71><b>= {preview.ProjectedScore} PTS</b></color>" : "<color=#7F8C8D>--</color>";
+            PreviewTotalScoreText.text = preview.IsValid ? $"<color=#43B87A><b>= {preview.ProjectedScore} PTS</b></color>" : "<color=#96826F>--</color>";
         }
 
         if (PlayButton != null)
@@ -503,7 +503,7 @@ public class UIManager : MonoBehaviour
             {
                 tileUI.TriggerScoreBounce();
                 FloatingBadge.Spawn(PlayingPanel.transform, tileUI.transform.position + new Vector3(0f, 70f, 0f),
-                    $"+{tileFu}", new Color(0.2f, 0.6f, 1f), 24f);
+                    $"+{tileFu}", MalajongTheme.FuText, 24f);
             }
 
             // Sweep the full pitch range regardless of how many tiles were played, so a
@@ -516,7 +516,7 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.09f);
         }
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(-120, 90, 0), $"+{targetFu} FU", new Color(0.2f, 0.6f, 1f));
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(-120, 90, 0), $"+{targetFu} FU", MalajongTheme.FuText);
         yield return new WaitForSeconds(0.12f);
 
         // 3. Step 2: Fan Tally
@@ -531,7 +531,7 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(120, 90, 0), $"{targetFan:F1}X FAN", new Color(0.95f, 0.3f, 0.25f));
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(120, 90, 0), $"{targetFan:F1}X FAN", MalajongTheme.FanText);
         yield return new WaitForSeconds(0.18f);
 
         // 4. Step 3: Big Multiplication Crunch / Slam
@@ -547,7 +547,7 @@ public class UIManager : MonoBehaviour
         UIJuice.Hitstop(0.05f + impact * 0.06f);
         UIJuice.Shake(PlayingPanel != null ? PlayingPanel.transform as RectTransform : null, impact);
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 130, 0), $"+{calculatedScore} PTS!", new Color(1f, 0.85f, 0.1f), 34f);
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 130, 0), $"+{calculatedScore} PTS!", MalajongTheme.Gold, 34f);
         yield return new WaitForSeconds(0.35f);
 
         // 5. Step 4: Smooth Score Bar Roll-Up
@@ -657,7 +657,7 @@ public class UIManager : MonoBehaviour
 
         if (ShopStatusText != null)
         {
-            ShopStatusText.text = $"<b>SPIRIT SHOP</b>   |   Your Yuan: <b><color=#F1C40F>¥{gameManager.Yuan}</color></b>   |   " +
+            ShopStatusText.text = $"<b>SPIRIT SHOP</b>   |   Your Yuan: <b><color=#D9A93A>¥{gameManager.Yuan}</color></b>   |   " +
                                   $"Spirits Owned: <b>{gameManager.EquippedSpirits.Count}/{gameManager.MaxSpirits}</b>\n" +
                                   $"<size=85%>Purchase powerful spirits (¥5 each) to augment your mahjong hand combos!</size>";
         }
@@ -682,7 +682,7 @@ public class UIManager : MonoBehaviour
 
             if (cardText != null && spirit != null)
             {
-                cardText.text = $"<b><color=#F1C40F>{spirit.SpiritName}</color></b>\n\n<size=80%>{spirit.Description}</size>";
+                cardText.text = $"<b><color=#D9A93A>{spirit.SpiritName}</color></b>\n\n<size=80%>{spirit.Description}</size>";
             }
 
             if (buyBtn != null && spirit != null)
@@ -745,27 +745,27 @@ public class UIManager : MonoBehaviour
         if (RunInfoContentText == null || gameManager == null) return;
 
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine("<size=115%><b><color=#F1C40F>YAKU & COMBO SCORING GUIDE</color></b></size>");
-        sb.AppendLine("• <b>Pair (Toitsu)</b>: 2 Identical Tiles  >>  <b><color=#3498DB>+10 Fu</color></b> | <b><color=#E74C3C>x1.0 Fan</color></b>");
-        sb.AppendLine("• <b>Chow (Shuntsu)</b>: 3 Consecutive Suit Tiles  >>  <b><color=#3498DB>+20 Fu</color></b> | <b><color=#E74C3C>x1.5 Fan</color></b>");
-        sb.AppendLine("• <b>Pong (Koutsu)</b>: 3 Identical Tiles  >>  <b><color=#3498DB>+30 Fu</color></b> | <b><color=#E74C3C>x2.0 Fan</color></b>");
-        sb.AppendLine("• <b>Kong (Kantsu)</b>: 4 Identical Tiles  >>  <b><color=#3498DB>+60 Fu</color></b> | <b><color=#E74C3C>x3.0 Fan</color></b>");
-        sb.AppendLine("• <b>Pure Hand (Flush)</b>: All tiles in single suit  >>  <b><color=#3498DB>+150 Fu</color></b> | <b><color=#E74C3C>+2.0 Fan</color></b>");
+        sb.AppendLine("<size=115%><b><color=#D9A93A>YAKU & COMBO SCORING GUIDE</color></b></size>");
+        sb.AppendLine("• <b>Pair (Toitsu)</b>: 2 Identical Tiles  >>  <b><color=#6FB8EE>+10 Fu</color></b> | <b><color=#D8402E>x1.0 Fan</color></b>");
+        sb.AppendLine("• <b>Chow (Shuntsu)</b>: 3 Consecutive Suit Tiles  >>  <b><color=#6FB8EE>+20 Fu</color></b> | <b><color=#D8402E>x1.5 Fan</color></b>");
+        sb.AppendLine("• <b>Pong (Koutsu)</b>: 3 Identical Tiles  >>  <b><color=#6FB8EE>+30 Fu</color></b> | <b><color=#D8402E>x2.0 Fan</color></b>");
+        sb.AppendLine("• <b>Kong (Kantsu)</b>: 4 Identical Tiles  >>  <b><color=#6FB8EE>+60 Fu</color></b> | <b><color=#D8402E>x3.0 Fan</color></b>");
+        sb.AppendLine("• <b>Pure Hand (Flush)</b>: All tiles in single suit  >>  <b><color=#6FB8EE>+150 Fu</color></b> | <b><color=#D8402E>+2.0 Fan</color></b>");
         sb.AppendLine();
 
-        sb.AppendLine("<size=115%><b><color=#F1C40F>RUN MULTIPLIERS & SPIRITS</color></b></size>");
+        sb.AppendLine("<size=115%><b><color=#D9A93A>RUN MULTIPLIERS & SPIRITS</color></b></size>");
         if (gameManager.Affinity != null)
         {
-            sb.AppendLine($"<color=#2ECC71>Bamboo: {gameManager.Affinity.GetMultiplier(TileSuit.Bamboo):F1}x</color>  |  " +
-                          $"<color=#E67E22>Characters: {gameManager.Affinity.GetMultiplier(TileSuit.Characters):F1}x</color>  |  " +
-                          $"<color=#3498DB>Dots: {gameManager.Affinity.GetMultiplier(TileSuit.Dots):F1}x</color>");
+            sb.AppendLine($"<color=#43B87A>Bamboo: {gameManager.Affinity.GetMultiplier(TileSuit.Bamboo):F1}x</color>  |  " +
+                          $"<color=#D9A93A>Characters: {gameManager.Affinity.GetMultiplier(TileSuit.Characters):F1}x</color>  |  " +
+                          $"<color=#6FB8EE>Dots: {gameManager.Affinity.GetMultiplier(TileSuit.Dots):F1}x</color>");
         }
 
         sb.AppendLine();
         sb.AppendLine($"<b>Equipped Spirits ({gameManager.EquippedSpirits.Count}/{gameManager.MaxSpirits}):</b>");
         if (gameManager.EquippedSpirits.Count == 0)
         {
-            sb.AppendLine("<color=#7F8C8D><i>No spirits equipped. Visit the Shop between rounds!</i></color>");
+            sb.AppendLine("<color=#96826F><i>No spirits equipped. Visit the Shop between rounds!</i></color>");
         }
         else
         {
@@ -773,7 +773,7 @@ public class UIManager : MonoBehaviour
             {
                 if (s != null)
                 {
-                    sb.AppendLine($"• <color=#F1C40F><b>{s.SpiritName}</b></color>: {s.Description}");
+                    sb.AppendLine($"• <color=#D9A93A><b>{s.SpiritName}</b></color>: {s.Description}");
                 }
             }
         }
@@ -819,7 +819,7 @@ public class UIManager : MonoBehaviour
         if (ToggleAudioText != null)
         {
             bool isMuted = MalajongAudio.Instance != null && MalajongAudio.Instance.MasterVolume <= 0.001f;
-            ToggleAudioText.text = isMuted ? "SFX: <color=#E74C3C>MUTED</color>" : "SFX: <color=#2ECC71>ENABLED</color>";
+            ToggleAudioText.text = isMuted ? "SFX: <color=#D8402E>MUTED</color>" : "SFX: <color=#43B87A>ENABLED</color>";
         }
     }
 

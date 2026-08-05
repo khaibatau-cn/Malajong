@@ -12,9 +12,9 @@ public class BalatroBGController : MonoBehaviour
     [SerializeField] private float swirlFrequency = 3.5f;
 
     [Header("Colors Palette")]
-    [SerializeField] private Color primaryColor = new Color(0.12f, 0.22f, 0.45f, 1f);   // Deep Balatro Blue
-    [SerializeField] private Color secondaryColor = new Color(0.85f, 0.25f, 0.35f, 1f); // Vibrant Red/Crimson
-    [SerializeField] private Color accentColor = new Color(0.08f, 0.08f, 0.18f, 1f);
+    [SerializeField] private Color primaryColor = MalajongTheme.MalachiteDeep;   // Imperial beam green
+    [SerializeField] private Color secondaryColor = MalajongTheme.VermilionDeep; // Imperial pillar red
+    [SerializeField] private Color accentColor = MalajongTheme.Ink;              // Aged lacquer ground
 
     private Image bgImage;
     private Material instancedMaterial;

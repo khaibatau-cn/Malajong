@@ -255,7 +255,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 TileSpriteImage.gameObject.SetActive(true);
                 TileSpriteImage.sprite = BoundTile.Data.TileSprite;
-                TileSpriteImage.color = isSelected ? new Color(1f, 1f, 0.7f, 1f) : Color.white;
+                TileSpriteImage.color = isSelected ? MalajongTheme.TileSelectTint : Color.white;
                 TileSpriteImage.preserveAspect = false; // Stretch to fill full rectangular card!
             }
 
@@ -267,7 +267,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
             if (BackgroundImage != null)
             {
-                BackgroundImage.color = isSelected ? new Color(0.18f, 0.85f, 0.35f, 0.35f) : Color.clear;
+                BackgroundImage.color = isSelected ? MalajongTheme.TileSelectGlow : Color.clear;
             }
         }
         else
@@ -283,10 +283,10 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 TileText.gameObject.SetActive(true);
                 string suitColor = BoundTile.Suit switch
                 {
-                    TileSuit.Bamboo => "#2ECC71",     // Green
-                    TileSuit.Characters => "#E74C3C", // Red
-                    TileSuit.Dots => "#3498DB",       // Blue
-                    TileSuit.Honor => "#F1C40F",      // Gold
+                    TileSuit.Bamboo => "#43B87A",     // Green
+                    TileSuit.Characters => "#D8402E", // Red
+                    TileSuit.Dots => "#6FB8EE",       // Blue
+                    TileSuit.Honor => "#D9A93A",      // Gold
                     _ => "#FFFFFF"
                 };
 
@@ -295,7 +295,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
             if (BackgroundImage != null)
             {
-                BackgroundImage.color = isSelected ? new Color(0.2f, 0.95f, 0.35f, 1f) : new Color(0.96f, 0.96f, 0.96f, 1f);
+                BackgroundImage.color = isSelected ? MalajongTheme.Gold : MalajongTheme.Bone;
             }
         }
 
