@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -16,6 +17,8 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public Image TileSpriteImage;      // Displays the pixel art sprite from sheet.png
     public Image SelectionGlow;        // Optional highlight border
     public TextMeshProUGUI TileText;   // Fallback text or badge
+    public BalatroCardVisual BalatroVisual { get; private set; }
+    public BalatroTileTooltip Tooltip { get; private set; }
 
     [Header("Juice & Animation Settings")]
     public float LiftHeight = 36f;
@@ -25,6 +28,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private bool isHovered = false;
     private Vector3 targetLocalPos = Vector3.zero;
     private Vector3 targetScale = Vector3.one;
+    private bool isWaitingToDeal = false;
 
     public void Initialize(Tile tile, UIManager manager)
     {
@@ -38,6 +42,23 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             Transform visualChild = transform.Find("TileFace");
             CardVisual = visualChild != null ? visualChild : transform;
+        }
+
+        // Auto-attach BalatroCardVisual for iconic 3D tilt, spring animations & edition shaders
+        if (CardVisual != null)
+        {
+            BalatroVisual = CardVisual.GetComponent<BalatroCardVisual>();
+            if (BalatroVisual == null)
+            {
+                BalatroVisual = CardVisual.gameObject.AddComponent<BalatroCardVisual>();
+            }
+        }
+
+        // Auto-find or attach BalatroTileTooltip
+        Tooltip = GetComponentInChildren<BalatroTileTooltip>();
+        if (Tooltip == null && CardVisual != null)
+        {
+            Tooltip = CardVisual.GetComponentInChildren<BalatroTileTooltip>();
         }
 
         if (BackgroundImage == null && CardVisual != null) BackgroundImage = CardVisual.GetComponent<Image>();
@@ -96,12 +117,58 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void Update()
     {
+        // Held at zero scale until this tile's turn in the deal stagger.
+        if (isWaitingToDeal) return;
+
         // Smoothly interpolate position and scale for juicy game feel
         if (CardVisual != null)
         {
             CardVisual.localPosition = Vector3.Lerp(CardVisual.localPosition, targetLocalPos, Time.deltaTime * SmoothSpeed);
             CardVisual.localScale = Vector3.Lerp(CardVisual.localScale, targetScale, Time.deltaTime * SmoothSpeed);
         }
+    }
+
+    /// <summary>
+    /// Deals this tile in after a delay. Rather than running its own tween, it parks the tile
+    /// at zero scale and then hands control back to Update's existing lerp, which springs it
+    /// to full size — so the deal never fights the hover/select animation.
+    /// </summary>
+    public void PlayDealIn(float delay)
+    {
+        if (CardVisual == null) return;
+
+        // The hand is refreshed after the round-end state change, so tiles can be spawned
+        // under an already-hidden PlayingPanel. Unity can't run a coroutine on an inactive
+        // object, and there's nothing to watch anyway — settle at full size instead. The
+        // next round's RefreshHandDisplay deals them in properly.
+        if (!isActiveAndEnabled)
+        {
+            CardVisual.localScale = Vector3.one;
+            isWaitingToDeal = false;
+            return;
+        }
+
+        CardVisual.localScale = Vector3.zero;
+        isWaitingToDeal = true;
+        StartCoroutine(DealInRoutine(delay));
+    }
+
+    private IEnumerator DealInRoutine(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+
+        isWaitingToDeal = false;
+        MalajongAudio.Instance?.PlayTileHover();
+    }
+
+    private void OnEnable()
+    {
+        // Deactivating an object kills its coroutines, so a tile hidden mid-deal would come
+        // back with isWaitingToDeal stuck true and stay invisible. Clear it on re-enable.
+        if (!isWaitingToDeal) return;
+
+        isWaitingToDeal = false;
+        if (CardVisual != null) CardVisual.localScale = Vector3.one;
     }
 
     public void OnTileClicked()
@@ -119,6 +186,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             CardVisual.localScale = Vector3.one * 1.15f;
         }
 
+        BalatroVisual?.TriggerSelectPunch();
         uiManager?.OnTileSelectionChanged(this, isSelected);
         UpdateVisuals();
     }
@@ -137,12 +205,15 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             CardVisual.localScale = Vector3.one * 1.25f;
             targetLocalPos = new Vector3(0, LiftHeight * 1.35f, 0);
         }
+        BalatroVisual?.TriggerScorePunch();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         isHovered = true;
         targetScale = Vector3.one * 1.04f;
+        BalatroVisual?.TriggerHoverPunch();
+        Tooltip?.Show(BoundTile, BalatroVisual != null ? BalatroVisual.Edition : BalatroCardVisual.CardEdition.Regular);
         UpdateVisuals();
         MalajongAudio.Instance?.PlayTileHover();
     }
@@ -151,6 +222,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         isHovered = false;
         targetScale = Vector3.one;
+        Tooltip?.Hide();
         UpdateVisuals();
     }
 
@@ -183,7 +255,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 TileSpriteImage.gameObject.SetActive(true);
                 TileSpriteImage.sprite = BoundTile.Data.TileSprite;
-                TileSpriteImage.color = isSelected ? new Color(1f, 1f, 0.7f, 1f) : Color.white;
+                TileSpriteImage.color = isSelected ? MalajongTheme.TileSelectTint : Color.white;
                 TileSpriteImage.preserveAspect = false; // Stretch to fill full rectangular card!
             }
 
@@ -195,7 +267,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
             if (BackgroundImage != null)
             {
-                BackgroundImage.color = isSelected ? new Color(0.18f, 0.85f, 0.35f, 0.35f) : Color.clear;
+                BackgroundImage.color = isSelected ? MalajongTheme.TileSelectGlow : Color.clear;
             }
         }
         else
@@ -211,10 +283,10 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 TileText.gameObject.SetActive(true);
                 string suitColor = BoundTile.Suit switch
                 {
-                    TileSuit.Bamboo => "#2ECC71",     // Green
-                    TileSuit.Characters => "#E74C3C", // Red
-                    TileSuit.Dots => "#3498DB",       // Blue
-                    TileSuit.Honor => "#F1C40F",      // Gold
+                    TileSuit.Bamboo => "#43B87A",     // Green
+                    TileSuit.Characters => "#D8402E", // Red
+                    TileSuit.Dots => "#6FB8EE",       // Blue
+                    TileSuit.Honor => "#D9A93A",      // Gold
                     _ => "#FFFFFF"
                 };
 
@@ -223,7 +295,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
             if (BackgroundImage != null)
             {
-                BackgroundImage.color = isSelected ? new Color(0.2f, 0.95f, 0.35f, 1f) : new Color(0.96f, 0.96f, 0.96f, 1f);
+                BackgroundImage.color = isSelected ? MalajongTheme.Gold : MalajongTheme.Bone;
             }
         }
 

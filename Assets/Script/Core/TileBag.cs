@@ -6,6 +6,7 @@ public class TileBag
     private List<Tile> drawPile = new List<Tile>();
 
     public int Remaining => drawPile.Count;
+    public int RemainingCount => Remaining;
 
     public void Initialize(List<TileData> allTileTypes)
     {
