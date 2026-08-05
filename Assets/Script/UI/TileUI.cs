@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -27,6 +28,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private bool isHovered = false;
     private Vector3 targetLocalPos = Vector3.zero;
     private Vector3 targetScale = Vector3.one;
+    private bool isWaitingToDeal = false;
 
     public void Initialize(Tile tile, UIManager manager)
     {
@@ -115,12 +117,58 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void Update()
     {
+        // Held at zero scale until this tile's turn in the deal stagger.
+        if (isWaitingToDeal) return;
+
         // Smoothly interpolate position and scale for juicy game feel
         if (CardVisual != null)
         {
             CardVisual.localPosition = Vector3.Lerp(CardVisual.localPosition, targetLocalPos, Time.deltaTime * SmoothSpeed);
             CardVisual.localScale = Vector3.Lerp(CardVisual.localScale, targetScale, Time.deltaTime * SmoothSpeed);
         }
+    }
+
+    /// <summary>
+    /// Deals this tile in after a delay. Rather than running its own tween, it parks the tile
+    /// at zero scale and then hands control back to Update's existing lerp, which springs it
+    /// to full size — so the deal never fights the hover/select animation.
+    /// </summary>
+    public void PlayDealIn(float delay)
+    {
+        if (CardVisual == null) return;
+
+        // The hand is refreshed after the round-end state change, so tiles can be spawned
+        // under an already-hidden PlayingPanel. Unity can't run a coroutine on an inactive
+        // object, and there's nothing to watch anyway — settle at full size instead. The
+        // next round's RefreshHandDisplay deals them in properly.
+        if (!isActiveAndEnabled)
+        {
+            CardVisual.localScale = Vector3.one;
+            isWaitingToDeal = false;
+            return;
+        }
+
+        CardVisual.localScale = Vector3.zero;
+        isWaitingToDeal = true;
+        StartCoroutine(DealInRoutine(delay));
+    }
+
+    private IEnumerator DealInRoutine(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+
+        isWaitingToDeal = false;
+        MalajongAudio.Instance?.PlayTileHover();
+    }
+
+    private void OnEnable()
+    {
+        // Deactivating an object kills its coroutines, so a tile hidden mid-deal would come
+        // back with isWaitingToDeal stuck true and stay invisible. Clear it on re-enable.
+        if (!isWaitingToDeal) return;
+
+        isWaitingToDeal = false;
+        if (CardVisual != null) CardVisual.localScale = Vector3.one;
     }
 
     public void OnTileClicked()

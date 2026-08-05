@@ -79,6 +79,9 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        UIJuice.EnsureExists();
+        AttachButtonJuice();
+
         if (gameManager != null)
         {
             gameManager.OnHandUpdated += RefreshHandDisplay;
@@ -104,11 +107,11 @@ public class UIManager : MonoBehaviour
     {
         if (gameManager == null) return;
 
-        if (StartMenuPanel != null) StartMenuPanel.SetActive(gameManager.State == GameManager.GameState.StartMenu);
-        if (PlayingPanel != null) PlayingPanel.SetActive(gameManager.State == GameManager.GameState.Playing);
-        if (ShopPanel != null) ShopPanel.SetActive(gameManager.State == GameManager.GameState.Shop);
-        if (GameOverPanel != null) GameOverPanel.SetActive(gameManager.State == GameManager.GameState.GameOver);
-        if (VictoryPanel != null) VictoryPanel.SetActive(gameManager.State == GameManager.GameState.Victory);
+        SetPanelActive(StartMenuPanel, gameManager.State == GameManager.GameState.StartMenu);
+        SetPanelActive(PlayingPanel, gameManager.State == GameManager.GameState.Playing);
+        SetPanelActive(ShopPanel, gameManager.State == GameManager.GameState.Shop);
+        SetPanelActive(GameOverPanel, gameManager.State == GameManager.GameState.GameOver);
+        SetPanelActive(VictoryPanel, gameManager.State == GameManager.GameState.Victory);
 
         UpdateLeftBlindPanel();
         UpdateCenterSpiritRack();
@@ -117,6 +120,39 @@ public class UIManager : MonoBehaviour
         UpdateShopText();
         UpdateSummaryTexts();
         UpdateSelectionPreview();
+    }
+
+    /// <summary>
+    /// Shows or hides a panel, popping it in when it goes from hidden to visible. Panels that
+    /// are already on screen are left alone, so the HUD doesn't re-pop on every state refresh.
+    /// </summary>
+    private void SetPanelActive(GameObject panel, bool active)
+    {
+        if (panel == null) return;
+
+        bool wasActive = panel.activeSelf;
+        panel.SetActive(active);
+
+        if (active && !wasActive) UIJuice.PopIn(panel.transform);
+    }
+
+    /// <summary>
+    /// Adds press/hover spring feedback to every Button under the canvas. Done at runtime so
+    /// buttons built by SceneSetupTool pick it up without the scene being rebuilt. Tiles are
+    /// skipped — TileUI already drives its own hover and selection juice.
+    /// </summary>
+    private void AttachButtonJuice()
+    {
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas == null && PlayingPanel != null) canvas = PlayingPanel.GetComponentInParent<Canvas>();
+        if (canvas == null && StartMenuPanel != null) canvas = StartMenuPanel.GetComponentInParent<Canvas>();
+        if (canvas == null) return;
+
+        foreach (Button button in canvas.GetComponentsInChildren<Button>(true))
+        {
+            if (button.GetComponentInParent<TileUI>() != null) continue;
+            if (button.GetComponent<ButtonJuice>() == null) button.gameObject.AddComponent<ButtonJuice>();
+        }
     }
 
     // --- Left Panel: Blind & Stakes Updates ---
@@ -445,25 +481,39 @@ public class UIManager : MonoBehaviour
         isScoringSequenceActive = true;
         SetControlsInteractable(false);
 
-        // 1. Highlight and lift played tiles with visual bounce
-        foreach (var tileUI in playedUIs)
-        {
-            if (tileUI != null) tileUI.TriggerScoreBounce();
-        }
+        yield return new WaitForSeconds(0.1f);
 
-        yield return new WaitForSeconds(0.15f);
-
-        // 2. Step 1: Fu Count-Up Tally
-        int currentTallyFu = 0;
+        // 1. Step 1: Per-Tile Fu Tally.
+        // Each tile scores in turn — pops, throws its own number, and plays a note one
+        // step higher than the last. Scoring the whole group at once loses the build-up.
         int targetFu = preview.TotalFu;
-        int stepFu = Mathf.Max(1, targetFu / 8);
+        int tileCount = Mathf.Max(1, playedUIs.Count);
+        int fuPerTile = targetFu / tileCount;
+        int fuRemainder = targetFu % tileCount;
 
-        while (currentTallyFu < targetFu)
+        int runningFu = 0;
+        for (int i = 0; i < playedUIs.Count; i++)
         {
-            currentTallyFu = Mathf.Min(currentTallyFu + stepFu, targetFu);
-            if (PreviewFuBoxText != null) PreviewFuBoxText.text = $"<b>{currentTallyFu}</b>";
-            MalajongAudio.Instance?.PlayScoreChipTick();
-            yield return new WaitForSeconds(0.04f);
+            // Spread the remainder over the first tiles so the tally lands exactly on TotalFu.
+            int tileFu = fuPerTile + (i < fuRemainder ? 1 : 0);
+            runningFu += tileFu;
+
+            TileUI tileUI = playedUIs[i];
+            if (tileUI != null)
+            {
+                tileUI.TriggerScoreBounce();
+                FloatingBadge.Spawn(PlayingPanel.transform, tileUI.transform.position + new Vector3(0f, 70f, 0f),
+                    $"+{tileFu}", new Color(0.2f, 0.6f, 1f), 24f);
+            }
+
+            // Sweep the full pitch range regardless of how many tiles were played, so a
+            // 3-tile Pong still arpeggiates instead of clustering on the low notes.
+            int pitchIndex = tileCount > 1 ? Mathf.RoundToInt((float)i / (tileCount - 1) * 6f) : 0;
+            MalajongAudio.Instance?.PlayTileSelect(pitchIndex);
+
+            if (PreviewFuBoxText != null) PreviewFuBoxText.text = $"<b>{runningFu}</b>";
+
+            yield return new WaitForSeconds(0.09f);
         }
 
         FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(-120, 90, 0), $"+{targetFu} FU", new Color(0.2f, 0.6f, 1f));
@@ -487,6 +537,15 @@ public class UIManager : MonoBehaviour
         // 4. Step 3: Big Multiplication Crunch / Slam
         int calculatedScore = Mathf.RoundToInt(targetFu * targetFan);
         MalajongAudio.Instance?.PlayScoreCrunchSlam();
+
+        // Impact scales with how much of the round quota this one hand just covered, so a
+        // Pair barely registers while a dora-loaded Kong freezes and rattles the screen.
+        float impact = gameManager.CurrentTargetScore > 0
+            ? Mathf.Clamp01((float)calculatedScore / gameManager.CurrentTargetScore)
+            : 0.5f;
+
+        UIJuice.Hitstop(0.05f + impact * 0.06f);
+        UIJuice.Shake(PlayingPanel != null ? PlayingPanel.transform as RectTransform : null, impact);
 
         FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 130, 0), $"+{calculatedScore} PTS!", new Color(1f, 0.85f, 0.1f), 34f);
         yield return new WaitForSeconds(0.35f);
@@ -567,6 +626,9 @@ public class UIManager : MonoBehaviour
             {
                 tileUI.Initialize(tile, this);
                 spawnedTileUIs.Add(tileUI);
+
+                // Deal tiles in one at a time rather than the whole hand appearing at once.
+                tileUI.PlayDealIn(index * 0.035f);
 
                 Button btn = newTileObj.GetComponentInChildren<Button>();
                 if (btn != null)
@@ -667,6 +729,7 @@ public class UIManager : MonoBehaviour
         if (RunInfoModal == null) return;
         UpdateRunInfoContent();
         RunInfoModal.SetActive(true);
+        UIJuice.PopIn(RunInfoModal.transform);
         MalajongAudio.Instance?.PlayTileSelect(0);
     }
 
@@ -729,6 +792,7 @@ public class UIManager : MonoBehaviour
         if (OptionsModal == null) return;
         UpdateOptionsUI();
         OptionsModal.SetActive(true);
+        UIJuice.PopIn(OptionsModal.transform);
         MalajongAudio.Instance?.PlayTileSelect(0);
     }
 
