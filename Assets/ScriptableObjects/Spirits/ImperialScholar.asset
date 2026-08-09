@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ImperialScholar
   m_EditorClassIdentifier: Assembly-CSharp::ImperialScholar
   SpiritName: Imperial Scholar
-  Description: Upgrades All Honors hand multiplier from x12 to x20.
+  Description: All Honors scores x20 Fan instead of x12.
   Icon: {fileID: 0}

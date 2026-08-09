@@ -106,3 +106,5 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ss]ceneDependencyCache*
 /MALAJONG_PROJECT.md
 MalajongProposal.pdf
+# Third-party asset pack archives (source zips, not imported by Unity)
+/ThirdParty/

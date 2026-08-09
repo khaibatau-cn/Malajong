@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: RestlessWind
   m_EditorClassIdentifier: Assembly-CSharp::RestlessWind
   SpiritName: Restless Wind
-  Description: Scoring a Wind Pong grants +1 Discard.
+  Description: Wind Pong grants +1 Discard.
   Icon: {fileID: 0}

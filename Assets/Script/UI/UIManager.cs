@@ -30,7 +30,9 @@ public class UIManager : MonoBehaviour
 
     [Header("Center Stage: Spirit Rack & Hand")]
     public Transform SpiritRackContainer;
-    public TextMeshProUGUI SuitAffinityText;
+    public SuitAffinityMeter BambooAffinityMeter;
+    public SuitAffinityMeter CharactersAffinityMeter;
+    public SuitAffinityMeter DotsAffinityMeter;
     public Transform HandContainer;
     public GameObject TilePrefab;
     public Button SortSuitButton;
@@ -219,34 +221,49 @@ public class UIManager : MonoBehaviour
             Transform slot = SpiritRackContainer.Find($"SpiritSlot_{i}");
             if (slot == null) continue;
 
-            TextMeshProUGUI label = slot.GetComponentInChildren<TextMeshProUGUI>();
+            TextMeshProUGUI label = slot.GetComponentInChildren<TextMeshProUGUI>(true);
             Image bg = slot.GetComponent<Image>();
+
+            Transform iconTransform = slot.Find("Icon");
+            Image icon = iconTransform != null ? iconTransform.GetComponent<Image>() : null;
 
             if (i < gameManager.EquippedSpirits.Count && gameManager.EquippedSpirits[i] != null)
             {
                 SpiritData spirit = gameManager.EquippedSpirits[i];
                 if (label != null) label.text = $"<b>{spirit.SpiritName}</b>";
                 if (bg != null) bg.color = MalajongTheme.MalachiteDeep;
+
+                // An equipped spirit with no icon assigned still shows its name — better a nameplate
+                // than an empty white box where art was expected.
+                if (icon != null)
+                {
+                    icon.sprite = spirit.Icon;
+                    icon.gameObject.SetActive(spirit.Icon != null);
+                }
             }
             else
             {
                 if (label != null) label.text = "<color=#96826F>Empty</color>";
                 if (bg != null) bg.color = MalajongTheme.SlotEmpty;
+                if (icon != null) icon.gameObject.SetActive(false);
             }
         }
     }
 
     private void UpdateCenterAffinityHUD()
     {
-        if (SuitAffinityText == null || gameManager == null || gameManager.Affinity == null) return;
+        if (gameManager == null || gameManager.Affinity == null) return;
 
-        float bambooMult = gameManager.Affinity.GetMultiplier(TileSuit.Bamboo);
-        float charMult = gameManager.Affinity.GetMultiplier(TileSuit.Characters);
-        float dotMult = gameManager.Affinity.GetMultiplier(TileSuit.Dots);
+        UpdateAffinityMeter(BambooAffinityMeter, TileSuit.Bamboo);
+        UpdateAffinityMeter(CharactersAffinityMeter, TileSuit.Characters);
+        UpdateAffinityMeter(DotsAffinityMeter, TileSuit.Dots);
+    }
 
-        SuitAffinityText.text = $"<color=#43B87A><b>Bamboo:</b> {bambooMult:F1}x</color>   |   " +
-                                $"<color=#D8402E><b>Chars:</b> {charMult:F1}x</color>   |   " +
-                                $"<color=#6FB8EE><b>Dots:</b> {dotMult:F1}x</color>";
+    private void UpdateAffinityMeter(SuitAffinityMeter meter, TileSuit suit)
+    {
+        if (meter == null) return;
+
+        meter.SetLevel(gameManager.Affinity.GetLevel(suit), gameManager.Affinity.GetMultiplier(suit));
     }
 
     // --- Right Panel: Score Engine Updates ---
