@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BrokenCompass
   m_EditorClassIdentifier: Assembly-CSharp::BrokenCompass
   SpiritName: Broken Compass
-  Description: Playing mixed suits grants +20 Chips burst.
+  Description: Mixed-suit combos grant +20 Fu.
   Icon: {fileID: 0}

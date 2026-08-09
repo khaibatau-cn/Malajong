@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BambooVow
   m_EditorClassIdentifier: Assembly-CSharp::BambooVow
   SpiritName: Bamboo Vow
-  Description: +0.5x mult per Bamboo combo this round; resets on off-suit.
+  Description: Bamboo combos stack +0.5 Fan each. Off-suit resets it.
   Icon: {fileID: 0}

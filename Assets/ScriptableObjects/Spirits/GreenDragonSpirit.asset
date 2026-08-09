@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: GreenDragonSpirit
   m_EditorClassIdentifier: Assembly-CSharp::GreenDragonSpirit
   SpiritName: Green Dragon Spirit
-  Description: Playing Green Dragon grants +50 Chips & +2.0x Mult.
+  Description: Green Dragon grants +50 Fu and +2 Fan.
   Icon: {fileID: 0}

@@ -49,6 +49,38 @@ public static class MalajongTheme
     public static readonly Color FuText   = Hex("6FB8EE");
     public static readonly Color FanText  = Hex("F5897E");
 
+    // --- Suit identity ---
+    // One colour per suit, taken from how the suit is actually drawn in the tileset. Anything that
+    // distinguishes suits — affinity meters, badges, combo text — reads from here, so the language
+    // stays consistent and retuning a suit is one edit.
+    public static readonly Color SuitBamboo     = MalachiteBright;
+    /// <summary>
+    /// This is <see cref="VermilionBright"/>, which is otherwise reserved for the one accent
+    /// element per screen. It is shared deliberately: red *is* the character suit in the art, and
+    /// splitting them would mean two different reds on the same screen. If the affinity meter ever
+    /// starts competing with Play Combo for attention, change this rather than the accent.
+    /// </summary>
+    public static readonly Color SuitCharacters = VermilionBright;
+    public static readonly Color SuitDots       = FuText;
+
+    /// <summary>Honors sit outside affinity entirely, so they get the trim metal rather than a suit.</summary>
+    public static Color ForSuit(TileSuit suit)
+    {
+        switch (suit)
+        {
+            case TileSuit.Bamboo:     return SuitBamboo;
+            case TileSuit.Characters: return SuitCharacters;
+            case TileSuit.Dots:       return SuitDots;
+            default:                  return Gold;
+        }
+    }
+
+    /// <summary>
+    /// The dark track an unlit meter block sits in. Derived from its lit colour rather than being a
+    /// fixed grey, so an empty meter still reads as "this one fills up with green" at a glance.
+    /// </summary>
+    public static Color MeterUnlit(Color lit) => Color.Lerp(lit, Ink, 0.80f);
+
     // --- Tile states ---
     /// <summary>Warm tint over a selected tile's sprite. Gold-biased so it reads as lit, not washed.</summary>
     public static readonly Color TileSelectTint = Hex("FFF2C0");

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PuristsFlute
   m_EditorClassIdentifier: Assembly-CSharp::PuristsFlute
   SpiritName: Purist's Flute
-  Description: Grants +100 bonus chips for a Pure Hand.
+  Description: +100 Fu for a Pure Hand.
   Icon: {fileID: 0}

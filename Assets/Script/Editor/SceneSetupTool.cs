@@ -15,6 +15,11 @@ public class SceneSetupTool
         TileDataGenerator.GenerateAllGameData();
         MahjongAssetWiringTool.SliceAndWireAllTiles();
 
+        // Frame sprites must be sliced and set to Point before anything references them, or the
+        // first build bakes in blurry, unstretchable borders. No-ops once they are configured.
+        MalajongSkin.ConfigureAll();
+        MalajongSkin.WireSpiritIcons();
+
         // 1. Ensure EventSystem exists and supports New Input System (Unity 6)
         GameObject eventSystemObj = GameObject.Find("EventSystem");
         if (eventSystemObj == null)
@@ -102,7 +107,7 @@ public class SceneSetupTool
         // ----------------------------------------------------
         // COLUMN 1: LEFT PANEL ("Blind & Stakes" - Inspired by Image 1)
         // ----------------------------------------------------
-        Transform leftPanel = CreateSubPanel(mainPanel, "LeftBlindPanel", new Vector2(0.015f, 0.025f), new Vector2(0.21f, 0.975f), MalajongTheme.Vermilion);
+        Transform leftPanel = CreateSubPanel(mainPanel, "LeftBlindPanel", new Vector2(0.015f, 0.025f), new Vector2(0.21f, 0.975f), MalajongTheme.Vermilion, cabinet: true);
 
         // Blind Boss / Wind Card Box
         Transform blindCardBox = CreateSubPanel(leftPanel, "BlindCardBox", new Vector2(0.05f, 0.50f), new Vector2(0.95f, 0.97f), MalajongTheme.VermilionDeep);
@@ -161,7 +166,7 @@ public class SceneSetupTool
         // ----------------------------------------------------
         // COLUMN 2: CENTER STAGE ("Mahjong Mat & Spirit Rack" - Inspired by Image 2)
         // ----------------------------------------------------
-        Transform centerStage = CreateSubPanel(mainPanel, "CenterStageMat", new Vector2(0.22f, 0.025f), new Vector2(0.77f, 0.975f), MalajongTheme.Malachite);
+        Transform centerStage = CreateSubPanel(mainPanel, "CenterStageMat", new Vector2(0.22f, 0.025f), new Vector2(0.77f, 0.975f), MalajongTheme.Malachite, cabinet: true);
 
         // Top: 5-Slot Spirit Rack
         GameObject rackObj = new GameObject("SpiritRackContainer", typeof(RectTransform));
@@ -185,14 +190,34 @@ public class SceneSetupTool
             Image slotImg = slot.GetComponent<Image>();
             slotImg.color = MalajongTheme.SlotEmpty;
 
-            CreateText(slot.transform, "Label", Vector2.zero, Vector2.one,
-                "<color=#96826F>Empty</color>", 24, TextAlignmentOptions.Center);
+            // Icon sits above the name. UIManager looks this child up by name and hides it for an
+            // empty slot, so the placeholder reads as a vacancy rather than a broken sprite.
+            GameObject iconObj = new GameObject("Icon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            iconObj.transform.SetParent(slot.transform, false);
+            RectTransform iconRect = iconObj.GetComponent<RectTransform>();
+            iconRect.anchorMin = new Vector2(0.5f, 0.62f);
+            iconRect.anchorMax = new Vector2(0.5f, 0.62f);
+            iconRect.sizeDelta = new Vector2(40f, 40f);
+            iconRect.anchoredPosition = Vector2.zero;
+
+            Image iconImg = iconObj.GetComponent<Image>();
+            iconImg.raycastTarget = false;
+            iconImg.preserveAspect = true;
+            iconObj.SetActive(false);
+
+            CreateText(slot.transform, "Label", new Vector2(0f, 0f), new Vector2(1f, 0.38f),
+                "<color=#96826F>Empty</color>", 20, TextAlignmentOptions.Center);
         }
 
-        // Middle: Suit Affinity HUD
-        Transform affinityBox = CreateSubPanel(centerStage, "SuitAffinityHUD", new Vector2(0.05f, 0.72f), new Vector2(0.95f, 0.82f), MalajongTheme.BoxFill);
-        TextMeshProUGUI suitAffinityText = CreateText(affinityBox, "AffinityText", Vector2.zero, Vector2.one,
-            "<color=#43B87A><b>Bamboo:</b> 1.0x</color>   |   <color=#D8402E><b>Chars:</b> 1.0x</color>   |   <color=#6FB8EE><b>Dots:</b> 1.0x</color>", 28, TextAlignmentOptions.Center);
+        // Middle: Suit Affinity HUD — one blocked-out meter per suit. Stacked rather than in a
+        // row because the comparison that matters is "which suit am I committed to", and three
+        // bars sharing a left edge make that readable at a glance.
+        Transform affinityBox = CreateSubPanel(centerStage, "SuitAffinityHUD", new Vector2(0.05f, 0.695f), new Vector2(0.95f, 0.835f), MalajongTheme.BoxFill);
+
+        // Row 0 is the bottom row, since anchors run bottom-up.
+        SuitAffinityMeter dotsMeter = CreateAffinityMeter(affinityBox, TileSuit.Dots, "DOTS", 0);
+        SuitAffinityMeter charactersMeter = CreateAffinityMeter(affinityBox, TileSuit.Characters, "CHARS", 1);
+        SuitAffinityMeter bambooMeter = CreateAffinityMeter(affinityBox, TileSuit.Bamboo, "BAMBOO", 2);
 
         // Center Area: Hand Container (Adjacency layout with 14 tiles)
         GameObject handObj = new GameObject("HandContainer", typeof(RectTransform));
@@ -228,7 +253,7 @@ public class SceneSetupTool
         // ----------------------------------------------------
         // COLUMN 3: RIGHT PANEL ("Score Engine & Dual-Box HUD" - Balatro Style)
         // ----------------------------------------------------
-        Transform rightPanel = CreateSubPanel(mainPanel, "RightScorePanel", new Vector2(0.78f, 0.025f), new Vector2(0.985f, 0.975f), MalajongTheme.Vermilion);
+        Transform rightPanel = CreateSubPanel(mainPanel, "RightScorePanel", new Vector2(0.78f, 0.025f), new Vector2(0.985f, 0.975f), MalajongTheme.Vermilion, cabinet: true);
 
         // Hands & Discards now live in the left column — this column is the score engine only.
 
@@ -347,7 +372,25 @@ public class SceneSetupTool
             Image cardImg = cardObj.GetComponent<Image>();
             cardImg.color = MalajongTheme.Vermilion;
 
-            CreateText(cardObj.transform, "CardText", new Vector2(0.05f, 0.35f), new Vector2(0.95f, 0.95f),
+            // The catalog is built at edit time, so the icon can be assigned straight from the
+            // asset — no runtime lookup needed.
+            if (spirit.Icon != null)
+            {
+                GameObject shopIconObj = new GameObject("Icon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                shopIconObj.transform.SetParent(cardObj.transform, false);
+                RectTransform shopIconRect = shopIconObj.GetComponent<RectTransform>();
+                shopIconRect.anchorMin = new Vector2(0.5f, 0.88f);
+                shopIconRect.anchorMax = new Vector2(0.5f, 0.88f);
+                shopIconRect.sizeDelta = new Vector2(56f, 56f);
+                shopIconRect.anchoredPosition = Vector2.zero;
+
+                Image shopIcon = shopIconObj.GetComponent<Image>();
+                shopIcon.sprite = spirit.Icon;
+                shopIcon.preserveAspect = true;
+                shopIcon.raycastTarget = false;
+            }
+
+            CreateText(cardObj.transform, "CardText", new Vector2(0.05f, 0.32f), new Vector2(0.95f, 0.80f),
                 $"<b><color=#D9A93A>{spirit.SpiritName}</color></b>\n\n{spirit.Description}", 24, TextAlignmentOptions.Center);
 
             Button buyBtn = CreateButton(cardObj.transform, "BuyButton", "BUY (¥5)", MalajongTheme.MalachiteRaised, 24,
@@ -466,7 +509,9 @@ public class SceneSetupTool
 
         // Center Stage
         uiManager.SpiritRackContainer = rackObj.transform;
-        uiManager.SuitAffinityText = suitAffinityText;
+        uiManager.BambooAffinityMeter = bambooMeter;
+        uiManager.CharactersAffinityMeter = charactersMeter;
+        uiManager.DotsAffinityMeter = dotsMeter;
         uiManager.HandContainer = handObj.transform;
         uiManager.TilePrefab = tilePrefab;
         uiManager.SortSuitButton = sortSuitBtn;
@@ -689,15 +734,22 @@ public class SceneSetupTool
     }
 
     /// <summary>
-    /// Creates a bevelled box: the panel object itself is the border, with an inset Fill child
-    /// carrying the actual colour. Thick stepped edges instead of hairlines — that is what makes
-    /// the UI read as carved rather than vector-drawn.
+    /// Creates a framed box.
     ///
-    /// The returned transform is still the named panel (not the fill), so every existing
-    /// reference and SetActive call keeps working. The Fill is added first, so anything a caller
-    /// parents to this panel afterwards renders on top of it.
+    /// With a skin sprite available (<see cref="MalajongSkin"/>) the panel image carries the fill
+    /// colour and a Frame child draws the tinted border art on top of it. Without one it falls
+    /// back to the original flat bevel, where the panel image *is* the border and an inset Fill
+    /// child carries the colour. Both paths keep the same object names.
+    ///
+    /// The returned transform is still the named panel (not the fill), so every existing reference
+    /// and SetActive call keeps working. Fill and Frame are added first, so anything a caller
+    /// parents to this panel afterwards renders on top of both.
     /// </summary>
-    private static Transform CreateSubPanel(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Color color)
+    /// <param name="cabinet">
+    /// True for the three full-height columns, which get the heavier frame. Inner value boxes keep
+    /// the lighter one so the two do not read at the same weight.
+    /// </param>
+    private static Transform CreateSubPanel(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Color color, bool cabinet = false)
     {
         GameObject panelObj = new GameObject(name, typeof(RectTransform), typeof(Image));
         panelObj.transform.SetParent(parent, false);
@@ -708,8 +760,15 @@ public class SceneSetupTool
         panelRect.offsetMin = Vector2.zero;
         panelRect.offsetMax = Vector2.zero;
 
+        Sprite frameSprite = cabinet ? MalajongSkin.PanelFrame : MalajongSkin.BoxFrame;
+        bool skinned = frameSprite != null;
+
         Image border = panelObj.GetComponent<Image>();
-        border.color = MalajongTheme.GoldDark;
+        border.color = skinned ? color : MalajongTheme.GoldDark;
+
+        // Skinned, the frame art supplies the edge, so the fill runs the full rect. Unskinned, the
+        // inset is what leaves the border visible.
+        int inset = skinned ? 0 : MalajongTheme.Border;
 
         GameObject fillObj = new GameObject("Fill", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         fillObj.transform.SetParent(panelObj.transform, false);
@@ -717,15 +776,46 @@ public class SceneSetupTool
         RectTransform fillRect = fillObj.GetComponent<RectTransform>();
         fillRect.anchorMin = Vector2.zero;
         fillRect.anchorMax = Vector2.one;
-        fillRect.offsetMin = new Vector2(MalajongTheme.Border, MalajongTheme.Border);
-        fillRect.offsetMax = new Vector2(-MalajongTheme.Border, -MalajongTheme.Border);
+        fillRect.offsetMin = new Vector2(inset, inset);
+        fillRect.offsetMax = new Vector2(-inset, -inset);
 
         Image fill = fillObj.GetComponent<Image>();
         fill.color = color;
         fill.raycastTarget = false;
 
+        // Added after Fill so the border art sits on top of the colour rather than under it.
+        if (skinned) CreateFrameOverlay(panelObj.transform, frameSprite, MalajongTheme.Gold);
+
         Undo.RegisterCreatedObjectUndo(panelObj, "Create " + name);
         return panelObj.transform;
+    }
+
+    /// <summary>
+    /// Stretches a 9-sliced border sprite over its parent as a non-interactive overlay.
+    ///
+    /// The art is white line work, so the tint here is what gives it a colour — which keeps
+    /// MalajongTheme the single source of truth even though the shape now comes from a sprite.
+    /// </summary>
+    private static Image CreateFrameOverlay(Transform parent, Sprite sprite, Color tint)
+    {
+        GameObject frameObj = new GameObject("Frame", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        frameObj.transform.SetParent(parent, false);
+
+        RectTransform frameRect = frameObj.GetComponent<RectTransform>();
+        frameRect.anchorMin = Vector2.zero;
+        frameRect.anchorMax = Vector2.one;
+        frameRect.offsetMin = Vector2.zero;
+        frameRect.offsetMax = Vector2.zero;
+
+        Image frame = frameObj.GetComponent<Image>();
+        frame.sprite = sprite;
+        frame.type = Image.Type.Sliced;
+        frame.pixelsPerUnitMultiplier = MalajongSkin.PixelsPerUnitMultiplier;
+        frame.color = tint;
+        // The parent already handles hit-testing; a raycasting overlay would swallow button clicks.
+        frame.raycastTarget = false;
+
+        return frame;
     }
 
     private static TextMeshProUGUI CreateText(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, string defaultText, float fontSize, TextAlignmentOptions alignment)
@@ -754,6 +844,86 @@ public class SceneSetupTool
 
         Undo.RegisterCreatedObjectUndo(textObj, "Create " + name);
         return text;
+    }
+
+    /// <summary>
+    /// One affinity row: suit label on the left, a strip of discrete blocks, live multiplier on
+    /// the right.
+    ///
+    /// The blocks are separate Images rather than a filled Image with dividers laid over it — the
+    /// trick the score bar uses — because affinity has no roll-up animation to protect, and
+    /// individually addressable blocks can pop as they light.
+    /// </summary>
+    /// <param name="row">0 is the bottom row. Anchors run bottom-up.</param>
+    private static SuitAffinityMeter CreateAffinityMeter(Transform parent, TileSuit suit, string label, int row)
+    {
+        // Three rows plus two gutters, inset 0.04 top and bottom.
+        const float RowHeight = 0.27f;
+        const float RowGap = 0.055f;
+
+        float y0 = 0.04f + row * (RowHeight + RowGap);
+
+        GameObject rowObj = new GameObject($"AffinityMeter_{suit}", typeof(RectTransform));
+        rowObj.transform.SetParent(parent, false);
+
+        RectTransform rowRect = rowObj.GetComponent<RectTransform>();
+        rowRect.anchorMin = new Vector2(0.03f, y0);
+        rowRect.anchorMax = new Vector2(0.97f, y0 + RowHeight);
+        rowRect.offsetMin = Vector2.zero;
+        rowRect.offsetMax = Vector2.zero;
+
+        Color lit = MalajongTheme.ForSuit(suit);
+        Color unlit = MalajongTheme.MeterUnlit(lit);
+
+        TextMeshProUGUI labelText = CreateText(rowObj.transform, "Label",
+            new Vector2(0f, 0f), new Vector2(0.20f, 1f), label, 24, TextAlignmentOptions.Left);
+        labelText.color = lit;
+
+        GameObject trackObj = new GameObject("Track", typeof(RectTransform));
+        trackObj.transform.SetParent(rowObj.transform, false);
+
+        RectTransform trackRect = trackObj.GetComponent<RectTransform>();
+        trackRect.anchorMin = new Vector2(0.22f, 0.18f);
+        trackRect.anchorMax = new Vector2(0.85f, 0.82f);
+        trackRect.offsetMin = Vector2.zero;
+        trackRect.offsetMax = Vector2.zero;
+
+        Image[] segments = new Image[MalajongTheme.MeterSegments];
+        float slotWidth = 1f / MalajongTheme.MeterSegments;
+
+        for (int i = 0; i < MalajongTheme.MeterSegments; i++)
+        {
+            GameObject segObj = new GameObject($"Segment_{i}", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            segObj.transform.SetParent(trackObj.transform, false);
+
+            RectTransform segRect = segObj.GetComponent<RectTransform>();
+            segRect.anchorMin = new Vector2(i * slotWidth, 0f);
+            segRect.anchorMax = new Vector2((i + 1) * slotWidth, 1f);
+            // Inset half a gap on each side, so every gutter between blocks is one full gap wide
+            // and the strip still ends flush with the track at both ends.
+            segRect.offsetMin = new Vector2(MalajongTheme.SegmentGap * 0.5f, 0f);
+            segRect.offsetMax = new Vector2(-MalajongTheme.SegmentGap * 0.5f, 0f);
+
+            Image segImg = segObj.GetComponent<Image>();
+            segImg.color = unlit;
+            segImg.raycastTarget = false;
+
+            segments[i] = segImg;
+        }
+
+        TextMeshProUGUI valueText = CreateText(rowObj.transform, "Value",
+            new Vector2(0.86f, 0f), new Vector2(1f, 1f), "1.0x", 24, TextAlignmentOptions.Right);
+        valueText.color = MalajongTheme.Smoke;
+
+        SuitAffinityMeter meter = rowObj.AddComponent<SuitAffinityMeter>();
+        meter.ValueText = valueText;
+        meter.Segments = segments;
+        meter.LitColor = lit;
+        meter.UnlitColor = unlit;
+        meter.IdleTextColor = MalajongTheme.Smoke;
+
+        Undo.RegisterCreatedObjectUndo(rowObj, "Create " + rowObj.name);
+        return meter;
     }
 
     private static List<TileData> LoadAllTileAssets()
@@ -927,25 +1097,32 @@ public class SceneSetupTool
             rect.offsetMax = Vector2.zero;
         }
 
-        // Same bevel as CreateSubPanel: the button object is the border, an inset Fill carries
-        // the colour. The Button component stays on the outer object so hit-testing is unchanged.
+        // Same construction as CreateSubPanel. The Button component stays on the outer object so
+        // hit-testing is unchanged either way.
+        Sprite btnFrameSprite = MalajongSkin.ButtonFrame;
+        bool btnSkinned = btnFrameSprite != null;
+
         Image img = btnObj.GetComponent<Image>();
-        img.color = MalajongTheme.GoldDark;
+        img.color = btnSkinned ? color : MalajongTheme.GoldDark;
+
+        int btnInset = btnSkinned ? 0 : MalajongTheme.Border;
 
         GameObject btnFillObj = new GameObject("Fill", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         btnFillObj.transform.SetParent(btnObj.transform, false);
         RectTransform btnFillRect = btnFillObj.GetComponent<RectTransform>();
         btnFillRect.anchorMin = Vector2.zero;
         btnFillRect.anchorMax = Vector2.one;
-        btnFillRect.offsetMin = new Vector2(MalajongTheme.Border, MalajongTheme.Border);
-        btnFillRect.offsetMax = new Vector2(-MalajongTheme.Border, -MalajongTheme.Border);
+        btnFillRect.offsetMin = new Vector2(btnInset, btnInset);
+        btnFillRect.offsetMax = new Vector2(-btnInset, -btnInset);
 
         Image btnFill = btnFillObj.GetComponent<Image>();
         btnFill.color = color;
         btnFill.raycastTarget = false;
 
+        if (btnSkinned) CreateFrameOverlay(btnObj.transform, btnFrameSprite, MalajongTheme.Gold);
+
         Button btn = btnObj.GetComponent<Button>();
-        // Tint the inset fill rather than the border, so hover/press keeps the frame intact.
+        // Tint the fill rather than the frame, so hover/press keeps the border art intact.
         btn.targetGraphic = btnFill;
 
         GameObject textObj = new GameObject("Text", typeof(RectTransform));

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: CompassRose
   m_EditorClassIdentifier: Assembly-CSharp::CompassRose
   SpiritName: Compass Rose
-  Description: Grants +5 bonus chips per tile matching your highest affinity suit.
+  Description: +5 Fu per tile matching your top affinity suit.
   Icon: {fileID: 0}

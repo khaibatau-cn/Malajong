@@ -50,14 +50,17 @@ public class TileDataGenerator
         if (!AssetDatabase.IsValidFolder("Assets/ScriptableObjects/Spirits"))
             AssetDatabase.CreateFolder("Assets/ScriptableObjects", "Spirits");
 
-        CreateSpiritAsset<BambooWeaver>("BambooWeaver", "Bamboo Weaver", "Boosts Bamboo suit affinity buildup rate by 1.5x.", path);
-        CreateSpiritAsset<ImperialScholar>("ImperialScholar", "Imperial Scholar", "Upgrades All Honors hand multiplier from x12 to x20.", path);
-        CreateSpiritAsset<PuristsFlute>("PuristsFlute", "Purist's Flute", "Grants +100 bonus chips for a Pure Hand.", path);
-        CreateSpiritAsset<RestlessWind>("RestlessWind", "Restless Wind", "Scoring a Wind Pong grants +1 Discard.", path);
-        CreateSpiritAsset<BambooVow>("BambooVow", "Bamboo Vow", "+0.5x mult per Bamboo combo this round; resets on off-suit.", path);
-        CreateSpiritAsset<BrokenCompass>("BrokenCompass", "Broken Compass", "Playing mixed suits grants +20 Chips burst.", path);
-        CreateSpiritAsset<GreenDragonSpirit>("GreenDragonSpirit", "Green Dragon Spirit", "Playing Green Dragon grants +50 Chips & +2.0x Mult.", path);
-        CreateSpiritAsset<CompassRose>("CompassRose", "Compass Rose", "Grants +5 bonus chips per tile matching your highest affinity suit.", path);
+        // These strings are the seed values only — CreateSpiritAsset skips assets that already
+        // exist, so edits made to the .asset files are authoritative and are not overwritten here.
+        // Keep the two in sync anyway, or deleting an asset resurrects stale text.
+        CreateSpiritAsset<BambooWeaver>("BambooWeaver", "Bamboo Weaver", "Bamboo affinity builds 1.5x faster.", path);
+        CreateSpiritAsset<ImperialScholar>("ImperialScholar", "Imperial Scholar", "All Honors scores x20 Fan instead of x12.", path);
+        CreateSpiritAsset<PuristsFlute>("PuristsFlute", "Purist's Flute", "+100 Fu for a Pure Hand.", path);
+        CreateSpiritAsset<RestlessWind>("RestlessWind", "Restless Wind", "Wind Pong grants +1 Discard.", path);
+        CreateSpiritAsset<BambooVow>("BambooVow", "Bamboo Vow", "Bamboo combos stack +0.5 Fan each. Off-suit resets it.", path);
+        CreateSpiritAsset<BrokenCompass>("BrokenCompass", "Broken Compass", "Mixed-suit combos grant +20 Fu.", path);
+        CreateSpiritAsset<GreenDragonSpirit>("GreenDragonSpirit", "Green Dragon Spirit", "Green Dragon grants +50 Fu and +2 Fan.", path);
+        CreateSpiritAsset<CompassRose>("CompassRose", "Compass Rose", "+5 Fu per tile matching your top affinity suit.", path);
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();

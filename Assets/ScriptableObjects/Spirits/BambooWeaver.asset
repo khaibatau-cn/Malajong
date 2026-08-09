@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BambooWeaver
   m_EditorClassIdentifier: Assembly-CSharp::BambooWeaver
   SpiritName: Bamboo Weaver
-  Description: Boosts Bamboo suit affinity buildup rate by 1.5x.
+  Description: Bamboo affinity builds 1.5x faster.
   Icon: {fileID: 0}
