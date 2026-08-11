@@ -81,7 +81,7 @@ happens to be unplayable.
 `StartRound` now deals through `DealOpeningHand()`, which reshuffles the wall and redeals until the
 hand holds at least one playable combo. A round can never open already in trouble.
 
-Capped at 50 attempts so an incomplete tile set cannot hang the editor; with a full 144-tile wall
+Capped at 50 attempts so an incomplete tile set cannot hang the editor; with a full 136-tile wall
 this effectively always succeeds on the first or second deal.
 
 ---
@@ -136,7 +136,7 @@ times.
 ### Is the redraw loop exploitable?
 
 No. Surviving a deadlock grants a discard, which can be spent into another deadlock, which grants
-another redraw — but each cycle burns roughly 14 tiles off a 144-tile wall, so the loop is bounded
+another redraw — but each cycle burns roughly 14 tiles off a 136-tile wall, so the loop is bounded
 by the wall running dry. It cannot be farmed, and it never advances the score on its own.
 
 ---
