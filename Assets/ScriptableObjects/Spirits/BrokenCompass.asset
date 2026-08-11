@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BrokenCompass
   SpiritName: Broken Compass
   Description: Mixed-suit combos grant +20 Fu.
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 31d5c5ab5d43ca84b89f86bbc2d38b37, type: 3}

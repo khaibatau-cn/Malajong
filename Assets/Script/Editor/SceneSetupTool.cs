@@ -81,13 +81,24 @@ public class SceneSetupTool
         // ----------------------------------------------------
         // CRITICAL: Wipe clean all existing UI panels to eliminate duplicate ghosting!
         // ----------------------------------------------------
-        string[] panelsToClear = { "StartMenuUI", "MainGameUI", "ShopUI", "GameOverUI", "VictoryUI" };
-        foreach (string panelName in panelsToClear)
+        // Modals belong here too. They were missing, so every run of this tool left the previous
+        // pair behind and stacked a new one on top — a scene set up a dozen times carried a dozen
+        // dead copies of each, all still catching raycasts.
+        string[] panelsToClear =
         {
-            Transform existing = canvasObj.transform.Find(panelName);
-            if (existing != null)
+            "StartMenuUI", "MainGameUI", "ShopUI", "GameOverUI", "VictoryUI",
+            "RunInfoModal", "OptionsModal", "AbandonConfirmModal", "RedrawModal"
+        };
+        // Walks backwards over every child rather than Find()ing one by name, so a scene that
+        // already accumulated duplicates is cleaned out in a single pass instead of shedding one
+        // copy per run.
+        var clearSet = new HashSet<string>(panelsToClear);
+        for (int i = canvasObj.transform.childCount - 1; i >= 0; i--)
+        {
+            Transform child = canvasObj.transform.GetChild(i);
+            if (clearSet.Contains(child.name))
             {
-                Object.DestroyImmediate(existing.gameObject);
+                Object.DestroyImmediate(child.gameObject);
             }
         }
 
@@ -95,9 +106,7 @@ public class SceneSetupTool
         // 4. Panel 1: StartMenuUI
         // ==========================================
         Transform startPanel = CreatePanel(canvasObj.transform, "StartMenuUI", MalajongTheme.Ink);
-        CreateText(startPanel, "TitleText", new Vector2(0.1f, 0.55f), new Vector2(0.9f, 0.85f),
-            "<b><size=200%><color=#D9A93A>MALAJONG</color></size></b>\n<size=100%><color=#B8AC97>A Mahjong Roguelike Deckbuilder</color></size>", 48, TextAlignmentOptions.Center);
-        Button startRunBtn = CreateButton(startPanel, "StartRunButton", "START RUN", MalajongTheme.VermilionBright, 36, new Vector2(0.38f, 0.32f), new Vector2(0.62f, 0.44f));
+        Button startRunBtn = BuildStartMenu(startPanel);
 
         // ==========================================
         // 5. Panel 2: MainGameUI (3-Column Balatro + Mahjong Layout)
@@ -346,59 +355,7 @@ public class SceneSetupTool
         // 6. Panel 3: ShopUI
         // ==========================================
         Transform shopPanel = CreatePanel(canvasObj.transform, "ShopUI", MalajongTheme.Ink);
-        TextMeshProUGUI shopStatusText = CreateText(shopPanel, "ShopStatusText", new Vector2(0.1f, 0.78f), new Vector2(0.9f, 0.95f),
-            "<b>SPIRIT SHOP</b>   |   Yuan: ¥5", 38, TextAlignmentOptions.Center);
-
-        GameObject catObj = new GameObject("ShopCatalogContainer", typeof(RectTransform));
-        catObj.transform.SetParent(shopPanel, false);
-        RectTransform catRect = catObj.GetComponent<RectTransform>();
-        catRect.anchorMin = new Vector2(0.1f, 0.30f);
-        catRect.anchorMax = new Vector2(0.9f, 0.72f);
-        catRect.offsetMin = Vector2.zero;
-        catRect.offsetMax = Vector2.zero;
-
-        HorizontalLayoutGroup catLayout = catObj.AddComponent<HorizontalLayoutGroup>();
-        catLayout.spacing = 20;
-        catLayout.childAlignment = TextAnchor.MiddleCenter;
-        catLayout.childControlWidth = true;
-        catLayout.childControlHeight = true;
-
-        List<SpiritData> spiritCatalog = LoadAllSpiritAssets();
-        for (int i = 0; i < spiritCatalog.Count; i++)
-        {
-            SpiritData spirit = spiritCatalog[i];
-            GameObject cardObj = new GameObject($"ShopItem_{i}", typeof(RectTransform), typeof(Image));
-            cardObj.transform.SetParent(catObj.transform, false);
-            Image cardImg = cardObj.GetComponent<Image>();
-            cardImg.color = MalajongTheme.Vermilion;
-
-            // The catalog is built at edit time, so the icon can be assigned straight from the
-            // asset — no runtime lookup needed.
-            if (spirit.Icon != null)
-            {
-                GameObject shopIconObj = new GameObject("Icon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-                shopIconObj.transform.SetParent(cardObj.transform, false);
-                RectTransform shopIconRect = shopIconObj.GetComponent<RectTransform>();
-                shopIconRect.anchorMin = new Vector2(0.5f, 0.88f);
-                shopIconRect.anchorMax = new Vector2(0.5f, 0.88f);
-                shopIconRect.sizeDelta = new Vector2(56f, 56f);
-                shopIconRect.anchoredPosition = Vector2.zero;
-
-                Image shopIcon = shopIconObj.GetComponent<Image>();
-                shopIcon.sprite = spirit.Icon;
-                shopIcon.preserveAspect = true;
-                shopIcon.raycastTarget = false;
-            }
-
-            CreateText(cardObj.transform, "CardText", new Vector2(0.05f, 0.32f), new Vector2(0.95f, 0.80f),
-                $"<b><color=#D9A93A>{spirit.SpiritName}</color></b>\n\n{spirit.Description}", 24, TextAlignmentOptions.Center);
-
-            Button buyBtn = CreateButton(cardObj.transform, "BuyButton", "BUY (¥5)", MalajongTheme.MalachiteRaised, 24,
-                new Vector2(0.1f, 0.08f), new Vector2(0.9f, 0.28f));
-        }
-
-        Button nextRoundBtn = CreateButton(shopPanel, "NextRoundButton", "NEXT ROUND >>", MalajongTheme.VermilionRaised, 32,
-            new Vector2(0.35f, 0.08f), new Vector2(0.65f, 0.20f));
+        var (shopStatusText, catObj, spiritCatalog, nextRoundBtn) = BuildShop(shopPanel);
 
         // ==========================================
         // 7. Panel 4: GameOverUI
@@ -462,6 +419,61 @@ public class SceneSetupTool
             new Vector2(0.52f, 0.12f), new Vector2(0.88f, 0.24f));
 
         optionsModal.gameObject.SetActive(false);
+
+        // ==========================================
+        // 10b. Panel 8: AbandonConfirmModal (Overlay)
+        // ==========================================
+        // Created after OptionsModal so it draws on top of it — abandoning is reached *from* the
+        // options screen, which stays open behind the confirmation.
+        Transform abandonModal = CreatePanel(canvasObj.transform, "AbandonConfirmModal", MalajongTheme.Scrim);
+        Transform abandonCard = CreateSubPanel(abandonModal, "AbandonCard", new Vector2(0.31f, 0.34f), new Vector2(0.69f, 0.66f), MalajongTheme.VermilionDeep, cabinet: true);
+
+        TextMeshProUGUI abandonBody = CreateText(abandonCard, "AbandonConfirmText", new Vector2(0.07f, 0.30f), new Vector2(0.93f, 0.92f),
+            "<b>ABANDON THIS RUN?</b>\n\nAll run progress will be lost.", 26, TextAlignmentOptions.Center);
+
+        // Cancel takes the accent and sits on the right, where the eye lands last. Destructive
+        // choices should never be the easy default.
+        Button confirmAbandonBtn = CreateButton(abandonCard, "ConfirmAbandonButton", "YES, ABANDON", MalajongTheme.Vermilion, 24,
+            new Vector2(0.08f, 0.10f), new Vector2(0.48f, 0.26f));
+        Button cancelAbandonBtn = CreateButton(abandonCard, "CancelAbandonButton", "KEEP PLAYING", MalajongTheme.MalachiteRaised, 24,
+            new Vector2(0.52f, 0.10f), new Vector2(0.92f, 0.26f));
+
+        abandonModal.gameObject.SetActive(false);
+
+        // ==========================================
+        // 10c. Panel 9: RedrawModal (Dead Hand Reprieve)
+        // ==========================================
+        Transform redrawModal = CreatePanel(canvasObj.transform, "RedrawModal", MalajongTheme.Scrim);
+        Transform redrawCard = CreateSubPanel(redrawModal, "RedrawCard", new Vector2(0.30f, 0.30f), new Vector2(0.70f, 0.70f), MalajongTheme.MalachiteDeep, cabinet: true);
+
+        // The maneki-neko from the title art, if it has been baked out — the prompt is written in
+        // the cat's voice, so showing the cat is worth more than another block of text.
+        Sprite catSprite = LoadTitleSprite();
+        if (catSprite != null)
+        {
+            GameObject luckyCatObj = new GameObject("LuckyCat", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            luckyCatObj.transform.SetParent(redrawCard, false);
+
+            RectTransform luckyCatRect = luckyCatObj.GetComponent<RectTransform>();
+            luckyCatRect.anchorMin = new Vector2(0.20f, 0.74f);
+            luckyCatRect.anchorMax = new Vector2(0.80f, 0.95f);
+            luckyCatRect.offsetMin = Vector2.zero;
+            luckyCatRect.offsetMax = Vector2.zero;
+
+            Image luckyCatImg = luckyCatObj.GetComponent<Image>();
+            luckyCatImg.sprite = catSprite;
+            luckyCatImg.preserveAspect = true;
+            luckyCatImg.raycastTarget = false;
+        }
+
+        TextMeshProUGUI redrawBody = CreateText(redrawCard, "RedrawText", new Vector2(0.07f, 0.28f), new Vector2(0.93f, 0.72f),
+            "<b>DEAD HAND</b>\n\nNo combo to play. No discards left.", 26, TextAlignmentOptions.Center);
+
+        // One button, no dismiss: a redraw is the only move left on the board.
+        Button redrawBtn = CreateButton(redrawCard, "RedrawButton", "ASK THE CAT", MalajongTheme.VermilionBright, 28,
+            new Vector2(0.22f, 0.08f), new Vector2(0.78f, 0.24f));
+
+        redrawModal.gameObject.SetActive(false);
 
         // 11. Generate & Save Upscaled TilePrefab (70x95)
         GameObject tilePrefab = CreateOrUpdateTilePrefab();
@@ -545,14 +557,34 @@ public class SceneSetupTool
         uiManager.CloseRunInfoButton = closeRunInfoBtn;
 
         uiManager.OptionsModal = optionsModal.gameObject;
+        uiManager.OptionsTitleText = optionsTitle;
         uiManager.ToggleAudioButton = toggleAudioBtn;
         uiManager.ToggleAudioText = toggleAudioText;
         uiManager.ForfeitRunButton = forfeitBtn;
         uiManager.CloseOptionsButton = closeOptionsBtn;
 
+        uiManager.RedrawModal = redrawModal.gameObject;
+        uiManager.RedrawText = redrawBody;
+        uiManager.RedrawButton = redrawBtn;
+
+        uiManager.AbandonConfirmModal = abandonModal.gameObject;
+        uiManager.AbandonConfirmText = abandonBody;
+        uiManager.ConfirmAbandonButton = confirmAbandonBtn;
+        uiManager.CancelAbandonButton = cancelAbandonBtn;
+
         // Wire Button Listeners
         startRunBtn.onClick.RemoveAllListeners();
         UnityEditor.Events.UnityEventTools.AddPersistentListener(startRunBtn.onClick, uiManager.StartRun);
+
+        // The options modal already holds the rules box, so the menu reuses it rather than
+        // maintaining a second copy of the same text.
+        Button howToPlayBtn = startPanel.Find("HowToPlayButton").GetComponent<Button>();
+        howToPlayBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(howToPlayBtn.onClick, uiManager.OpenOptionsModal);
+
+        Button quitBtn = startPanel.Find("QuitButton").GetComponent<Button>();
+        quitBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(quitBtn.onClick, uiManager.QuitGame);
 
         runInfoBtn.onClick.RemoveAllListeners();
         UnityEditor.Events.UnityEventTools.AddPersistentListener(runInfoBtn.onClick, uiManager.OpenRunInfoModal);
@@ -570,7 +602,16 @@ public class SceneSetupTool
         UnityEditor.Events.UnityEventTools.AddPersistentListener(toggleAudioBtn.onClick, uiManager.ToggleAudio);
 
         forfeitBtn.onClick.RemoveAllListeners();
-        UnityEditor.Events.UnityEventTools.AddPersistentListener(forfeitBtn.onClick, uiManager.ForfeitRun);
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(forfeitBtn.onClick, uiManager.OpenAbandonConfirm);
+
+        redrawBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(redrawBtn.onClick, uiManager.TakeRedraw);
+
+        confirmAbandonBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(confirmAbandonBtn.onClick, uiManager.ConfirmAbandonRun);
+
+        cancelAbandonBtn.onClick.RemoveAllListeners();
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(cancelAbandonBtn.onClick, uiManager.CancelAbandon);
 
         sortSuitBtn.onClick.RemoveAllListeners();
         UnityEditor.Events.UnityEventTools.AddPersistentListener(sortSuitBtn.onClick, uiManager.SortHandBySuit);
@@ -593,8 +634,10 @@ public class SceneSetupTool
         restartBtn.onClick.RemoveAllListeners();
         UnityEditor.Events.UnityEventTools.AddPersistentListener(restartBtn.onClick, uiManager.RestartRun);
 
+        // Labelled MAIN MENU, so it goes to the menu — it restarted the run outright back when the
+        // menu was unreachable.
         victoryRestartBtn.onClick.RemoveAllListeners();
-        UnityEditor.Events.UnityEventTools.AddPersistentListener(victoryRestartBtn.onClick, uiManager.RestartRun);
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(victoryRestartBtn.onClick, uiManager.ReturnToMainMenu);
 
         // Apply pixel font to all TextMeshProUGUI components in the Canvas
         TMP_FontAsset pixelFont = GetOrCreatePixelFont();
@@ -716,6 +759,369 @@ public class SceneSetupTool
         return RebuildPixelFontAsset();
     }
 
+    // ==========================================
+    // Start Menu
+    // ==========================================
+
+    /// <summary>
+    /// Builds the title screen: framed logo card, a swaying fan of real tiles resting on a
+    /// malachite mat, and the three entry buttons.
+    ///
+    /// The logo is the imported Aseprite art when it is present and falls back to type-set text
+    /// when it is not, so the menu is never a blank rectangle on a fresh clone.
+    /// </summary>
+    /// <returns>The START RUN button, which the caller wires to UIManager.StartRun.</returns>
+    private static Button BuildStartMenu(Transform startPanel)
+    {
+        List<TileData> tiles = LoadAllTileAssets();
+
+        // --- Drifting tile field. First child, so everything else draws over it ---
+        CreateFloatingTileField(startPanel, tiles, count: 18);
+
+        // --- Mat: the tiles need something to rest on, or the fan reads as floating text ---
+        CreateRect(startPanel, "FloorBand", new Vector2(0f, 0f), new Vector2(1f, 0.19f), MalajongTheme.MalachiteDeep);
+        CreateRect(startPanel, "FloorEdge", new Vector2(0f, 0.185f), new Vector2(1f, 0.19f), MalajongTheme.Gold);
+
+        // Corner seal tiles used to sit here as wallpaper. The drifting field does that job now, and
+        // two static giants alongside it just read as clutter.
+
+        // --- Title card ---
+        Transform titleCard = CreateSubPanel(startPanel, "TitleCard", new Vector2(0.17f, 0.51f), new Vector2(0.83f, 0.90f), MalajongTheme.VermilionDeep, cabinet: true);
+
+        Sprite logoSprite = LoadTitleSprite();
+        RectTransform logoRect = null;
+
+        if (logoSprite != null)
+        {
+            GameObject logoObj = new GameObject("TitleLogo", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            logoObj.transform.SetParent(titleCard, false);
+
+            // Near-flush with the card. The baked sprite is trimmed to its own artwork, so this is
+            // the logo's real size rather than a canvas full of margin.
+            logoRect = logoObj.GetComponent<RectTransform>();
+            logoRect.anchorMin = new Vector2(0.035f, 0.20f);
+            logoRect.anchorMax = new Vector2(0.965f, 0.95f);
+            logoRect.offsetMin = Vector2.zero;
+            logoRect.offsetMax = Vector2.zero;
+
+            Image logoImg = logoObj.GetComponent<Image>();
+            logoImg.sprite = logoSprite;
+            logoImg.preserveAspect = true;
+            logoImg.raycastTarget = false;
+        }
+        else
+        {
+            Debug.LogWarning("[SceneSetupTool] No title art found under Assets/Sprites/UI. Falling back to a text logo.");
+            CreateText(titleCard, "TitleText", new Vector2(0.05f, 0.22f), new Vector2(0.95f, 0.92f),
+                $"<b><size=200%><color={MalajongTheme.HexGold}>MALAJONG</color></size></b>", 48, TextAlignmentOptions.Center);
+        }
+
+        TextMeshProUGUI tagline = CreateText(titleCard, "Tagline", new Vector2(0.05f, 0.05f), new Vector2(0.95f, 0.21f),
+            $"<color={MalajongTheme.HexBoneDim}>A MAHJONG ROGUELIKE DECKBUILDER</color>", 26, TextAlignmentOptions.Center);
+        tagline.characterSpacing = 8f;
+
+        // --- Tile fan on the mat ---
+        GameObject fanObj = new GameObject("TileFan", typeof(RectTransform));
+        fanObj.transform.SetParent(startPanel, false);
+
+        // Sits high enough in the mat that the arc's lowest tiles still clear the footer line, and
+        // the whole fan stays inside the band instead of bleeding off the bottom of the screen.
+        RectTransform fanRect = fanObj.GetComponent<RectTransform>();
+        fanRect.anchorMin = new Vector2(0.5f, 0.105f);
+        fanRect.anchorMax = new Vector2(0.5f, 0.105f);
+        fanRect.sizeDelta = Vector2.zero;
+        fanRect.anchoredPosition = Vector2.zero;
+
+        // A hand you could almost read: two suits and a wind, so the fan advertises what the game
+        // is made of rather than being nine copies of the same tile.
+        (TileSuit suit, int rank)[] fanHand =
+        {
+            (TileSuit.Bamboo, 1), (TileSuit.Bamboo, 2), (TileSuit.Bamboo, 3),
+            (TileSuit.Dots, 5), (TileSuit.Dots, 5), (TileSuit.Dots, 5),
+            (TileSuit.Characters, 7), (TileSuit.Characters, 8), (TileSuit.Honor, 1)
+        };
+
+        // Sized against the mat rather than the hand: at 104px tall the fan reads as decoration at
+        // the bottom of the frame, where the old 141px version dominated the lower third.
+        const float TileHeight = 104f;
+        const float TileSpacing = 92f;
+        // Total arc depth is ArcDrop x offset², so the outermost tile of nine falls 16 x this.
+        const float ArcDrop = 2.2f;
+        const float TiltStep = 3.2f;
+
+        RectTransform[] fanTiles = new RectTransform[fanHand.Length];
+        float centre = (fanHand.Length - 1) * 0.5f;
+
+        for (int i = 0; i < fanHand.Length; i++)
+        {
+            float offset = i - centre;
+            var (suit, rank) = fanHand[i];
+
+            GameObject tileObj = new GameObject($"FanTile_{i}", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            tileObj.transform.SetParent(fanObj.transform, false);
+
+            RectTransform tileRect = tileObj.GetComponent<RectTransform>();
+            tileRect.anchorMin = new Vector2(0.5f, 0.5f);
+            tileRect.anchorMax = new Vector2(0.5f, 0.5f);
+            tileRect.sizeDelta = new Vector2(TileHeight * 0.74f, TileHeight);
+            // Squared falloff, so the fan curves away from the centre instead of stepping down.
+            tileRect.anchoredPosition = new Vector2(offset * TileSpacing, -offset * offset * ArcDrop);
+            tileRect.localRotation = Quaternion.Euler(0f, 0f, -offset * TiltStep);
+
+            Image tileImg = tileObj.GetComponent<Image>();
+            tileImg.preserveAspect = true;
+            tileImg.raycastTarget = false;
+
+            TileData data = FindTile(tiles, suit, rank);
+            if (data != null && data.TileSprite != null)
+            {
+                tileImg.sprite = data.TileSprite;
+                // Slightly knocked back so the fan stays scenery and START RUN keeps the eye.
+                tileImg.color = new Color(1f, 1f, 1f, 0.88f);
+            }
+            else
+            {
+                tileImg.color = MalajongTheme.Hex("EDE6D6", 0.35f);
+            }
+
+            fanTiles[i] = tileRect;
+        }
+
+        // --- Buttons ---
+        Button startRunBtn = CreateButton(startPanel, "StartRunButton", "START RUN", MalajongTheme.VermilionBright, 38,
+            new Vector2(0.385f, 0.375f), new Vector2(0.615f, 0.475f));
+        CreateButton(startPanel, "HowToPlayButton", "HOW TO PLAY", MalajongTheme.MalachiteRaised, 26,
+            new Vector2(0.395f, 0.295f), new Vector2(0.605f, 0.365f));
+        CreateButton(startPanel, "QuitButton", "QUIT", MalajongTheme.Vermilion, 26,
+            new Vector2(0.395f, 0.215f), new Vector2(0.605f, 0.285f));
+
+        // Kept clear of the fan's lowest point, sway included — the credit line is the one piece of
+        // text on this screen that must never be half-covered.
+        CreateText(startPanel, "FooterText", new Vector2(0.02f, 0.004f), new Vector2(0.98f, 0.040f),
+            $"<color={MalajongTheme.HexSmoke}>TEAM SANROKUNANA  ·  CODECATALYST  ·  SWINBURNE</color>", 20, TextAlignmentOptions.Center);
+
+        TitleMenuDecor decor = startPanel.gameObject.AddComponent<TitleMenuDecor>();
+        decor.Logo = logoRect;
+        decor.Tiles = fanTiles;
+
+        return startRunBtn;
+    }
+
+    // ==========================================
+    // Shop
+    // ==========================================
+
+    /// <summary>
+    /// Builds the shop as a market stall rather than a settings screen: a hanging wooden sign,
+    /// paper lanterns, a drifting tile field behind it and the spirits laid out as framed cards on
+    /// a malachite counter.
+    ///
+    /// The catalog is a grid rather than one long row — eight spirits sharing a single row left
+    /// each card too narrow to read its own description.
+    /// </summary>
+    private static (TextMeshProUGUI status, GameObject catalog, List<SpiritData> spirits, Button nextRound) BuildShop(Transform shopPanel)
+    {
+        // --- Same drifting field as the title screen, so the two read as one place ---
+        CreateFloatingTileField(shopPanel, LoadAllTileAssets(), count: 12);
+
+        // --- Counter the stall sits behind ---
+        CreateRect(shopPanel, "CounterBand", new Vector2(0f, 0f), new Vector2(1f, 0.17f), MalajongTheme.MalachiteDeep);
+        CreateRect(shopPanel, "CounterEdge", new Vector2(0f, 0.165f), new Vector2(1f, 0.17f), MalajongTheme.Gold);
+
+        // --- Hanging sign. Native 48x41 art, point-filtered and scaled up ---
+        Sprite signSprite = TitleSpriteBaker.FirstSpriteAt(ShopSignPath);
+        if (signSprite != null)
+        {
+            GameObject signObj = new GameObject("ShopSign", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            signObj.transform.SetParent(shopPanel, false);
+
+            RectTransform signRect = signObj.GetComponent<RectTransform>();
+            signRect.anchorMin = new Vector2(0.40f, 0.80f);
+            signRect.anchorMax = new Vector2(0.60f, 0.99f);
+            signRect.offsetMin = Vector2.zero;
+            signRect.offsetMax = Vector2.zero;
+
+            Image signImg = signObj.GetComponent<Image>();
+            signImg.sprite = signSprite;
+            signImg.preserveAspect = true;
+            signImg.raycastTarget = false;
+        }
+        else
+        {
+            Debug.LogWarning($"[SceneSetupTool] Shop sign missing at '{ShopSignPath}'. The shop header falls back to text.");
+            CreateText(shopPanel, "ShopSignFallback", new Vector2(0.3f, 0.86f), new Vector2(0.7f, 0.97f),
+                $"<b><color={MalajongTheme.HexGold}>SPIRIT SHOP</color></b>", 44, TextAlignmentOptions.Center);
+        }
+
+        // --- Lanterns flanking the sign, hung from the top edge ---
+        CreateLantern(shopPanel, "LanternLeft", new Vector2(0.16f, 0.66f), new Vector2(0.24f, 0.99f));
+        CreateLantern(shopPanel, "LanternRight", new Vector2(0.76f, 0.66f), new Vector2(0.84f, 0.99f));
+
+        TextMeshProUGUI shopStatusText = CreateText(shopPanel, "ShopStatusText", new Vector2(0.12f, 0.72f), new Vector2(0.88f, 0.80f),
+            "<b>SPIRIT SHOP</b>   |   Yuan: ¥5", 30, TextAlignmentOptions.Center);
+
+        // --- Catalog grid ---
+        GameObject catObj = new GameObject("ShopCatalogContainer", typeof(RectTransform));
+        catObj.transform.SetParent(shopPanel, false);
+
+        RectTransform catRect = catObj.GetComponent<RectTransform>();
+        catRect.anchorMin = new Vector2(0.06f, 0.20f);
+        catRect.anchorMax = new Vector2(0.94f, 0.71f);
+        catRect.offsetMin = Vector2.zero;
+        catRect.offsetMax = Vector2.zero;
+
+        GridLayoutGroup catLayout = catObj.AddComponent<GridLayoutGroup>();
+        catLayout.cellSize = new Vector2(360f, 240f);
+        catLayout.spacing = new Vector2(24f, 20f);
+        catLayout.childAlignment = TextAnchor.UpperCenter;
+        catLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        catLayout.constraintCount = 4;
+
+        List<SpiritData> spiritCatalog = LoadAllSpiritAssets();
+        for (int i = 0; i < spiritCatalog.Count; i++)
+        {
+            CreateShopCard(catObj.transform, spiritCatalog[i], i);
+        }
+
+        Button nextRoundBtn = CreateButton(shopPanel, "NextRoundButton", "NEXT ROUND >>", MalajongTheme.VermilionBright, 30,
+            new Vector2(0.38f, 0.035f), new Vector2(0.62f, 0.135f));
+
+        return (shopStatusText, catObj, spiritCatalog, nextRoundBtn);
+    }
+
+    private const string ShopSignPath = "Assets/Sprites/UI/Shop/ShopSign.png";
+    private const string LanternPath = "Assets/Sprites/UI/Shop/Lantern.aseprite";
+
+    /// <summary>
+    /// One spirit card: framed box, icon, name and description, price tag, buy button.
+    ///
+    /// The child names <c>Icon</c>, <c>CardText</c> and <c>BuyButton</c> are load-bearing —
+    /// <c>UIManager.RefreshShopCards</c> looks them up by name every time the shop opens.
+    /// </summary>
+    private static void CreateShopCard(Transform parent, SpiritData spirit, int index)
+    {
+        // Anchors are overwritten by the GridLayoutGroup; the frame art is what this buys us.
+        Transform card = CreateSubPanel(parent, $"ShopItem_{index}", Vector2.zero, Vector2.one, MalajongTheme.Vermilion);
+
+        if (spirit.Icon != null)
+        {
+            GameObject iconObj = new GameObject("Icon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            iconObj.transform.SetParent(card, false);
+
+            RectTransform iconRect = iconObj.GetComponent<RectTransform>();
+            iconRect.anchorMin = new Vector2(0.5f, 0.80f);
+            iconRect.anchorMax = new Vector2(0.5f, 0.80f);
+            iconRect.sizeDelta = new Vector2(64f, 64f);
+            iconRect.anchoredPosition = Vector2.zero;
+
+            Image icon = iconObj.GetComponent<Image>();
+            icon.sprite = spirit.Icon;
+            icon.preserveAspect = true;
+            icon.raycastTarget = false;
+        }
+
+        CreateText(card, "CardText", new Vector2(0.06f, 0.30f), new Vector2(0.94f, 0.68f),
+            $"<b><color={MalajongTheme.HexGold}>{spirit.SpiritName}</color></b>\n\n<size=80%>{spirit.Description}</size>",
+            22, TextAlignmentOptions.Center);
+
+        CreateButton(card, "BuyButton", "BUY (¥5)", MalajongTheme.MalachiteRaised, 22,
+            new Vector2(0.12f, 0.06f), new Vector2(0.88f, 0.26f));
+    }
+
+    /// <summary>A paper lantern on a cord, hung from the top of its anchor box.</summary>
+    private static void CreateLantern(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax)
+    {
+        Sprite lantern = TitleSpriteBaker.FirstSpriteAt(LanternPath);
+        if (lantern == null)
+        {
+            Debug.LogWarning($"[SceneSetupTool] Lantern art missing at '{LanternPath}'. Skipping '{name}'.");
+            return;
+        }
+
+        GameObject lanternObj = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        lanternObj.transform.SetParent(parent, false);
+
+        RectTransform rect = lanternObj.GetComponent<RectTransform>();
+        rect.anchorMin = anchorMin;
+        rect.anchorMax = anchorMax;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        Image image = lanternObj.GetComponent<Image>();
+        image.sprite = lantern;
+        image.preserveAspect = true;
+        image.raycastTarget = false;
+    }
+
+    /// <summary>
+    /// Spawns the drifting tile wallpaper as the first child of a panel, so everything built
+    /// afterwards draws over it.
+    /// </summary>
+    private static void CreateFloatingTileField(Transform parent, List<TileData> tiles, int count)
+    {
+        GameObject fieldObj = new GameObject("FloatingTileField", typeof(RectTransform));
+        fieldObj.transform.SetParent(parent, false);
+
+        RectTransform fieldRect = fieldObj.GetComponent<RectTransform>();
+        fieldRect.anchorMin = Vector2.zero;
+        fieldRect.anchorMax = Vector2.one;
+        fieldRect.offsetMin = Vector2.zero;
+        fieldRect.offsetMax = Vector2.zero;
+
+        List<Sprite> tilePool = new List<Sprite>();
+        foreach (TileData data in tiles)
+        {
+            if (data != null && data.TileSprite != null) tilePool.Add(data.TileSprite);
+        }
+
+        if (tilePool.Count == 0)
+        {
+            Debug.LogWarning("[SceneSetupTool] No tile sprites available — the floating tile field will be empty.");
+            return;
+        }
+
+        FloatingTileField field = fieldObj.AddComponent<FloatingTileField>();
+        field.TilePool = tilePool.ToArray();
+        field.Count = count;
+    }
+
+    /// <summary>
+    /// Prefers the baked sprite — background knocked out and canvas trimmed — and falls back to the
+    /// raw art if baking failed, which shows the logo letterboxed rather than not at all.
+    /// </summary>
+    private static Sprite LoadTitleSprite()
+    {
+        Sprite baked = TitleSpriteBaker.BakeIfStale();
+        if (baked != null) return baked;
+
+        return TitleSpriteBaker.FirstSpriteAt("Assets/Sprites/UI/Title.aseprite")
+            ?? TitleSpriteBaker.FirstSpriteAt("Assets/Sprites/UI/Title.png");
+    }
+
+    private static TileData FindTile(List<TileData> tiles, TileSuit suit, int rank)
+    {
+        return tiles.Find(t => t != null && t.Suit == suit && t.Rank == rank);
+    }
+
+    /// <summary>Flat colour block. Unlike CreateSubPanel this carries no frame art — it is background, not furniture.</summary>
+    private static Image CreateRect(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Color color)
+    {
+        GameObject rectObj = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        rectObj.transform.SetParent(parent, false);
+
+        RectTransform rect = rectObj.GetComponent<RectTransform>();
+        rect.anchorMin = anchorMin;
+        rect.anchorMax = anchorMax;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        Image image = rectObj.GetComponent<Image>();
+        image.color = color;
+        image.raycastTarget = false;
+
+        return image;
+    }
+
     private static Transform CreatePanel(Transform canvas, string name, Color color)
     {
         GameObject panelObj = new GameObject(name, typeof(RectTransform), typeof(Image));
@@ -784,7 +1190,11 @@ public class SceneSetupTool
         fill.raycastTarget = false;
 
         // Added after Fill so the border art sits on top of the colour rather than under it.
-        if (skinned) CreateFrameOverlay(panelObj.transform, frameSprite, MalajongTheme.Gold);
+        if (skinned)
+        {
+            float ppu = cabinet ? MalajongSkin.PanelPixelsPerUnitMultiplier : MalajongSkin.BoxPixelsPerUnitMultiplier;
+            CreateFrameOverlay(panelObj.transform, frameSprite, MalajongTheme.Gold, ppu);
+        }
 
         Undo.RegisterCreatedObjectUndo(panelObj, "Create " + name);
         return panelObj.transform;
@@ -796,7 +1206,7 @@ public class SceneSetupTool
     /// The art is white line work, so the tint here is what gives it a colour — which keeps
     /// MalajongTheme the single source of truth even though the shape now comes from a sprite.
     /// </summary>
-    private static Image CreateFrameOverlay(Transform parent, Sprite sprite, Color tint)
+    private static Image CreateFrameOverlay(Transform parent, Sprite sprite, Color tint, float pixelsPerUnitMultiplier)
     {
         GameObject frameObj = new GameObject("Frame", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         frameObj.transform.SetParent(parent, false);
@@ -810,7 +1220,7 @@ public class SceneSetupTool
         Image frame = frameObj.GetComponent<Image>();
         frame.sprite = sprite;
         frame.type = Image.Type.Sliced;
-        frame.pixelsPerUnitMultiplier = MalajongSkin.PixelsPerUnitMultiplier;
+        frame.pixelsPerUnitMultiplier = pixelsPerUnitMultiplier;
         frame.color = tint;
         // The parent already handles hit-testing; a raycasting overlay would swallow button clicks.
         frame.raycastTarget = false;
@@ -1119,7 +1529,7 @@ public class SceneSetupTool
         btnFill.color = color;
         btnFill.raycastTarget = false;
 
-        if (btnSkinned) CreateFrameOverlay(btnObj.transform, btnFrameSprite, MalajongTheme.Gold);
+        if (btnSkinned) CreateFrameOverlay(btnObj.transform, btnFrameSprite, MalajongTheme.Gold, MalajongSkin.ButtonPixelsPerUnitMultiplier);
 
         Button btn = btnObj.GetComponent<Button>();
         // Tint the fill rather than the frame, so hover/press keeps the border art intact.

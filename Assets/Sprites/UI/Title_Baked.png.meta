@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 31d5c5ab5d43ca84b89f86bbc2d38b37
+guid: 6fd9103d21fb7dc45b781aef877b4624
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1753006574534882776
-    second: BrokenCompass_0
+      213: -3711416539786961825
+    second: Title_Baked_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BrokenCompass_0
+      name: Title_Baked_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 31
-        height: 32
+        x: 1
+        y: 1
+        width: 134
+        height: 71
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 82a8cebeec11ca7e0800000000000000
-      internalID: -1753006574534882776
+      spriteID: f5c1d7c22566e7cc0800000000000000
+      internalID: -3711416539786961825
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BrokenCompass_0: -1753006574534882776
+      Title_Baked_0: -3711416539786961825
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

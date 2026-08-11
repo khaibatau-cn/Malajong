@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RestlessWind
   SpiritName: Restless Wind
   Description: Wind Pong grants +1 Discard.
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 9a2dd78c32759f2459095edc8fcb3d2a, type: 3}

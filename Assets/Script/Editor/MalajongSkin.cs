@@ -27,6 +27,9 @@ public static class MalajongSkin
     /// </summary>
     public const string SpiritIconRoot = "Assets/Sprites/UI/Icons/Spirits";
 
+    /// <summary>Shop dressing — the hanging sign and the lanterns. Drawn at their natural size, never stretched.</summary>
+    public const string ShopArtRoot = "Assets/Sprites/UI/Shop";
+
     // --- Role assignment. These three lines re-skin everything. ---
     /// <summary>Full-height cabinets: the three main columns.</summary>
     private const string PanelFrameName = "panel-border-013";
@@ -42,10 +45,20 @@ public static class MalajongSkin
     public const int SliceBorder = 16;
 
     /// <summary>
-    /// One source pixel to one UI pixel, given <see cref="ImportPixelsPerUnit"/> matches the
-    /// canvas reference PPU. Lower this to draw the frame heavier.
+    /// How large the frame art draws, per role. At 1.0 one source pixel maps to one UI pixel, which
+    /// left the corner motifs reading as hairlines on a 1920-wide canvas — the ornament was there
+    /// but too fine to see. Values below 1 scale the border up; the corner grows to
+    /// <see cref="SliceBorder"/> / multiplier pixels while the stretched middle band is unaffected.
+    ///
+    /// Graded by role rather than shared, because a corner sized for a full-height cabinet would
+    /// swallow a button: the two corners must stay well clear of each other across the short edge,
+    /// so smaller elements need a larger multiplier.
     /// </summary>
-    public const float PixelsPerUnitMultiplier = 1f;
+    public const float PanelPixelsPerUnitMultiplier = 0.5f;
+    /// <summary>Inner value boxes. Chunky, but a step below the cabinets so the hierarchy holds.</summary>
+    public const float BoxPixelsPerUnitMultiplier = 0.62f;
+    /// <summary>Buttons are the shortest framed element — roughly 70px tall — so this is the ceiling before corners collide.</summary>
+    public const float ButtonPixelsPerUnitMultiplier = 0.8f;
 
     private const float ImportPixelsPerUnit = 100f;
 
@@ -123,6 +136,7 @@ public static class MalajongSkin
         // not be, or the artwork would smear.
         changed += ConfigureFolder(Root, sliced: true);
         changed += ConfigureFolder(SpiritIconRoot, sliced: false);
+        changed += ConfigureFolder(ShopArtRoot, sliced: false);
 
         if (changed > 0) AssetDatabase.SaveAssets();
         return changed;

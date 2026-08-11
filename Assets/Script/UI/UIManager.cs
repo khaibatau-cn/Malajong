@@ -70,10 +70,20 @@ public class UIManager : MonoBehaviour
     public Button CloseRunInfoButton;
 
     public GameObject OptionsModal;
+    public TextMeshProUGUI OptionsTitleText;
     public Button ToggleAudioButton;
     public TextMeshProUGUI ToggleAudioText;
     public Button ForfeitRunButton;
     public Button CloseOptionsButton;
+
+    public GameObject RedrawModal;
+    public TextMeshProUGUI RedrawText;
+    public Button RedrawButton;
+
+    public GameObject AbandonConfirmModal;
+    public TextMeshProUGUI AbandonConfirmText;
+    public Button ConfirmAbandonButton;
+    public Button CancelAbandonButton;
     
     private List<TileUI> spawnedTileUIs = new List<TileUI>();
     private List<TileUI> selectedTileUIs = new List<TileUI>();
@@ -88,7 +98,8 @@ public class UIManager : MonoBehaviour
         {
             gameManager.OnHandUpdated += RefreshHandDisplay;
             gameManager.OnStateChanged += HandleStateChanged;
-            
+            gameManager.OnRedrawRequired += ShowRedrawPrompt;
+
             RefreshHandDisplay();
             HandleStateChanged();
         }
@@ -102,6 +113,7 @@ public class UIManager : MonoBehaviour
         {
             gameManager.OnHandUpdated -= RefreshHandDisplay;
             gameManager.OnStateChanged -= HandleStateChanged;
+            gameManager.OnRedrawRequired -= ShowRedrawPrompt;
         }
     }
 
@@ -279,7 +291,9 @@ public class UIManager : MonoBehaviour
 
         if (DiscardsRemainingText != null)
         {
-            DiscardsRemainingText.text = $"Discards\n<color=#D9A93A><b>{gameManager.DiscardsRemaining}</b></color>";
+            // Red at zero: losing the safety net should be visible before it costs anything.
+            string discardColor = gameManager.DiscardsRemaining > 0 ? MalajongTheme.HexGold : MalajongTheme.HexVermilion;
+            DiscardsRemainingText.text = $"Discards\n<color={discardColor}><b>{gameManager.DiscardsRemaining}</b></color>";
         }
 
         if (RoundScoreText != null)
@@ -305,9 +319,20 @@ public class UIManager : MonoBehaviour
             var lines = playable.Select(p => $"* <b>{p.combo.Name}</b>: <color=#6FB8EE>{p.combo.BaseFu} Fu</color> x <color=#D8402E>{p.combo.BaseFan:F1} Fan</color>");
             PlayableCombosText.text = $"<b>PLAYABLE IN HAND:</b>\n" + string.Join("\n", lines);
         }
+        else if (gameManager.DiscardsRemaining > 0)
+        {
+            // A dead hand with discards left is not an aside, it is an instruction — discarding is
+            // now the only legal move, so this reads as a warning rather than grey filler.
+            PlayableCombosText.text =
+                $"<b><color={MalajongTheme.HexVermilion}>DEAD HAND</color></b>\n" +
+                $"<color={MalajongTheme.HexBoneDim}>No combo can be formed. You must discard — " +
+                $"<b>{gameManager.DiscardsRemaining}</b> left.</color>";
+        }
         else
         {
-            PlayableCombosText.text = "<b>PLAYABLE IN HAND:</b>\n<color=#96826F><i>No complete combo. Select tiles to discard or form Chow/Pong/Pair!</i></color>";
+            PlayableCombosText.text =
+                $"<b><color={MalajongTheme.HexVermilion}>DEAD HAND — NO DISCARDS</color></b>\n" +
+                $"<color={MalajongTheme.HexBoneDim}>Only the cat can help you now.</color>";
         }
     }
 
@@ -348,6 +373,20 @@ public class UIManager : MonoBehaviour
     public void RestartRun()
     {
         if (gameManager != null) gameManager.StartGame();
+    }
+
+    public void ReturnToMainMenu()
+    {
+        if (gameManager != null) gameManager.ReturnToMenu();
+    }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     public void BuyShopItem(int catalogIndex)
@@ -730,13 +769,35 @@ public class UIManager : MonoBehaviour
 
         if (GameOverSummaryText != null)
         {
-            GameOverSummaryText.text = $"<b>GAME OVER</b>\n\nFailed at Round {gameManager.CurrentRound}\nFinal Score: {gameManager.CurrentScore} / {gameManager.CurrentTargetScore}";
+            // Losing to a dead hand and losing to the quota feel completely different, so the
+            // screen names which one happened instead of reporting a bare score.
+            string reason = string.IsNullOrEmpty(gameManager.GameOverReason)
+                ? $"Final Score: {gameManager.CurrentScore} / {gameManager.CurrentTargetScore}"
+                : gameManager.GameOverReason;
+
+            GameOverSummaryText.text =
+                $"<b>GAME OVER</b>\n\nFailed at Round {gameManager.CurrentRound}\n\n" +
+                $"<color={MalajongTheme.HexBoneDim}>{reason}</color>{CatSaveLine()}";
         }
 
         if (VictorySummaryText != null)
         {
-            VictorySummaryText.text = $"<b>VICTORY!</b>\n\nYou successfully completed all {gameManager.MaxRounds} rounds of Malajong!\nFinal Yuan: ¥{gameManager.Yuan} | Spirits Equipped: {gameManager.EquippedSpirits.Count}";
+            VictorySummaryText.text =
+                $"<b>VICTORY!</b>\n\nYou successfully completed all {gameManager.MaxRounds} rounds of Malajong!\n" +
+                $"Final Yuan: ¥{gameManager.Yuan} | Spirits Equipped: {gameManager.EquippedSpirits.Count}{CatSaveLine()}";
         }
+    }
+
+    /// <summary>
+    /// End-of-run line for the cat counter. Returns nothing at zero — a run that never deadlocked
+    /// should not be told it was rescued no times.
+    /// </summary>
+    private string CatSaveLine()
+    {
+        if (gameManager == null || gameManager.CatSaves <= 0) return "";
+
+        string times = gameManager.CatSaves == 1 ? "once" : $"{gameManager.CatSaves} times";
+        return $"\n\n<color={MalajongTheme.HexGold}>The lucky cat saved you {times} this run.</color>";
     }
 
     // --- Modal / Popup Handlers ---
@@ -801,12 +862,48 @@ public class UIManager : MonoBehaviour
             sb.AppendLine($"<b>Tiles Remaining in Wall:</b> {gameManager.Deck.Remaining}");
         }
 
+        if (gameManager.CatSaves > 0)
+        {
+            sb.AppendLine($"<b>Rescued by the Lucky Cat:</b> <color={MalajongTheme.HexGold}>{gameManager.CatSaves}x</color>");
+        }
+
         RunInfoContentText.text = sb.ToString();
     }
 
     public void OpenOptionsModal()
     {
         if (OptionsModal == null) return;
+
+        // The same modal serves two jobs: HOW TO PLAY from the title screen, and pause/options
+        // mid-run. Abandoning only means anything when there is a run to abandon, so outside
+        // Playing the button is removed rather than shown disabled — an "abandon run" control on
+        // the main menu reads as a mistake even greyed out.
+        bool inRun = gameManager != null && gameManager.State == GameManager.GameState.Playing;
+
+        if (ForfeitRunButton != null) ForfeitRunButton.gameObject.SetActive(inRun);
+
+        if (OptionsTitleText != null)
+        {
+            OptionsTitleText.text = inRun ? "<b>GAME OPTIONS & SETTINGS</b>" : "<b>HOW TO PLAY</b>";
+        }
+
+        if (CloseOptionsButton != null)
+        {
+            // With Abandon gone the close button takes the whole row, so the footer is not left
+            // visibly half-empty.
+            RectTransform closeRect = CloseOptionsButton.transform as RectTransform;
+            if (closeRect != null)
+            {
+                closeRect.anchorMin = new Vector2(inRun ? 0.52f : 0.30f, 0.12f);
+                closeRect.anchorMax = new Vector2(inRun ? 0.88f : 0.70f, 0.24f);
+                closeRect.offsetMin = Vector2.zero;
+                closeRect.offsetMax = Vector2.zero;
+            }
+
+            TextMeshProUGUI closeLabel = CloseOptionsButton.GetComponentInChildren<TextMeshProUGUI>();
+            if (closeLabel != null) closeLabel.text = inRun ? "RESUME [X]" : "BACK";
+        }
+
         UpdateOptionsUI();
         OptionsModal.SetActive(true);
         UIJuice.PopIn(OptionsModal.transform);
@@ -840,10 +937,113 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Abandoning throws away a whole run, so it asks first. Kept under the original name because
+    /// scenes built before the confirm modal existed still have this bound to their forfeit button.
+    /// </summary>
     public void ForfeitRun()
     {
+        OpenAbandonConfirm();
+    }
+
+    // --- Dead hand / redraw ------------------------------------------------
+
+    /// <summary>
+    /// The deadlock prompt. Deliberately has no dismiss button — a redraw is the only action left
+    /// on the board, so offering a way to close the window would just strand the player.
+    /// </summary>
+    public void ShowRedrawPrompt()
+    {
+        if (RedrawModal == null)
+        {
+            // No modal in this scene: take the redraw automatically rather than freeze the board.
+            gameManager?.RedrawHand();
+            return;
+        }
+
+        if (RedrawText != null)
+        {
+            // A repeat visitor gets a different line — the cat keeping count is funnier than the
+            // same warning twice, and it quietly tells the player this is a run stat.
+            string history = "";
+            if (gameManager != null && gameManager.CatSaves > 0)
+            {
+                string times = gameManager.CatSaves == 1 ? "once" : $"{gameManager.CatSaves} times";
+                history = $"\n<size=75%><color={MalajongTheme.HexGold}>The cat has already bailed you out {times} this run. It is keeping count.</color></size>";
+            }
+
+            RedrawText.text =
+                $"<b><color={MalajongTheme.HexVermilion}>DEAD HAND</color></b>\n\n" +
+                $"No combo to play. No discards left.\n" +
+                $"The lucky cat is now your entire strategy.\n\n" +
+                $"<size=80%><color={MalajongTheme.HexBoneDim}>Redraw your hand. Find a combo and the cat grants you " +
+                $"<color={MalajongTheme.HexGold}>+1 discard</color> — find nothing, and the run ends here.</color></size>" +
+                history;
+        }
+
+        RedrawModal.SetActive(true);
+        UIJuice.PopIn(RedrawModal.transform);
+        MalajongAudio.Instance?.PlayGameOver();
+    }
+
+    public void TakeRedraw()
+    {
+        if (RedrawModal != null) RedrawModal.SetActive(false);
+        if (gameManager == null) return;
+
+        gameManager.RedrawHand();
+
+        // The badge only lands on a survival — the game over panel speaks for the other outcome.
+        if (gameManager.State == GameManager.GameState.Playing && PlayingPanel != null)
+        {
+            string badge = gameManager.CatSaves > 1
+                ? $"CAT SAVE #{gameManager.CatSaves}! +1 DISCARD"
+                : "THE CAT SMILES! +1 DISCARD";
+
+            MalajongAudio.Instance?.PlayCashChime();
+            FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 120, 0),
+                badge, MalajongTheme.Gold, 30f);
+        }
+    }
+
+    public void OpenAbandonConfirm()
+    {
+        if (AbandonConfirmModal == null)
+        {
+            // No modal in this scene — abandon outright rather than leaving the button dead.
+            CloseOptionsModal();
+            ReturnToMainMenu();
+            return;
+        }
+
+        if (AbandonConfirmText != null && gameManager != null)
+        {
+            AbandonConfirmText.text =
+                $"<b>ABANDON THIS RUN?</b>\n\n" +
+                $"<color={MalajongTheme.HexBoneDim}>You are on round <b>{gameManager.CurrentRound}/{gameManager.MaxRounds}</b> " +
+                $"with <b>{gameManager.CurrentScore}/{gameManager.CurrentTargetScore}</b> points and " +
+                $"<b>{gameManager.EquippedSpirits.Count}</b> spirit(s) equipped.</color>\n\n" +
+                $"<color={MalajongTheme.HexVermilion}>All run progress will be lost.</color>";
+        }
+
+        AbandonConfirmModal.SetActive(true);
+        UIJuice.PopIn(AbandonConfirmModal.transform);
+        MalajongAudio.Instance?.PlayTileSelect(0);
+    }
+
+    public void CancelAbandon()
+    {
+        if (AbandonConfirmModal == null) return;
+        AbandonConfirmModal.SetActive(false);
+        MalajongAudio.Instance?.PlayTileDeselect();
+    }
+
+    public void ConfirmAbandonRun()
+    {
+        CancelAbandon();
         CloseOptionsModal();
-        RestartRun();
+        CloseRunInfoModal();
+        ReturnToMainMenu();
     }
 
     private Vector3 GetMousePosition()
