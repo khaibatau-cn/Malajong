@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PuristsFlute
   SpiritName: Purist's Flute
   Description: +100 Fu for a Pure Hand.
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 27adbd09f7afb2b428ad8c44965a17ef, type: 3}

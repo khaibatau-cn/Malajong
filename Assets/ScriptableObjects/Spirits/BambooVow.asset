@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BambooVow
   SpiritName: Bamboo Vow
   Description: Bamboo combos stack +0.5 Fan each. Off-suit resets it.
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: e0210d8d98929dc408c0446528af3666, type: 3}
