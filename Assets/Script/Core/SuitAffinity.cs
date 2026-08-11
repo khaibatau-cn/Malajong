@@ -44,6 +44,21 @@ public class SuitAffinity
         }
     }
 
+    /// <summary>
+    /// What <see cref="GetMultiplier"/> would return after boosting this suit by
+    /// <paramref name="amount"/>, without applying anything.
+    ///
+    /// Exists so the score preview can show the multiplier a play will actually score at. Reading
+    /// the current value instead understated every preview, because scoring boosts affinity first
+    /// and then multiplies by the raised value.
+    /// </summary>
+    public float PeekMultiplierAfterBoost(TileSuit suit, float amount)
+    {
+        if (suit == TileSuit.Honor || !affinityLevels.ContainsKey(suit)) return 1.0f;
+
+        return 1.0f + Mathf.Clamp(affinityLevels[suit] + amount, MinAffinity, MaxAffinity);
+    }
+
     public float GetMultiplier(TileSuit suit)
     {
         if (affinityLevels.ContainsKey(suit))
