@@ -65,18 +65,51 @@ public static class ScoreEngine
             return preview;
         }
 
-        preview.IsValid = true;
-        preview.DetectedCombo = combo;
-        preview.ComboName = combo.Name;
-        preview.BaseFu = combo.BaseFu;
-        preview.TileFu = combo.Tiles.Sum(t => t.Rank);
-        preview.TotalFu = preview.BaseFu + preview.TileFu;
-        preview.BaseFan = combo.BaseFan;
+        return Evaluate(combo, fullHand, affinityManager, activeSpirits, gm, commit: false);
+    }
 
-        int fu = preview.TotalFu;
+    public static (int fu, float fan) Calculate(Combo combo, List<Tile> fullHand, SuitAffinity affinityManager = null, IEnumerable<SpiritData> activeSpirits = null, GameManager gm = null)
+    {
+        if (!combo.IsValid())
+        {
+            return (0, 0f);
+        }
+
+        ScorePreview result = Evaluate(combo, fullHand, affinityManager, activeSpirits, gm, commit: true);
+        return (result.TotalFu, result.TotalFan);
+    }
+
+    /// <summary>
+    /// The single scoring path. Previewing and actually playing a combo run through this same
+    /// method, so the number shown to the player and the number banked cannot disagree.
+    ///
+    /// <paramref name="commit"/> is the only difference between them:
+    /// <list type="bullet">
+    /// <item><b>false</b> — pure. Nothing is mutated. Affinity gain is *simulated* so the preview
+    /// shows the multiplier the play will actually score at, not the one from before it.</item>
+    /// <item><b>true</b> — applies affinity gain and fires the spirits' side-effect hook.</item>
+    /// </list>
+    ///
+    /// This split exists because preview used to run the full scoring path on every tile click:
+    /// RestlessWind handed out a real discard each time a tile was selected, and BambooVow's
+    /// accumulator ratcheted up without anything being played. Spirit scoring hooks are pure by
+    /// contract now — anything that changes run state belongs in <see cref="SpiritData.OnComboCommitted"/>.
+    /// </summary>
+    private static ScorePreview Evaluate(Combo combo, List<Tile> fullHand, SuitAffinity affinityManager, IEnumerable<SpiritData> activeSpirits, GameManager gm, bool commit)
+    {
+        var preview = new ScorePreview
+        {
+            IsValid = true,
+            DetectedCombo = combo,
+            ComboName = combo.Name,
+            BaseFu = combo.BaseFu,
+            TileFu = combo.Tiles.Sum(t => t.Rank),
+            BaseFan = combo.BaseFan
+        };
+
+        int fu = preview.BaseFu + preview.TileFu;
         float fan = preview.BaseFan;
 
-        // Simulate bonuses non-destructively
         ApplyPostCheckBonuses(fullHand, ref fu, ref fan, activeSpirits, gm);
 
         if (activeSpirits != null)
@@ -88,62 +121,56 @@ public static class ScoreEngine
         }
 
         float affMult = 1f;
-        if (affinityManager != null && combo.Tiles.Count > 0 && !combo.Tiles[0].IsHonor)
-        {
-            affMult = affinityManager.GetMultiplier(combo.Tiles[0].Suit);
-            fan *= affMult;
-        }
-
-        preview.TotalFu = fu;
-        preview.AffinityFan = affMult;
-        preview.TotalFan = fan;
-        preview.ProjectedScore = UnityEngine.Mathf.RoundToInt(fu * fan);
-        preview.DetailText = $"{combo.Tiles[0].Suit} {combo.Name}";
-
-        return preview;
-    }
-
-    public static (int fu, float fan) Calculate(Combo combo, List<Tile> fullHand, SuitAffinity affinityManager = null, IEnumerable<SpiritData> activeSpirits = null, GameManager gm = null)
-    {
-        if (!combo.IsValid())
-        {
-            return (0, 0f);
-        }
-
-        int fu = combo.BaseFu + combo.Tiles.Sum(t => t.Rank);
-        float fan = combo.BaseFan;
-
-        ApplyPostCheckBonuses(fullHand, ref fu, ref fan, activeSpirits, gm);
-
-        if (activeSpirits != null)
-        {
-            foreach (var spirit in activeSpirits)
-            {
-                spirit.OnComboScored(combo, ref fu, ref fan, gm);
-            }
-        }
-
         if (affinityManager != null)
         {
-            foreach (var delta in combo.AffinityDeltas) 
+            TileSuit comboSuit = combo.Tiles.Count > 0 ? combo.Tiles[0].Suit : TileSuit.Honor;
+            float pendingBoost = 0f;
+
+            foreach (var delta in combo.AffinityDeltas)
             {
                 float boostMult = 1.0f;
                 if (activeSpirits != null)
                 {
                     foreach (var spirit in activeSpirits)
                     {
+                        // Pure by contract: returns a scaling factor, changes nothing.
                         boostMult *= spirit.OnAffinityBoosted(delta.Key, delta.Value, gm);
                     }
                 }
-                affinityManager.Boost(delta.Key, delta.Value * boostMult);
+
+                float amount = delta.Value * boostMult;
+                if (delta.Key == comboSuit) pendingBoost += amount;
+
+                if (commit) affinityManager.Boost(delta.Key, amount);
             }
-            if (combo.Tiles.Count > 0 && !combo.Tiles[0].IsHonor) 
+
+            if (combo.Tiles.Count > 0 && !combo.Tiles[0].IsHonor)
             {
-                fan *= affinityManager.GetMultiplier(combo.Tiles[0].Suit);
+                // Committing has already applied the boost, so a plain read is the post-boost
+                // value; previewing has to project it. Both land on the same number.
+                affMult = commit
+                    ? affinityManager.GetMultiplier(comboSuit)
+                    : affinityManager.PeekMultiplierAfterBoost(comboSuit, pendingBoost);
+
+                fan *= affMult;
             }
         }
 
-        return (fu, fan);
+        if (commit && activeSpirits != null)
+        {
+            foreach (var spirit in activeSpirits)
+            {
+                spirit.OnComboCommitted(combo, gm);
+            }
+        }
+
+        preview.TotalFu = fu;
+        preview.AffinityFan = affMult;
+        preview.TotalFan = fan;
+        preview.ProjectedScore = UnityEngine.Mathf.RoundToInt(fu * fan);
+        preview.DetailText = combo.Tiles.Count > 0 ? $"{combo.Tiles[0].Suit} {combo.Name}" : combo.Name;
+
+        return preview;
     }
 
     private static void ApplyPostCheckBonuses(List<Tile> hand, ref int fu, ref float fan, IEnumerable<SpiritData> activeSpirits, GameManager gm)
