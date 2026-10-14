@@ -21,6 +21,7 @@ public class MalajongAudio : MonoBehaviour
             return;
         }
         Instance = this;
+        MasterVolume = PlayerPrefs.GetInt("Malajong.SfxMuted", 0) == 1 ? 0f : MasterVolume;
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)

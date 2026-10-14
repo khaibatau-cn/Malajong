@@ -58,7 +58,7 @@ public class TileDataGenerator
         CreateSpiritAsset<PuristsFlute>("PuristsFlute", "Purist's Flute", "+100 Fu for a Pure Hand.", path);
         CreateSpiritAsset<RestlessWind>("RestlessWind", "Restless Wind", "Wind Pong grants +1 Discard.", path);
         CreateSpiritAsset<BambooVow>("BambooVow", "Bamboo Vow", "Bamboo combos stack +0.5 Fan each. Off-suit resets it.", path);
-        CreateSpiritAsset<BrokenCompass>("BrokenCompass", "Broken Compass", "Mixed-suit combos grant +20 Fu.", path);
+        CreateSpiritAsset<BrokenCompass>("BrokenCompass", "Broken Compass", "Switch suits between plays for +20 Fu. Honors do not count.", path);
         CreateSpiritAsset<GreenDragonSpirit>("GreenDragonSpirit", "Green Dragon Spirit", "Green Dragon grants +50 Fu and +2 Fan.", path);
         CreateSpiritAsset<CompassRose>("CompassRose", "Compass Rose", "+5 Fu per tile matching your top affinity suit.", path);
 

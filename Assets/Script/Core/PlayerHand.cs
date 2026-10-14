@@ -13,7 +13,7 @@ public class PlayerHand
 
     public void RemoveTiles(List<Tile> usedTiles)
     {
-        foreach (var t in usedTiles)
+        foreach (var t in usedTiles.ToList())
         {
             Tiles.Remove(t);
         }

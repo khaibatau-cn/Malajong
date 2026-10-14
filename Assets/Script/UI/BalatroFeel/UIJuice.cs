@@ -174,6 +174,43 @@ public class UIJuice : MonoBehaviour
         target.localScale = Vector3.one;
     }
 
+    // --- Punch ------------------------------------------------------------
+
+    /// <summary>
+    /// Kicks an element up to <paramref name="scale"/> and springs it back to rest. Each call
+    /// restarts from the peak, so rapid tallies read as a drumbeat rather than one long swell.
+    /// </summary>
+    public static void Punch(Transform target, float scale = 1.12f, float duration = 0.16f)
+    {
+        if (target == null) return;
+
+        UIJuice juice = EnsureExists();
+        if (juice.activePunches.TryGetValue(target, out Coroutine running) && running != null)
+        {
+            juice.StopCoroutine(running);
+        }
+        juice.activePunches[target] = juice.StartCoroutine(juice.PunchRoutine(target, scale, duration));
+    }
+
+    private readonly Dictionary<Transform, Coroutine> activePunches = new Dictionary<Transform, Coroutine>();
+
+    private IEnumerator PunchRoutine(Transform target, float scale, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            if (target == null) yield break;
+
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            target.localScale = Vector3.one * Mathf.Lerp(scale, 1f, t * t);
+            yield return null;
+        }
+
+        if (target != null) target.localScale = Vector3.one;
+        activePunches.Remove(target);
+    }
+
     /// <summary>Overshoots past the target then settles exactly on it — the "back out" curve.</summary>
     public static float EaseOutBack(float t)
     {

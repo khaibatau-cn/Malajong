@@ -30,6 +30,13 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private Vector3 targetScale = Vector3.one;
     private bool isWaitingToDeal = false;
 
+    // Shadow behind the art and a suit border over it, built at runtime so older prefabs pick them up too.
+    private Image shadowImage;
+    private GameObject suitBorder;
+    private Image[] suitBorderEdges;
+    /// <summary>Suit border thickness: two art pixels at the 2x tile scale.</summary>
+    private const float SuitBorderWidth = 4f;
+
     public void Initialize(Tile tile, UIManager manager)
     {
         BoundTile = tile;
@@ -111,8 +118,91 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             CardVisual.localPosition = Vector3.zero;
             CardVisual.localScale = Vector3.one;
         }
-        
+
+        EnsureDepthLayers();
         UpdateVisuals();
+    }
+
+    /// <summary>
+    /// Adds a cast shadow behind the tile art and a suit-coloured border over it.
+    ///
+    /// The shadow is the tile's own silhouette, so its corners match the art. It is named "Shadow"
+    /// because BalatroCardVisual already looks for a child of that name and pushes it further out as
+    /// the tile lifts, which is what sells the height.
+    ///
+    /// The border is drawn on top of the art, inside the tile's edge. Drawn behind and outside, the
+    /// next tile in the rack would cover its right side and leave a lopsided outline.
+    /// </summary>
+    private void EnsureDepthLayers()
+    {
+        if (CardVisual == null) return;
+
+        Sprite art = BoundTile != null && BoundTile.Data != null ? BoundTile.Data.TileSprite : null;
+
+        Transform existingShadow = CardVisual.Find("Shadow");
+        GameObject shadow = existingShadow != null
+            ? existingShadow.gameObject
+            : new GameObject("Shadow", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        shadow.transform.SetParent(CardVisual, false);
+        shadow.transform.SetAsFirstSibling();
+        Stretch(shadow.GetComponent<RectTransform>());
+
+        shadowImage = shadow.GetComponent<Image>();
+        shadowImage.raycastTarget = false;
+        shadowImage.sprite = art;
+        shadowImage.color = MalajongTheme.TileShadow;
+        shadowImage.enabled = art != null;
+
+        Transform existingBorder = CardVisual.Find("SuitBorder");
+        if (existingBorder != null)
+        {
+            suitBorder = existingBorder.gameObject;
+            suitBorderEdges = suitBorder.GetComponentsInChildren<Image>(true);
+        }
+        else
+        {
+            suitBorder = new GameObject("SuitBorder", typeof(RectTransform));
+            suitBorder.transform.SetParent(CardVisual, false);
+            Stretch(suitBorder.GetComponent<RectTransform>());
+
+            // Left, right, bottom, top: anchored to each edge, SuitBorderWidth thick.
+            (Vector2 min, Vector2 max)[] edges =
+            {
+                (new Vector2(0f, 0f), new Vector2(0f, 1f)),
+                (new Vector2(1f, 0f), new Vector2(1f, 1f)),
+                (new Vector2(0f, 0f), new Vector2(1f, 0f)),
+                (new Vector2(0f, 1f), new Vector2(1f, 1f)),
+            };
+            suitBorderEdges = new Image[edges.Length];
+            for (int i = 0; i < edges.Length; i++)
+            {
+                GameObject edge = new GameObject($"Edge_{i}", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                edge.transform.SetParent(suitBorder.transform, false);
+                RectTransform rect = edge.GetComponent<RectTransform>();
+                rect.anchorMin = edges[i].min;
+                rect.anchorMax = edges[i].max;
+                bool vertical = i < 2;
+                rect.pivot = new Vector2(i == 1 ? 1f : 0f, i == 3 ? 1f : 0f);
+                rect.sizeDelta = vertical ? new Vector2(SuitBorderWidth, 0f) : new Vector2(0f, SuitBorderWidth);
+                rect.anchoredPosition = Vector2.zero;
+
+                Image image = edge.GetComponent<Image>();
+                image.raycastTarget = false;
+                suitBorderEdges[i] = image;
+            }
+        }
+
+        // Last sibling, so the border draws over the art rather than under it.
+        suitBorder.transform.SetAsLastSibling();
+        suitBorder.SetActive(false);
+    }
+
+    private static void Stretch(RectTransform rect)
+    {
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
     }
 
     void Update()
@@ -281,14 +371,7 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (TileText != null && BoundTile != null)
             {
                 TileText.gameObject.SetActive(true);
-                string suitColor = BoundTile.Suit switch
-                {
-                    TileSuit.Bamboo => "#43B87A",     // Green
-                    TileSuit.Characters => "#D8402E", // Red
-                    TileSuit.Dots => "#6FB8EE",       // Blue
-                    TileSuit.Honor => "#D9A93A",      // Gold
-                    _ => "#FFFFFF"
-                };
+                string suitColor = MalajongTheme.HexOf(MalajongTheme.ForSuit(BoundTile.Suit));
 
                 TileText.text = $"<size=70%><color={suitColor}><b>{BoundTile.Suit}</b></color></size>\n<size=120%><b>{BoundTile.Rank}</b></size>";
             }
@@ -303,6 +386,18 @@ public class TileUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (SelectionGlow != null)
         {
             SelectionGlow.gameObject.SetActive(isSelected);
+        }
+
+        // Border in the tile's suit colour, so a selection shows which suit it will feed.
+        if (suitBorder != null)
+        {
+            bool show = isSelected && BoundTile != null && BoundTile.Data != null;
+            suitBorder.SetActive(show);
+            if (show)
+            {
+                Color suitColor = MalajongTheme.ForSuit(BoundTile.Suit);
+                foreach (Image edge in suitBorderEdges) edge.color = suitColor;
+            }
         }
     }
 }

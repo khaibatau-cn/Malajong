@@ -17,6 +17,11 @@ public static class BuildScript
     [MenuItem("Malajong/Build Windows Player")]
     public static void BuildWindows()
     {
+        BuildWindowsTo(ArgValue("-buildOutput") ?? DefaultOutputDir);
+    }
+
+    public static void BuildWindowsTo(string outputDir)
+    {
         var scenes = CollectScenes();
         if (scenes.Length == 0)
         {
@@ -24,7 +29,6 @@ public static class BuildScript
             return;
         }
 
-        var outputDir = ArgValue("-buildOutput") ?? DefaultOutputDir;
         Directory.CreateDirectory(outputDir);
 
         var exeName = Sanitize(PlayerSettings.productName) + ".exe";

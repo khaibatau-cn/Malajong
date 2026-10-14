@@ -7,7 +7,7 @@ public class PuristsFlute : SpiritData
 {
     public override void OnPostCheckBonuses(List<Tile> fullHand, ref int chips, ref float mult, GameManager gm)
     {
-        if (fullHand == null || fullHand.Count != 13) return;
+        if (fullHand == null || fullHand.Count != PlayerHand.MaxSize) return;
         
         bool containsHonors = fullHand.Any(t => t.IsHonor);
         if (!containsHonors)

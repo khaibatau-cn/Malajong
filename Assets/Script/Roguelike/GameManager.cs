@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -122,6 +123,7 @@ public class GameManager : MonoBehaviour
     
     public void NextRound()
     {
+        if (State != GameState.Shop) return;
         if (CurrentRound >= MaxRounds)
         {
             State = GameState.Victory;
@@ -135,7 +137,7 @@ public class GameManager : MonoBehaviour
     
     public bool BuySpirit(SpiritData spirit, int cost)
     {
-        if (spirit == null) return false;
+        if (State != GameState.Shop || spirit == null || cost < 0 || EquippedSpirits.Contains(spirit)) return false;
         if (Yuan < cost)
         {
             Debug.Log("[Shop] Not enough Yuan!");
@@ -168,7 +170,7 @@ public class GameManager : MonoBehaviour
     // Call this from UI when player selects tiles and clicks "Play Combo"
     public void PlaySelectedTiles(List<Tile> selectedTiles)
     {
-        if (State != GameState.Playing) return;
+        if (State != GameState.Playing || AwaitingRedraw || HandsRemaining <= 0 || !OwnsSelection(selectedTiles)) return;
         
         // 1. Try to play Full Hand first (instant win)
         if (selectedTiles.Count == 14)
@@ -178,8 +180,13 @@ public class GameManager : MonoBehaviour
             {
                 int scoreGained = Mathf.RoundToInt(bonusFu * bonusFan);
                 CurrentScore += scoreGained;
+                HandsRemaining--;
+                Hand.RemoveTiles(selectedTiles);
+                RefillHand();
                 Debug.Log($"FULL HAND ACHIEVED! Scored {scoreGained} bonus points.");
                 CheckExitConditions();
+                OnHandUpdated?.Invoke();
+                OnStateChanged?.Invoke();
                 return;
             }
         }
@@ -213,7 +220,7 @@ public class GameManager : MonoBehaviour
     // Call this from UI when player selects tiles and clicks "Discard"
     public void DiscardSelectedTiles(List<Tile> selectedTiles)
     {
-        if (State != GameState.Playing) return;
+        if (State != GameState.Playing || AwaitingRedraw || !OwnsSelection(selectedTiles)) return;
         
         if (DiscardsRemaining <= 0)
         {
@@ -238,6 +245,12 @@ public class GameManager : MonoBehaviour
         OnStateChanged?.Invoke();
     }
     
+    private bool OwnsSelection(List<Tile> tiles)
+    {
+        return Hand != null && tiles != null && tiles.Count > 0 &&
+               tiles.Distinct().Count() == tiles.Count && tiles.All(t => t != null && Hand.Tiles.Contains(t));
+    }
+
     // --- Dead hands ---------------------------------------------------------
     //
     // The smallest legal play is a Pair, so a hand holding no Pair, Chow, Pong or Kong cannot be
