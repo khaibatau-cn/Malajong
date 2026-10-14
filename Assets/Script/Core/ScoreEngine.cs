@@ -175,14 +175,13 @@ public static class ScoreEngine
 
     private static void ApplyPostCheckBonuses(List<Tile> hand, ref int fu, ref float fan, IEnumerable<SpiritData> activeSpirits, GameManager gm)
     {
-        if (hand == null || hand.Count != 13) return; // Added 13 check
+        if (hand == null || hand.Count != PlayerHand.MaxSize) return;
 
         bool isAllHonors = hand.All(t => t.IsHonor);
         if (isAllHonors)
         {
             fu += 180;
             fan *= 12.0f;
-            return;
         }
 
         bool containsHonors = hand.Any(t => t.IsHonor);
@@ -241,7 +240,7 @@ public static class ScoreEngine
     private static bool IsWinningMahjongHand(List<Tile> hand)
     {
         // Fix #2: The math strictly requires 14 tiles (4 sets of 3 + 1 pair = 14)
-        if (hand.Count != 14) return false;
+        if (hand == null || hand.Count != 14) return false;
 
         var counts = new Dictionary<string, int>();
         foreach (var t in hand)
@@ -270,18 +269,11 @@ public static class ScoreEngine
     {
         if (counts.Count == 0) return true; // Hand empty, sets matched perfectly
 
-        string firstKey = counts.Keys.First();
+        // Consume the lowest rank first so shuffled hands solve identically.
+        string firstKey = counts.Keys.OrderBy(k => k, System.StringComparer.Ordinal).First();
         string[] parts = firstKey.Split('_');
         TileSuit suit = (TileSuit)System.Enum.Parse(typeof(TileSuit), parts[0]);
         int rank = int.Parse(parts[1]);
-
-        // Try Kong (4 identical)
-        if (counts[firstKey] == 4)
-        {
-            var sim = new Dictionary<string, int>(counts);
-            sim.Remove(firstKey);
-            if (CanFormSets(sim)) return true;
-        }
 
         // Try Pong (3 identical)
         if (counts[firstKey] >= 3)

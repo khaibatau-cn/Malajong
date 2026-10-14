@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -81,14 +82,81 @@ public static class MalajongTheme
     /// </summary>
     public static Color MeterUnlit(Color lit) => Color.Lerp(lit, Ink, 0.80f);
 
+    /// <summary>
+    /// The colour a group of tiles reads as: its suit when every numbered tile shares one, gold for
+    /// an all-honor group, bone when suits are mixed. Combo names and score badges use this so the
+    /// suit a play feeds is visible before the player reads a word.
+    /// </summary>
+    public static Color ForTiles(IEnumerable<Tile> tiles)
+    {
+        TileSuit? suit = null;
+        bool any = false;
+        foreach (Tile tile in tiles)
+        {
+            if (tile == null || tile.Data == null) continue;
+            any = true;
+            if (tile.Suit == TileSuit.Honor) continue;
+            if (suit == null) suit = tile.Suit;
+            else if (suit != tile.Suit) return Bone;
+        }
+        if (!any) return Bone;
+        return suit.HasValue ? ForSuit(suit.Value) : Gold;
+    }
+
+    /// <summary>TMP rich-text form of any theme colour, so tags never hard-code a hex that can drift.</summary>
+    public static string HexOf(Color color) => "#" + ColorUtility.ToHtmlStringRGB(color);
+
+    // --- Spirit identity ---
+    // The spirit icons are near-identical scrolls, so each spirit owns an accent that backs its icon
+    // and colours its name. Suit-themed spirits borrow their suit; the rest get their own hue.
+    public static readonly Color SpiritBambooVow     = SuitBamboo;
+    public static readonly Color SpiritBambooWeaver  = Hex("9BC53D");
+    public static readonly Color SpiritBrokenCompass = Hex("E07B39");
+    public static readonly Color SpiritCompassRose   = SuitDots;
+    public static readonly Color SpiritGreenDragon   = Hex("2E9B63");
+    public static readonly Color SpiritScholar       = Gold;
+    public static readonly Color SpiritPuristsFlute  = Hex("A36BD1");
+    public static readonly Color SpiritRestlessWind  = Hex("8FC7D6");
+
+    public static Color ForSpirit(SpiritData spirit)
+    {
+        switch (spirit)
+        {
+            case BambooVow _:         return SpiritBambooVow;
+            case BambooWeaver _:      return SpiritBambooWeaver;
+            case BrokenCompass _:     return SpiritBrokenCompass;
+            case CompassRose _:       return SpiritCompassRose;
+            case GreenDragonSpirit _: return SpiritGreenDragon;
+            case ImperialScholar _:   return SpiritScholar;
+            case PuristsFlute _:      return SpiritPuristsFlute;
+            case RestlessWind _:      return SpiritRestlessWind;
+            default:                  return Bone;
+        }
+    }
+
     // --- Tile states ---
     /// <summary>Warm tint over a selected tile's sprite. Gold-biased so it reads as lit, not washed.</summary>
     public static readonly Color TileSelectTint = Hex("FFF2C0");
     public static readonly Color TileSelectGlow = Hex("D9A93A", 0.35f);
+    /// <summary>Tile silhouette cast onto the mat. Hard-edged, like every other shadow here.</summary>
+    public static readonly Color TileShadow = Hex("000000", 0.42f);
 
     // --- Overlays ---
     public static readonly Color Scrim     = Hex("0A0503", 0.86f);
     public static readonly Color SlotEmpty = Hex("000000", 0.28f);
+    /// <summary>
+    /// An unfilled spirit slot. Faint on purpose: five loud "Empty" boxes used to be the first thing
+    /// a new run showed, when the rack should read as something you fill up over the run.
+    /// </summary>
+    public static readonly Color SlotGhost = Hex("000000", 0.14f);
+    public const string HexSlotGhostMark = "#96826F66";
+
+    // --- Frames ---
+    /// <summary>
+    /// Trim for structural frames (the three columns, ordinary buttons). Dimmer than <see cref="Gold"/>
+    /// so the few boxes framed in full gold — the blind card and the Fu × Fan boxes — stand out.
+    /// </summary>
+    public static readonly Color FrameQuiet = GoldDim;
 
     // --- Rich-text hex, for TMP <color=#...> tags ---
     public const string HexGold      = "#D9A93A";
@@ -103,6 +171,27 @@ public static class MalajongTheme
     public const string HexOnGold    = "#1A1006";
 
     // --- Metrics ---
+    /// <summary>
+    /// Source size of one Blueeyedrat tile. Tiles are drawn at a whole multiple of it — at the old
+    /// 78x110 the art was stretched 1.70x across and 1.77x down, so source pixels came out as
+    /// uneven blocks and the tiles looked soft.
+    /// </summary>
+    public const int TileArtWidth = 46;
+    public const int TileArtHeight = 62;
+    public const int TileScale = 2;
+    public static Vector2 TileSize => new Vector2(TileArtWidth * TileScale, TileArtHeight * TileScale);
+    /// <summary>Negative so neighbours overlap their 2px outlines and share a single border line.</summary>
+    public const float TileSpacing = -2f;
+
+    /// <summary>
+    /// m5x7 is drawn on a 16-unit grid, so 32/48/64 render every font pixel the same size. Anything
+    /// the player must read is at least <see cref="TextMin"/>; headline numbers use the crisp sizes.
+    /// </summary>
+    public const float TextMin = 24f;
+    public const float TextCrisp2x = 32f;
+    public const float TextCrisp3x = 48f;
+    public const float TextCrisp4x = 64f;
+
     /// <summary>Border thickness in reference pixels. Thick and stepped, so it survives at pixel scale.</summary>
     public const int Border = 3;
     /// <summary>Hard offset shadow distance. Never blurred — blur is the giveaway of a modern vector UI.</summary>

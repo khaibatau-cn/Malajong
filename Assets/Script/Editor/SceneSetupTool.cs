@@ -116,10 +116,12 @@ public class SceneSetupTool
         // ----------------------------------------------------
         // COLUMN 1: LEFT PANEL ("Blind & Stakes" - Inspired by Image 1)
         // ----------------------------------------------------
-        Transform leftPanel = CreateSubPanel(mainPanel, "LeftBlindPanel", new Vector2(0.015f, 0.025f), new Vector2(0.21f, 0.975f), MalajongTheme.Vermilion, cabinet: true);
+        // Column widths are set by the hand: 14 tiles at 2x art scale need ~1260px, so the side
+        // columns give up a little width to the centre.
+        Transform leftPanel = CreateSubPanel(mainPanel, "LeftBlindPanel", new Vector2(0.012f, 0.025f), new Vector2(0.160f, 0.975f), MalajongTheme.Vermilion, cabinet: true);
 
-        // Blind Boss / Wind Card Box
-        Transform blindCardBox = CreateSubPanel(leftPanel, "BlindCardBox", new Vector2(0.05f, 0.50f), new Vector2(0.95f, 0.97f), MalajongTheme.VermilionDeep);
+        // Blind Boss / Wind Card Box — one of the few boxes framed in full gold.
+        Transform blindCardBox = CreateSubPanel(leftPanel, "BlindCardBox", new Vector2(0.05f, 0.50f), new Vector2(0.95f, 0.97f), MalajongTheme.VermilionDeep, framed: true, accent: true);
         
         // Gold Wind Header
         Transform blindHeader = CreateSubPanel(blindCardBox, "BlindHeader", new Vector2(0.0f, 0.84f), new Vector2(1.0f, 1.0f), MalajongTheme.Gold);
@@ -147,7 +149,7 @@ public class SceneSetupTool
         // Money Badge (Yuan)
         Transform moneyBox = CreateSubPanel(leftPanel, "MoneyBox", new Vector2(0.05f, 0.385f), new Vector2(0.95f, 0.485f), MalajongTheme.BoxFill);
         TextMeshProUGUI yuanText = CreateText(moneyBox, "YuanText", Vector2.zero, Vector2.one,
-            "<color=#D9A93A><b>¥5</b></color>", 44, TextAlignmentOptions.Center);
+            "<color=#D9A93A><b>¥5</b></color>", MalajongTheme.TextCrisp3x, TextAlignmentOptions.Center);
 
         // Ante & Round Badges
         Transform anteBox = CreateSubPanel(leftPanel, "AnteBox", new Vector2(0.05f, 0.27f), new Vector2(0.48f, 0.37f), MalajongTheme.BoxFill);
@@ -169,20 +171,21 @@ public class SceneSetupTool
             "Discards\n<color=#D9A93A><b>3</b></color>", 24, TextAlignmentOptions.Center);
 
         // Run Info & Option Buttons
-        Button runInfoBtn = CreateButton(leftPanel, "RunInfoButton", "RUN INFO", MalajongTheme.VermilionRaised, 22, new Vector2(0.05f, 0.03f), new Vector2(0.48f, 0.14f));
-        Button optionsBtn = CreateButton(leftPanel, "OptionsButton", "SHOP / OPT", MalajongTheme.VermilionRaised, 22, new Vector2(0.52f, 0.03f), new Vector2(0.95f, 0.14f));
+        Button runInfoBtn = CreateButton(leftPanel, "RunInfoButton", "RUN INFO", MalajongTheme.VermilionRaised, 24, new Vector2(0.05f, 0.03f), new Vector2(0.48f, 0.14f));
+        Button optionsBtn = CreateButton(leftPanel, "OptionsButton", "OPTIONS", MalajongTheme.VermilionRaised, 24, new Vector2(0.52f, 0.03f), new Vector2(0.95f, 0.14f));
 
         // ----------------------------------------------------
         // COLUMN 2: CENTER STAGE ("Mahjong Mat & Spirit Rack" - Inspired by Image 2)
         // ----------------------------------------------------
-        Transform centerStage = CreateSubPanel(mainPanel, "CenterStageMat", new Vector2(0.22f, 0.025f), new Vector2(0.77f, 0.975f), MalajongTheme.Malachite, cabinet: true);
+        Transform centerStage = CreateSubPanel(mainPanel, "CenterStageMat", new Vector2(0.168f, 0.025f), new Vector2(0.832f, 0.975f), MalajongTheme.Malachite, cabinet: true);
 
-        // Top: 5-Slot Spirit Rack
+        // Top: 5-Slot Spirit Rack. Slimmer than it was — empty slots are ghosts now, and the rack
+        // should not outweigh the hand at the start of a run.
         GameObject rackObj = new GameObject("SpiritRackContainer", typeof(RectTransform));
         rackObj.transform.SetParent(centerStage, false);
         RectTransform rackRect = rackObj.GetComponent<RectTransform>();
-        rackRect.anchorMin = new Vector2(0.05f, 0.84f);
-        rackRect.anchorMax = new Vector2(0.95f, 0.97f);
+        rackRect.anchorMin = new Vector2(0.08f, 0.875f);
+        rackRect.anchorMax = new Vector2(0.92f, 0.97f);
         rackRect.offsetMin = Vector2.zero;
         rackRect.offsetMax = Vector2.zero;
 
@@ -197,16 +200,30 @@ public class SceneSetupTool
             GameObject slot = new GameObject($"SpiritSlot_{i}", typeof(RectTransform), typeof(Image));
             slot.transform.SetParent(rackObj.transform, false);
             Image slotImg = slot.GetComponent<Image>();
-            slotImg.color = MalajongTheme.SlotEmpty;
+            slotImg.color = MalajongTheme.SlotGhost;
+
+            // Accent square behind the icon. The scroll icons look alike, so the spirit's colour is
+            // what tells them apart; UIManager tints it and hides it for an empty slot.
+            GameObject badgeObj = new GameObject("Badge", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            badgeObj.transform.SetParent(slot.transform, false);
+            RectTransform badgeRect = badgeObj.GetComponent<RectTransform>();
+            badgeRect.anchorMin = new Vector2(0.5f, 0.64f);
+            badgeRect.anchorMax = new Vector2(0.5f, 0.64f);
+            badgeRect.sizeDelta = new Vector2(44f, 44f);
+            badgeRect.anchoredPosition = Vector2.zero;
+            Image badgeImg = badgeObj.GetComponent<Image>();
+            badgeImg.raycastTarget = false;
+            badgeObj.SetActive(false);
 
             // Icon sits above the name. UIManager looks this child up by name and hides it for an
             // empty slot, so the placeholder reads as a vacancy rather than a broken sprite.
             GameObject iconObj = new GameObject("Icon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             iconObj.transform.SetParent(slot.transform, false);
             RectTransform iconRect = iconObj.GetComponent<RectTransform>();
-            iconRect.anchorMin = new Vector2(0.5f, 0.62f);
-            iconRect.anchorMax = new Vector2(0.5f, 0.62f);
-            iconRect.sizeDelta = new Vector2(40f, 40f);
+            iconRect.anchorMin = new Vector2(0.5f, 0.64f);
+            iconRect.anchorMax = new Vector2(0.5f, 0.64f);
+            // 32px art at exactly 1x, so the icon stays pixel-sharp.
+            iconRect.sizeDelta = new Vector2(32f, 32f);
             iconRect.anchoredPosition = Vector2.zero;
 
             Image iconImg = iconObj.GetComponent<Image>();
@@ -215,13 +232,13 @@ public class SceneSetupTool
             iconObj.SetActive(false);
 
             CreateText(slot.transform, "Label", new Vector2(0f, 0f), new Vector2(1f, 0.38f),
-                "<color=#96826F>Empty</color>", 20, TextAlignmentOptions.Center);
+                $"<color={MalajongTheme.HexSlotGhostMark}>+</color>", MalajongTheme.TextMin, TextAlignmentOptions.Center);
         }
 
         // Middle: Suit Affinity HUD — one blocked-out meter per suit. Stacked rather than in a
         // row because the comparison that matters is "which suit am I committed to", and three
         // bars sharing a left edge make that readable at a glance.
-        Transform affinityBox = CreateSubPanel(centerStage, "SuitAffinityHUD", new Vector2(0.05f, 0.695f), new Vector2(0.95f, 0.835f), MalajongTheme.BoxFill);
+        Transform affinityBox = CreateSubPanel(centerStage, "SuitAffinityHUD", new Vector2(0.08f, 0.735f), new Vector2(0.92f, 0.865f), MalajongTheme.BoxFill);
 
         // Row 0 is the bottom row, since anchors run bottom-up.
         SuitAffinityMeter dotsMeter = CreateAffinityMeter(affinityBox, TileSuit.Dots, "DOTS", 0);
@@ -232,16 +249,16 @@ public class SceneSetupTool
         GameObject handObj = new GameObject("HandContainer", typeof(RectTransform));
         handObj.transform.SetParent(centerStage, false);
         RectTransform handRect = handObj.GetComponent<RectTransform>();
-        handRect.anchorMin = new Vector2(0.01f, 0.32f);
-        handRect.anchorMax = new Vector2(0.99f, 0.68f);
+        handRect.anchorMin = new Vector2(0.005f, 0.36f);
+        handRect.anchorMax = new Vector2(0.995f, 0.68f);
         handRect.offsetMin = Vector2.zero;
         handRect.offsetMax = Vector2.zero;
 
         // Attach Balatro Fan Curve hand layout component
-        handObj.AddComponent<BalatroHandLayout>();
+        // The straight rack keeps every tile readable; only the inner tile face animates.
 
         HorizontalLayoutGroup handLayout = handObj.AddComponent<HorizontalLayoutGroup>();
-        handLayout.spacing = 0; // 0px spacing for contiguous adjacent tiles
+        handLayout.spacing = MalajongTheme.TileSpacing;
         handLayout.childAlignment = TextAnchor.MiddleCenter;
         handLayout.childControlWidth = false;
         handLayout.childControlHeight = false;
@@ -249,25 +266,30 @@ public class SceneSetupTool
         handLayout.childForceExpandHeight = false;
 
         // Sorting Quick Bar
-        Button sortSuitBtn = CreateButton(centerStage, "SortSuitButton", "SORT SUIT", MalajongTheme.MalachiteDeep, 24, new Vector2(0.08f, 0.22f), new Vector2(0.34f, 0.30f));
-        Button sortRankBtn = CreateButton(centerStage, "SortRankButton", "SORT RANK", MalajongTheme.MalachiteDeep, 24, new Vector2(0.37f, 0.22f), new Vector2(0.63f, 0.30f));
-        Button autoComboBtn = CreateButton(centerStage, "AutoComboButton", "AUTO SELECT", MalajongTheme.MalachiteDeep, 24, new Vector2(0.66f, 0.22f), new Vector2(0.92f, 0.30f));
+        Button sortSuitBtn = CreateButton(centerStage, "SortSuitButton", "SORT SUIT", MalajongTheme.MalachiteDeep, 24, new Vector2(0.08f, 0.22f), new Vector2(0.34f, 0.28f));
+        Button sortRankBtn = CreateButton(centerStage, "SortRankButton", "SORT RANK", MalajongTheme.MalachiteDeep, 24, new Vector2(0.37f, 0.22f), new Vector2(0.63f, 0.28f));
+        Button autoComboBtn = CreateButton(centerStage, "AutoComboButton", "BEST PLAY", MalajongTheme.MalachiteDeep, 24, new Vector2(0.66f, 0.22f), new Vector2(0.92f, 0.28f));
 
         // Bottom Action Bar: Play Combo & Discard
         // Play Combo is the one element on the screen that earns the accent colour. Everything
         // else stays lacquer, which is what makes it read as primary.
-        Button playButton = CreateButton(centerStage, "PlayComboButton", "PLAY COMBO", MalajongTheme.VermilionBright, 32, new Vector2(0.10f, 0.04f), new Vector2(0.48f, 0.18f));
-        Button discardButton = CreateButton(centerStage, "DiscardButton", "DISCARD", MalajongTheme.MalachiteRaised, 32, new Vector2(0.52f, 0.04f), new Vector2(0.90f, 0.18f));
+        Button playButton = CreateButton(centerStage, "PlayComboButton", "PLAY COMBO", MalajongTheme.VermilionBright, 32, new Vector2(0.10f, 0.09f), new Vector2(0.48f, 0.19f));
+        Button discardButton = CreateButton(centerStage, "DiscardButton", "DISCARD", MalajongTheme.MalachiteRaised, 32, new Vector2(0.52f, 0.09f), new Vector2(0.90f, 0.19f));
+        // Hints are one short line each: the rules live in HOW TO PLAY, these are just reminders.
+        CreateText(centerStage, "HandHint", new Vector2(0.06f, 0.295f), new Vector2(0.94f, 0.345f),
+            $"<color={MalajongTheme.HexBoneDim}>Play a Pair, Chow, Pong or Kong  ·  Discard up to 5</color>", MalajongTheme.TextMin, TextAlignmentOptions.Center);
+        CreateText(centerStage, "AffinityHint", new Vector2(0.06f, 0.69f), new Vector2(0.94f, 0.73f),
+            $"<color={MalajongTheme.HexBoneDim}>Play one suit to raise its multiplier</color>", MalajongTheme.TextMin, TextAlignmentOptions.Center);
 
         // ----------------------------------------------------
         // COLUMN 3: RIGHT PANEL ("Score Engine & Dual-Box HUD" - Balatro Style)
         // ----------------------------------------------------
-        Transform rightPanel = CreateSubPanel(mainPanel, "RightScorePanel", new Vector2(0.78f, 0.025f), new Vector2(0.985f, 0.975f), MalajongTheme.Vermilion, cabinet: true);
+        Transform rightPanel = CreateSubPanel(mainPanel, "RightScorePanel", new Vector2(0.840f, 0.025f), new Vector2(0.988f, 0.975f), MalajongTheme.Vermilion, cabinet: true);
 
         // Hands & Discards now live in the left column — this column is the score engine only.
 
         // Round Score & Progress Bar
-        Transform roundScoreBox = CreateSubPanel(rightPanel, "RoundScoreBox", new Vector2(0.05f, 0.74f), new Vector2(0.95f, 0.97f), MalajongTheme.Ink);
+        Transform roundScoreBox = CreateSubPanel(rightPanel, "RoundScoreBox", new Vector2(0.05f, 0.76f), new Vector2(0.95f, 0.97f), MalajongTheme.Ink);
         TextMeshProUGUI roundScoreText = CreateText(roundScoreBox, "RoundScoreText", new Vector2(0.05f, 0.30f), new Vector2(0.95f, 0.95f),
             "Round score\n<b>0</b>", 24, TextAlignmentOptions.Center);
 
@@ -280,7 +302,7 @@ public class SceneSetupTool
         bgRect.offsetMin = Vector2.zero;
         bgRect.offsetMax = Vector2.zero;
         Image bgImg = bgObj.GetComponent<Image>();
-        bgImg.color = MalajongTheme.Ink;
+        bgImg.color = MalajongTheme.MeterUnlit(MalajongTheme.MalachiteBright);
 
         GameObject fillObj = new GameObject("Fill", typeof(RectTransform), typeof(Image));
         fillObj.transform.SetParent(bgObj.transform, false);
@@ -292,7 +314,8 @@ public class SceneSetupTool
 
         Image scoreFillImage = fillObj.GetComponent<Image>();
         scoreFillImage.color = MalajongTheme.MalachiteBright;
-        scoreFillImage.type = Image.Type.Filled;
+        scoreFillImage.type = Image.Type.Simple;
+        fillRect.anchorMax = new Vector2(0f, 1f);
         scoreFillImage.fillMethod = Image.FillMethod.Horizontal;
         scoreFillImage.fillAmount = 0f;
 
@@ -325,31 +348,42 @@ public class SceneSetupTool
             dividerImg.raycastTarget = false;
         }
 
-        // Balatro Dual-Box Score HUD (ComboPreviewBox)
-        Transform comboPreviewBox = CreateSubPanel(rightPanel, "ComboPreviewBox", new Vector2(0.05f, 0.42f), new Vector2(0.95f, 0.68f), MalajongTheme.Ink);
+        // Balatro Dual-Box Score HUD (ComboPreviewBox) — the centrepiece of the right column, so it
+        // takes the most height and its numbers render at 4x the pixel font grid.
+        Transform comboPreviewBox = CreateSubPanel(rightPanel, "ComboPreviewBox", new Vector2(0.05f, 0.41f), new Vector2(0.95f, 0.74f), MalajongTheme.Ink);
 
-        TextMeshProUGUI previewComboNameText = CreateText(comboPreviewBox, "ComboNameText", new Vector2(0.05f, 0.68f), new Vector2(0.95f, 0.95f),
-            "<color=#96826F><b>SELECT TILES</b></color>", 28, TextAlignmentOptions.Center);
+        TextMeshProUGUI previewComboNameText = CreateText(comboPreviewBox, "ComboNameText", new Vector2(0.05f, 0.74f), new Vector2(0.95f, 0.95f),
+            "<color=#96826F><b>SELECT TILES</b></color>", MalajongTheme.TextCrisp2x, TextAlignmentOptions.Center);
 
-        // Blue Fu Box & Red Fan Box
-        Transform fuBox = CreateSubPanel(comboPreviewBox, "FuBox", new Vector2(0.08f, 0.26f), new Vector2(0.44f, 0.64f), MalajongTheme.FuFill);
-        TextMeshProUGUI fuBoxText = CreateText(fuBox, "FuValue", Vector2.zero, Vector2.one,
-            "<b>0</b>", 40, TextAlignmentOptions.Center);
+        // Blue Fu Box & Red Fan Box — framed in full gold, along with the blind card.
+        Transform fuBox = CreateSubPanel(comboPreviewBox, "FuBox", new Vector2(0.06f, 0.27f), new Vector2(0.44f, 0.71f), MalajongTheme.FuFill, framed: true, accent: true);
+        CreateText(fuBox, "FuLabel", new Vector2(0, 0.74f), Vector2.one, $"<color={MalajongTheme.HexFu}>FU</color>", MalajongTheme.TextMin, TextAlignmentOptions.Center);
+        TextMeshProUGUI fuBoxText = CreateText(fuBox, "FuValue", Vector2.zero, new Vector2(1, 0.78f),
+            "<b>0</b>", MalajongTheme.TextCrisp4x, TextAlignmentOptions.Center);
 
-        CreateText(comboPreviewBox, "MultiplySymbol", new Vector2(0.44f, 0.26f), new Vector2(0.56f, 0.64f),
-            "<color=#D8402E><b>x</b></color>", 34, TextAlignmentOptions.Center);
+        CreateText(comboPreviewBox, "MultiplySymbol", new Vector2(0.44f, 0.27f), new Vector2(0.56f, 0.71f),
+            "<color=#D8402E><b>x</b></color>", MalajongTheme.TextCrisp3x, TextAlignmentOptions.Center);
 
-        Transform fanBox = CreateSubPanel(comboPreviewBox, "FanBox", new Vector2(0.56f, 0.26f), new Vector2(0.92f, 0.64f), MalajongTheme.FanFill);
-        TextMeshProUGUI fanBoxText = CreateText(fanBox, "FanValue", Vector2.zero, Vector2.one,
-            "<b>1.0</b>", 40, TextAlignmentOptions.Center);
+        Transform fanBox = CreateSubPanel(comboPreviewBox, "FanBox", new Vector2(0.56f, 0.27f), new Vector2(0.94f, 0.71f), MalajongTheme.FanFill, framed: true, accent: true);
+        CreateText(fanBox, "FanLabel", new Vector2(0, 0.74f), Vector2.one, $"<color={MalajongTheme.HexFan}>FAN</color>", MalajongTheme.TextMin, TextAlignmentOptions.Center);
+        TextMeshProUGUI fanBoxText = CreateText(fanBox, "FanValue", Vector2.zero, new Vector2(1, 0.78f),
+            "<b>1.0</b>", MalajongTheme.TextCrisp4x, TextAlignmentOptions.Center);
+
+        // Big numbers stay at 64 until a long value ("12.5") would overflow the box, then step down.
+        foreach (TextMeshProUGUI value in new[] { fuBoxText, fanBoxText })
+        {
+            value.enableAutoSizing = true;
+            value.fontSizeMax = MalajongTheme.TextCrisp4x;
+            value.fontSizeMin = MalajongTheme.TextCrisp2x;
+        }
 
         TextMeshProUGUI previewTotalScoreText = CreateText(comboPreviewBox, "TotalScoreText", new Vector2(0.05f, 0.04f), new Vector2(0.95f, 0.24f),
-            "<color=#96826F>--</color>", 26, TextAlignmentOptions.Center);
+            "<color=#96826F>--</color>", MalajongTheme.TextCrisp2x, TextAlignmentOptions.Center);
 
         // Playable Combos List / Yaku Breakdown
-        Transform comboListBox = CreateSubPanel(rightPanel, "PlayableCombosBox", new Vector2(0.05f, 0.04f), new Vector2(0.95f, 0.40f), MalajongTheme.BoxFill);
+        Transform comboListBox = CreateSubPanel(rightPanel, "PlayableCombosBox", new Vector2(0.05f, 0.03f), new Vector2(0.95f, 0.39f), MalajongTheme.BoxFill);
         TextMeshProUGUI playableCombosText = CreateText(comboListBox, "PlayableCombosText", new Vector2(0.06f, 0.05f), new Vector2(0.94f, 0.95f),
-            "<b>PLAYABLE IN HAND:</b>\n<color=#96826F><i>Combos will appear here</i></color>", 22, TextAlignmentOptions.Left);
+            "<b>AVAILABLE PLAYS</b>\nChoose tiles to see your score.", MalajongTheme.TextMin, TextAlignmentOptions.TopLeft);
 
         // ==========================================
         // 6. Panel 3: ShopUI
@@ -379,7 +413,7 @@ public class SceneSetupTool
         // 9. Panel 6: RunInfoModal (Overlay)
         // ==========================================
         Transform runInfoModal = CreatePanel(canvasObj.transform, "RunInfoModal", MalajongTheme.Scrim);
-        Transform runInfoCard = CreateSubPanel(runInfoModal, "RunInfoCard", new Vector2(0.18f, 0.08f), new Vector2(0.82f, 0.92f), MalajongTheme.Vermilion);
+        Transform runInfoCard = CreateSubPanel(runInfoModal, "RunInfoCard", new Vector2(0.18f, 0.08f), new Vector2(0.82f, 0.92f), MalajongTheme.Vermilion, framed: true, accent: true);
         
         TextMeshProUGUI runInfoTitle = CreateText(runInfoCard, "Title", new Vector2(0.05f, 0.88f), new Vector2(0.95f, 0.98f),
             "<b>RUN INFORMATION & YAKU GUIDE</b>", 30, TextAlignmentOptions.Center);
@@ -396,7 +430,7 @@ public class SceneSetupTool
         // 10. Panel 7: OptionsModal (Overlay)
         // ==========================================
         Transform optionsModal = CreatePanel(canvasObj.transform, "OptionsModal", MalajongTheme.Scrim);
-        Transform optionsCard = CreateSubPanel(optionsModal, "OptionsCard", new Vector2(0.24f, 0.14f), new Vector2(0.76f, 0.86f), MalajongTheme.Vermilion);
+        Transform optionsCard = CreateSubPanel(optionsModal, "OptionsCard", new Vector2(0.24f, 0.14f), new Vector2(0.76f, 0.86f), MalajongTheme.Vermilion, framed: true, accent: true);
         
         TextMeshProUGUI optionsTitle = CreateText(optionsCard, "Title", new Vector2(0.05f, 0.86f), new Vector2(0.95f, 0.97f),
             "<b>GAME OPTIONS & SETTINGS</b>", 30, TextAlignmentOptions.Center);
@@ -408,9 +442,10 @@ public class SceneSetupTool
         Transform rulesBox = CreateSubPanel(optionsCard, "RulesBox", new Vector2(0.08f, 0.30f), new Vector2(0.92f, 0.58f), MalajongTheme.InkSoft);
         CreateText(rulesBox, "RulesText", new Vector2(0.04f, 0.04f), new Vector2(0.96f, 0.96f),
             "<b>HOW TO PLAY MALAJONG:</b>\n\n" +
-            "• Select tiles to form valid Mahjong Combos (Pair, Chow, Pong, Kong).\n" +
-            "• Pure Hand (all matching suits) grants huge Fu & Fan bonuses!\n" +
-            "• Beat Round Target Scores to earn Yuan and buy powerful Spirits in the Shop.", 22, TextAlignmentOptions.Center);
+            "Pair: 2 matching tiles. Chow: 3 consecutive ranks in one suit.\n" +
+            "Pong: 3 matching tiles. Kong: 4 matching tiles.\n" +
+            "You have 4 plays and 3 discards per round. Discard up to 5 tiles at once.\n" +
+            "Beat the target, buy spirits, and clear all 5 rounds. BEST PLAY suggests your highest score.", 26, TextAlignmentOptions.Center);
 
         Button forfeitBtn = CreateButton(optionsCard, "ForfeitButton", "ABANDON RUN", MalajongTheme.VermilionBright, 24,
             new Vector2(0.12f, 0.12f), new Vector2(0.48f, 0.24f));
@@ -426,7 +461,7 @@ public class SceneSetupTool
         // Created after OptionsModal so it draws on top of it — abandoning is reached *from* the
         // options screen, which stays open behind the confirmation.
         Transform abandonModal = CreatePanel(canvasObj.transform, "AbandonConfirmModal", MalajongTheme.Scrim);
-        Transform abandonCard = CreateSubPanel(abandonModal, "AbandonCard", new Vector2(0.31f, 0.34f), new Vector2(0.69f, 0.66f), MalajongTheme.VermilionDeep, cabinet: true);
+        Transform abandonCard = CreateSubPanel(abandonModal, "AbandonCard", new Vector2(0.31f, 0.34f), new Vector2(0.69f, 0.66f), MalajongTheme.VermilionDeep, cabinet: true, accent: true);
 
         TextMeshProUGUI abandonBody = CreateText(abandonCard, "AbandonConfirmText", new Vector2(0.07f, 0.30f), new Vector2(0.93f, 0.92f),
             "<b>ABANDON THIS RUN?</b>\n\nAll run progress will be lost.", 26, TextAlignmentOptions.Center);
@@ -444,7 +479,7 @@ public class SceneSetupTool
         // 10c. Panel 9: RedrawModal (Dead Hand Reprieve)
         // ==========================================
         Transform redrawModal = CreatePanel(canvasObj.transform, "RedrawModal", MalajongTheme.Scrim);
-        Transform redrawCard = CreateSubPanel(redrawModal, "RedrawCard", new Vector2(0.30f, 0.30f), new Vector2(0.70f, 0.70f), MalajongTheme.MalachiteDeep, cabinet: true);
+        Transform redrawCard = CreateSubPanel(redrawModal, "RedrawCard", new Vector2(0.30f, 0.30f), new Vector2(0.70f, 0.70f), MalajongTheme.MalachiteDeep, cabinet: true, accent: true);
 
         // The maneki-neko from the title art, if it has been baked out — the prompt is written in
         // the cat's voice, so showing the cat is worth more than another block of text.
@@ -475,7 +510,7 @@ public class SceneSetupTool
 
         redrawModal.gameObject.SetActive(false);
 
-        // 11. Generate & Save Upscaled TilePrefab (70x95)
+        // 11. Generate & Save TilePrefab (2x the tile art)
         GameObject tilePrefab = CreateOrUpdateTilePrefab();
 
         // 12. Find or Create GameManager & UIManager
@@ -786,7 +821,7 @@ public class SceneSetupTool
         // two static giants alongside it just read as clutter.
 
         // --- Title card ---
-        Transform titleCard = CreateSubPanel(startPanel, "TitleCard", new Vector2(0.17f, 0.51f), new Vector2(0.83f, 0.90f), MalajongTheme.VermilionDeep, cabinet: true);
+        Transform titleCard = CreateSubPanel(startPanel, "TitleCard", new Vector2(0.17f, 0.51f), new Vector2(0.83f, 0.90f), MalajongTheme.VermilionDeep, cabinet: true, accent: true);
 
         Sprite logoSprite = LoadTitleSprite();
         RectTransform logoRect = null;
@@ -817,7 +852,7 @@ public class SceneSetupTool
         }
 
         TextMeshProUGUI tagline = CreateText(titleCard, "Tagline", new Vector2(0.05f, 0.05f), new Vector2(0.95f, 0.21f),
-            $"<color={MalajongTheme.HexBoneDim}>A MAHJONG ROGUELIKE DECKBUILDER</color>", 26, TextAlignmentOptions.Center);
+            $"<color={MalajongTheme.HexBone}>BUILD YOUR HAND. FIND YOUR FORTUNE.</color>", 30, TextAlignmentOptions.Center);
         tagline.characterSpacing = 8f;
 
         // --- Tile fan on the mat ---
@@ -971,7 +1006,7 @@ public class SceneSetupTool
         catRect.offsetMax = Vector2.zero;
 
         GridLayoutGroup catLayout = catObj.AddComponent<GridLayoutGroup>();
-        catLayout.cellSize = new Vector2(360f, 240f);
+        catLayout.cellSize = new Vector2(392f, 252f);
         catLayout.spacing = new Vector2(24f, 20f);
         catLayout.childAlignment = TextAnchor.UpperCenter;
         catLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
@@ -1001,7 +1036,7 @@ public class SceneSetupTool
     private static void CreateShopCard(Transform parent, SpiritData spirit, int index)
     {
         // Anchors are overwritten by the GridLayoutGroup; the frame art is what this buys us.
-        Transform card = CreateSubPanel(parent, $"ShopItem_{index}", Vector2.zero, Vector2.one, MalajongTheme.Vermilion);
+        Transform card = CreateSubPanel(parent, $"ShopItem_{index}", Vector2.zero, Vector2.one, MalajongTheme.Vermilion, framed: true);
 
         if (spirit.Icon != null)
         {
@@ -1009,8 +1044,8 @@ public class SceneSetupTool
             iconObj.transform.SetParent(card, false);
 
             RectTransform iconRect = iconObj.GetComponent<RectTransform>();
-            iconRect.anchorMin = new Vector2(0.5f, 0.80f);
-            iconRect.anchorMax = new Vector2(0.5f, 0.80f);
+            iconRect.anchorMin = new Vector2(0.5f, 0.82f);
+            iconRect.anchorMax = new Vector2(0.5f, 0.82f);
             iconRect.sizeDelta = new Vector2(64f, 64f);
             iconRect.anchoredPosition = Vector2.zero;
 
@@ -1021,8 +1056,8 @@ public class SceneSetupTool
         }
 
         CreateText(card, "CardText", new Vector2(0.06f, 0.30f), new Vector2(0.94f, 0.68f),
-            $"<b><color={MalajongTheme.HexGold}>{spirit.SpiritName}</color></b>\n\n<size=80%>{spirit.Description}</size>",
-            22, TextAlignmentOptions.Center);
+            $"<b><color={MalajongTheme.HexOf(MalajongTheme.ForSpirit(spirit))}>{spirit.SpiritName}</color></b>\n{spirit.Description}",
+            28, TextAlignmentOptions.Center);
 
         CreateButton(card, "BuyButton", "BUY (¥5)", MalajongTheme.MalachiteRaised, 22,
             new Vector2(0.12f, 0.06f), new Vector2(0.88f, 0.26f));
@@ -1155,8 +1190,16 @@ public class SceneSetupTool
     /// True for the three full-height columns, which get the heavier frame. Inner value boxes keep
     /// the lighter one so the two do not read at the same weight.
     /// </param>
-    private static Transform CreateSubPanel(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Color color, bool cabinet = false)
+    /// <param name="framed">
+    /// Inner boxes are plain panels unless this is set. A gold border on every box meant none of
+    /// them stood out; now only cabinets and boxes that ask for it get one.
+    /// </param>
+    /// <param name="accent">Frame in full gold rather than the quieter structural trim.</param>
+    private static Transform CreateSubPanel(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Color color,
+        bool cabinet = false, bool framed = false, bool accent = false)
     {
+        bool hasFrame = cabinet || framed;
+        Color frameTint = accent ? MalajongTheme.Gold : MalajongTheme.FrameQuiet;
         GameObject panelObj = new GameObject(name, typeof(RectTransform), typeof(Image));
         panelObj.transform.SetParent(parent, false);
 
@@ -1170,11 +1213,11 @@ public class SceneSetupTool
         bool skinned = frameSprite != null;
 
         Image border = panelObj.GetComponent<Image>();
-        border.color = skinned ? color : MalajongTheme.GoldDark;
+        border.color = skinned || !hasFrame ? color : (accent ? MalajongTheme.Gold : MalajongTheme.GoldDark);
 
         // Skinned, the frame art supplies the edge, so the fill runs the full rect. Unskinned, the
         // inset is what leaves the border visible.
-        int inset = skinned ? 0 : MalajongTheme.Border;
+        int inset = skinned || !hasFrame ? 0 : MalajongTheme.Border;
 
         GameObject fillObj = new GameObject("Fill", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         fillObj.transform.SetParent(panelObj.transform, false);
@@ -1190,10 +1233,10 @@ public class SceneSetupTool
         fill.raycastTarget = false;
 
         // Added after Fill so the border art sits on top of the colour rather than under it.
-        if (skinned)
+        if (skinned && hasFrame)
         {
             float ppu = cabinet ? MalajongSkin.PanelPixelsPerUnitMultiplier : MalajongSkin.BoxPixelsPerUnitMultiplier;
-            CreateFrameOverlay(panelObj.transform, frameSprite, MalajongTheme.Gold, ppu);
+            CreateFrameOverlay(panelObj.transform, frameSprite, frameTint, ppu);
         }
 
         Undo.RegisterCreatedObjectUndo(panelObj, "Create " + name);
@@ -1247,7 +1290,8 @@ public class SceneSetupTool
             text.font = pixelFont;
         }
 
-        text.fontSize = fontSize;
+        // Nothing the player has to read goes below the floor size.
+        text.fontSize = Mathf.Max(fontSize, MalajongTheme.TextMin);
         text.alignment = alignment;
         text.text = defaultText;
         text.color = Color.white;
@@ -1368,14 +1412,17 @@ public class SceneSetupTool
 
         GameObject rootObj = new GameObject("TilePrefab", typeof(RectTransform), typeof(LayoutElement), typeof(TileUI));
         
+        // A whole multiple of the 46x62 art, so every source pixel lands on the same number of
+        // screen pixels at 1080p.
+        Vector2 tileSize = MalajongTheme.TileSize;
         RectTransform rootRect = rootObj.GetComponent<RectTransform>();
-        rootRect.sizeDelta = new Vector2(70, 95);
+        rootRect.sizeDelta = tileSize;
 
         LayoutElement layout = rootObj.GetComponent<LayoutElement>();
-        layout.minWidth = 70;
-        layout.preferredWidth = 70;
-        layout.minHeight = 95;
-        layout.preferredHeight = 95;
+        layout.minWidth = tileSize.x;
+        layout.preferredWidth = tileSize.x;
+        layout.minHeight = tileSize.y;
+        layout.preferredHeight = tileSize.y;
 
         GameObject faceObj = new GameObject("TileFace", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button), typeof(BalatroCardVisual));
         faceObj.transform.SetParent(rootObj.transform, false);
@@ -1393,7 +1440,7 @@ public class SceneSetupTool
         Button btn = faceObj.GetComponent<Button>();
         if (btn != null) btn.transition = Selectable.Transition.None;
 
-        // Pixel Art Sprite Image (Scaled to fill 70x95 tile)
+        // Pixel Art Sprite Image (fills the tile at a whole-number scale)
         GameObject spriteObj = new GameObject("TileSpriteImage", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         spriteObj.transform.SetParent(faceObj.transform, false);
         RectTransform spriteRect = spriteObj.GetComponent<RectTransform>();
@@ -1431,7 +1478,7 @@ public class SceneSetupTool
         tileUI.BackgroundImage = img;
         tileUI.TileSpriteImage = spriteImg;
         tileUI.TileText = text;
-        tileUI.LiftHeight = 36f;
+        tileUI.LiftHeight = 40f;
 
         GameObject prefabAsset = PrefabUtility.SaveAsPrefabAsset(rootObj, prefabPath);
         Object.DestroyImmediate(rootObj);
@@ -1439,6 +1486,13 @@ public class SceneSetupTool
         return prefabAsset;
     }
 
+    /// <summary>
+    /// The hover card above a tile: a dark framed box like the rest of the HUD, with the tile name
+    /// on two lines (rank in bone, suit in its suit colour) and its Fu underneath.
+    ///
+    /// Everything is laid out in pixels from the top edge so <c>BalatroTileTooltip</c> can grow the
+    /// box upward for an edition line without moving the rows. Text is 32, a crisp 2x of m5x7.
+    /// </summary>
     private static void CreateTooltipUI(Transform parent)
     {
         GameObject tooltipObj = new GameObject("BalatroTooltip", typeof(RectTransform), typeof(CanvasGroup), typeof(BalatroTileTooltip));
@@ -1449,48 +1503,53 @@ public class SceneSetupTool
         tRect.anchorMax = new Vector2(0.5f, 1f);
         tRect.pivot = new Vector2(0.5f, 0f);
         tRect.anchoredPosition = new Vector2(0, 8);
-        tRect.sizeDelta = new Vector2(160, 72);
+        tRect.sizeDelta = new Vector2(BalatroTileTooltip.Width, BalatroTileTooltip.BaseHeight);
 
-        // Frame (Dark Crisp Outer Border)
-        GameObject frameObj = new GameObject("Frame", typeof(RectTransform), typeof(Image));
-        frameObj.transform.SetParent(tooltipObj.transform, false);
-        RectTransform fRect = frameObj.GetComponent<RectTransform>();
-        fRect.anchorMin = Vector2.zero;
-        fRect.anchorMax = Vector2.one;
-        fRect.offsetMin = Vector2.zero;
-        fRect.offsetMax = Vector2.zero;
-        frameObj.GetComponent<Image>().color = MalajongTheme.InkSoft;
+        // Own sort order, so a lifted neighbour or the side columns never draw over the card.
+        Canvas tooltipCanvas = tooltipObj.AddComponent<Canvas>();
+        tooltipCanvas.overrideSorting = true;
+        tooltipCanvas.sortingOrder = 20;
 
-        // Header Box (Pure Plain White Container)
-        GameObject headerObj = new GameObject("HeaderBox", typeof(RectTransform), typeof(Image));
-        headerObj.transform.SetParent(frameObj.transform, false);
-        RectTransform hRect = headerObj.GetComponent<RectTransform>();
-        hRect.anchorMin = new Vector2(0.03f, 0.51f);
-        hRect.anchorMax = new Vector2(0.97f, 0.95f);
-        hRect.offsetMin = Vector2.zero;
-        hRect.offsetMax = Vector2.zero;
-        headerObj.GetComponent<Image>().color = Color.white;
+        Transform frame = CreateSubPanel(tooltipObj.transform, "Frame", Vector2.zero, Vector2.one, MalajongTheme.Ink, framed: true, accent: true);
 
-        TextMeshProUGUI headerText = CreateText(headerObj.transform, "HeaderTitleText", Vector2.zero, Vector2.one,
-            "<b>Rank</b> of <color=#D8402E>Suit</color>", 22, TextAlignmentOptions.Center);
-        headerText.color = MalajongTheme.InkSoft;
+        RectTransform header = CreateTopRow(frame, "HeaderBox", 10f, 60f);
+        TextMeshProUGUI headerText = CreateText(header, "HeaderTitleText", Vector2.zero, Vector2.one,
+            "Rank\nSuit", MalajongTheme.TextCrisp2x, TextAlignmentOptions.Center);
+        headerText.color = MalajongTheme.Bone;
 
-        // Body Box (Pure Plain White Container)
-        GameObject bodyObj = new GameObject("BodyBox", typeof(RectTransform), typeof(Image));
-        bodyObj.transform.SetParent(frameObj.transform, false);
-        RectTransform bRect = bodyObj.GetComponent<RectTransform>();
-        bRect.anchorMin = new Vector2(0.03f, 0.05f);
-        bRect.anchorMax = new Vector2(0.97f, 0.49f);
-        bRect.offsetMin = Vector2.zero;
-        bRect.offsetMax = Vector2.zero;
-        bodyObj.GetComponent<Image>().color = Color.white;
+        RectTransform divider = CreateTopRow(frame, "Divider", 74f, 2f, 14f);
+        Image dividerImg = divider.gameObject.AddComponent<Image>();
+        dividerImg.color = MalajongTheme.GoldDim;
+        dividerImg.raycastTarget = false;
 
-        TextMeshProUGUI bodyText = CreateText(bodyObj.transform, "BodyScoreText", new Vector2(0.02f, 0.10f), new Vector2(0.98f, 0.90f),
-            "<color=#6FB8EE><b>+5 Fu</b></color>", 24, TextAlignmentOptions.Center);
+        RectTransform body = CreateTopRow(frame, "BodyBox", 80f, 34f);
+        CreateText(body, "BodyScoreText", Vector2.zero, Vector2.one,
+            $"<color={MalajongTheme.HexFu}>+2 Fu</color>", MalajongTheme.TextCrisp2x, TextAlignmentOptions.Center);
 
-        TextMeshProUGUI editionText = CreateText(bodyObj.transform, "EditionText", new Vector2(0.02f, 0.05f), new Vector2(0.98f, 0.40f),
-            "", 16, TextAlignmentOptions.Center);
+        // Lives in BodyBox (the tooltip finds it there) but hangs below it, in the extra height
+        // the tooltip adds when an edition is showing.
+        TextMeshProUGUI editionText = CreateText(body, "EditionText", new Vector2(0f, 0f), new Vector2(1f, 0f),
+            "", MalajongTheme.TextMin, TextAlignmentOptions.Center);
+        RectTransform editionRect = editionText.rectTransform;
+        editionRect.pivot = new Vector2(0.5f, 1f);
+        editionRect.offsetMin = new Vector2(0f, -BalatroTileTooltip.EditionHeight);
+        editionRect.offsetMax = Vector2.zero;
         editionText.gameObject.SetActive(false);
+
+        foreach (Image img in tooltipObj.GetComponentsInChildren<Image>(true)) img.raycastTarget = false;
+    }
+
+    /// <summary>A full-width row pinned <paramref name="top"/> pixels below its parent's top edge.</summary>
+    private static RectTransform CreateTopRow(Transform parent, string name, float top, float height, float sideInset = 10f)
+    {
+        RectTransform row = new GameObject(name, typeof(RectTransform)).GetComponent<RectTransform>();
+        row.SetParent(parent, false);
+        row.anchorMin = new Vector2(0f, 1f);
+        row.anchorMax = new Vector2(1f, 1f);
+        row.pivot = new Vector2(0.5f, 1f);
+        row.offsetMin = new Vector2(sideInset, -top - height);
+        row.offsetMax = new Vector2(-sideInset, -top);
+        return row;
     }
 
     private static Button CreateButton(Transform parent, string name, string labelText, Color color, float fontSize = 24, Vector2? anchorMin = null, Vector2? anchorMax = null)
@@ -1529,7 +1588,9 @@ public class SceneSetupTool
         btnFill.color = color;
         btnFill.raycastTarget = false;
 
-        if (btnSkinned) CreateFrameOverlay(btnObj.transform, btnFrameSprite, MalajongTheme.Gold, MalajongSkin.ButtonPixelsPerUnitMultiplier);
+        // Only the accent button (one per screen) keeps full gold trim; the rest use the quiet trim.
+        Color btnFrameTint = color == MalajongTheme.VermilionBright ? MalajongTheme.Gold : MalajongTheme.FrameQuiet;
+        if (btnSkinned) CreateFrameOverlay(btnObj.transform, btnFrameSprite, btnFrameTint, MalajongSkin.ButtonPixelsPerUnitMultiplier);
 
         Button btn = btnObj.GetComponent<Button>();
         // Tint the fill rather than the frame, so hover/press keeps the border art intact.

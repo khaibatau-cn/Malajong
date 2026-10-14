@@ -89,10 +89,16 @@ public class UIManager : MonoBehaviour
     private List<TileUI> selectedTileUIs = new List<TileUI>();
     private bool isScoringSequenceActive = false;
 
+    // Null until the first state is shown, so the opening screen does not play a transition.
+    private GameManager.GameState? lastShownState;
+    // Spirits already shown on the rack, so only a newly bought one pops in.
+    private int shownSpiritCount;
+
     void Start()
     {
         UIJuice.EnsureExists();
         AttachButtonJuice();
+        if (HandContainer != null) MatAmbience.Ensure(HandContainer.parent);
 
         if (gameManager != null)
         {
@@ -121,6 +127,9 @@ public class UIManager : MonoBehaviour
     {
         if (gameManager == null) return;
 
+        bool screenChanged = lastShownState.HasValue && lastShownState.Value != gameManager.State;
+        lastShownState = gameManager.State;
+
         SetPanelActive(StartMenuPanel, gameManager.State == GameManager.GameState.StartMenu);
         SetPanelActive(PlayingPanel, gameManager.State == GameManager.GameState.Playing);
         SetPanelActive(ShopPanel, gameManager.State == GameManager.GameState.Shop);
@@ -134,6 +143,26 @@ public class UIManager : MonoBehaviour
         UpdateShopText();
         UpdateSummaryTexts();
         UpdateSelectionPreview();
+
+        if (screenChanged)
+        {
+            Canvas canvas = FindUICanvas();
+            if (canvas != null) ScreenWipe.Play(canvas.transform, TileSprites());
+        }
+    }
+
+    private Canvas FindUICanvas()
+    {
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas == null && PlayingPanel != null) canvas = PlayingPanel.GetComponentInParent<Canvas>();
+        if (canvas == null && StartMenuPanel != null) canvas = StartMenuPanel.GetComponentInParent<Canvas>();
+        return canvas;
+    }
+
+    private Sprite[] TileSprites()
+    {
+        if (gameManager == null || gameManager.AllTileTypes == null) return null;
+        return gameManager.AllTileTypes.Where(t => t != null && t.TileSprite != null).Select(t => t.TileSprite).ToArray();
     }
 
     /// <summary>
@@ -157,9 +186,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     private void AttachButtonJuice()
     {
-        Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null && PlayingPanel != null) canvas = PlayingPanel.GetComponentInParent<Canvas>();
-        if (canvas == null && StartMenuPanel != null) canvas = StartMenuPanel.GetComponentInParent<Canvas>();
+        Canvas canvas = FindUICanvas();
         if (canvas == null) return;
 
         foreach (Button button in canvas.GetComponentsInChildren<Button>(true))
@@ -180,7 +207,7 @@ public class UIManager : MonoBehaviour
 
         if (BlindTitleText != null)
         {
-            BlindTitleText.text = $"<b>{winds[windIndex].ToUpper()}</b>";
+            BlindTitleText.text = $"<color={MalajongTheme.HexOnGold}><b>{winds[windIndex].ToUpper()}</b></color>";
         }
 
         // Set Wind Tile Icon Sprite from loaded tiles
@@ -202,7 +229,7 @@ public class UIManager : MonoBehaviour
 
         if (RewardText != null)
         {
-            RewardText.text = $"Reward: <color=#D9A93A><b>¥5</b></color>";
+            RewardText.text = "CLEAR REWARD\n<color=#D9A93A>¥4 + ¥1 per unused hand</color>";
         }
 
         if (YuanText != null)
@@ -212,7 +239,7 @@ public class UIManager : MonoBehaviour
 
         if (AnteText != null)
         {
-            AnteText.text = $"Ante\n<color=#D9A93A><b>1/4</b></color>";
+            AnteText.text = $"Wall\n<color=#D9A93A><b>{gameManager.Deck?.Remaining ?? 136}</b></color>";
         }
 
         if (RoundText != null)
@@ -228,6 +255,7 @@ public class UIManager : MonoBehaviour
         if (SpiritRackContainer == null || gameManager == null) return;
 
         int maxSlots = gameManager.MaxSpirits;
+        int equippedCount = gameManager.EquippedSpirits.Count;
         for (int i = 0; i < maxSlots; i++)
         {
             Transform slot = SpiritRackContainer.Find($"SpiritSlot_{i}");
@@ -238,12 +266,22 @@ public class UIManager : MonoBehaviour
 
             Transform iconTransform = slot.Find("Icon");
             Image icon = iconTransform != null ? iconTransform.GetComponent<Image>() : null;
+            Transform badgeTransform = slot.Find("Badge");
+            Image badge = badgeTransform != null ? badgeTransform.GetComponent<Image>() : null;
 
-            if (i < gameManager.EquippedSpirits.Count && gameManager.EquippedSpirits[i] != null)
+            if (i < equippedCount && gameManager.EquippedSpirits[i] != null)
             {
                 SpiritData spirit = gameManager.EquippedSpirits[i];
-                if (label != null) label.text = $"<b>{spirit.SpiritName}</b>";
+                Color accent = MalajongTheme.ForSpirit(spirit);
+                if (label != null) label.text = $"<b><color={MalajongTheme.HexOf(accent)}>{spirit.SpiritName}</color></b>";
                 if (bg != null) bg.color = MalajongTheme.MalachiteDeep;
+
+                // The scroll icons all look alike, so the spirit's accent backs the icon.
+                if (badge != null)
+                {
+                    badge.color = Color.Lerp(accent, MalajongTheme.Ink, 0.45f);
+                    badge.gameObject.SetActive(true);
+                }
 
                 // An equipped spirit with no icon assigned still shows its name — better a nameplate
                 // than an empty white box where art was expected.
@@ -252,14 +290,20 @@ public class UIManager : MonoBehaviour
                     icon.sprite = spirit.Icon;
                     icon.gameObject.SetActive(spirit.Icon != null);
                 }
+
+                if (i >= shownSpiritCount) UIJuice.PopIn(slot, (i - shownSpiritCount) * 0.06f);
             }
             else
             {
-                if (label != null) label.text = "<color=#96826F>Empty</color>";
-                if (bg != null) bg.color = MalajongTheme.SlotEmpty;
+                // A ghost slot: a faint mark rather than a loud "Empty" label.
+                if (label != null) label.text = $"<size=150%><color={MalajongTheme.HexSlotGhostMark}>+</color></size>";
+                if (bg != null) bg.color = MalajongTheme.SlotGhost;
                 if (icon != null) icon.gameObject.SetActive(false);
+                if (badge != null) badge.gameObject.SetActive(false);
             }
         }
+
+        shownSpiritCount = equippedCount;
     }
 
     private void UpdateCenterAffinityHUD()
@@ -298,15 +342,28 @@ public class UIManager : MonoBehaviour
 
         if (RoundScoreText != null)
         {
-            RoundScoreText.text = $"Round score\n<b>{gameManager.CurrentScore}</b>";
+            RoundScoreText.text = RoundScoreLabel(gameManager.CurrentScore);
         }
 
         if (ScoreProgressBar != null && gameManager.CurrentTargetScore > 0)
         {
-            ScoreProgressBar.fillAmount = Mathf.Clamp01((float)gameManager.CurrentScore / gameManager.CurrentTargetScore);
+            SetScoreProgress((float)gameManager.CurrentScore / gameManager.CurrentTargetScore);
         }
 
         UpdatePlayableCombosList();
+    }
+
+    /// <summary>
+    /// Round score readout. The number renders at 2x the 24px body size — 48, a whole multiple of
+    /// the pixel font's grid — so the figure the player watches climb stays crisp.
+    /// </summary>
+    private string RoundScoreLabel(int score)
+    {
+        int toClear = Mathf.Max(0, gameManager.CurrentTargetScore - score);
+        string status = toClear > 0
+            ? $"<color={MalajongTheme.HexBoneDim}>{toClear:N0} to clear</color>"
+            : $"<color={MalajongTheme.HexGold}><b>QUOTA CLEARED</b></color>";
+        return $"ROUND SCORE\n<size=200%><b>{score:N0}</b></size>\n{status}";
     }
 
     private void UpdatePlayableCombosList()
@@ -316,8 +373,14 @@ public class UIManager : MonoBehaviour
         var playable = ScoreEngine.FindPlayableCombos(gameManager.Hand.Tiles);
         if (playable.Count > 0)
         {
-            var lines = playable.Select(p => $"* <b>{p.combo.Name}</b>: <color=#6FB8EE>{p.combo.BaseFu} Fu</color> x <color=#D8402E>{p.combo.BaseFan:F1} Fan</color>");
-            PlayableCombosText.text = $"<b>PLAYABLE IN HAND:</b>\n" + string.Join("\n", lines);
+            // Each line is tinted by the suit its tiles feed, the same colour the affinity meter uses.
+            var lines = playable.Select(p => (preview: ScoreEngine.PreviewScore(p.tiles, gameManager.Hand.Tiles,
+                    gameManager.Affinity, gameManager.EquippedSpirits, gameManager),
+                    color: MalajongTheme.HexOf(MalajongTheme.ForTiles(p.tiles))))
+                .OrderByDescending(p => p.preview.ProjectedScore)
+                .Select(p => $"<b><color={p.color}>{p.preview.DetailText}</color></b>\n<color={MalajongTheme.HexGold}>{p.preview.ProjectedScore:N0} points</color>")
+                .Distinct().Take(4);
+            PlayableCombosText.text = "<b>AVAILABLE PLAYS</b>\n\n" + string.Join("\n\n", lines);
         }
         else if (gameManager.DiscardsRemaining > 0)
         {
@@ -334,6 +397,19 @@ public class UIManager : MonoBehaviour
                 $"<b><color={MalajongTheme.HexVermilion}>DEAD HAND — NO DISCARDS</color></b>\n" +
                 $"<color={MalajongTheme.HexBoneDim}>Only the cat can help you now.</color>";
         }
+    }
+
+    private void SetScoreProgress(float fraction)
+    {
+        if (ScoreProgressBar == null) return;
+        // A sprite-less Image ignores fillAmount. Size the fill against its track instead.
+        ScoreProgressBar.type = Image.Type.Simple;
+        var rect = ScoreProgressBar.rectTransform;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = new Vector2(Mathf.Clamp01(fraction), 1f);
+        rect.offsetMin = rect.offsetMax = Vector2.zero;
+        // A full bar turns gold: the quota is met, and the bar says so without a label.
+        ScoreProgressBar.color = fraction >= 1f ? MalajongTheme.Gold : MalajongTheme.MalachiteBright;
     }
 
     // --- Hand Sorting Actions ---
@@ -444,7 +520,10 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                string colorHex = preview.IsValid ? "#D9A93A" : "#D8402E";
+                // A valid combo is named in the colour of the suit it feeds; an invalid one in red.
+                string colorHex = preview.IsValid
+                    ? MalajongTheme.HexOf(MalajongTheme.ForTiles(selectedTiles))
+                    : MalajongTheme.HexVermilion;
                 PreviewComboNameText.text = $"<color={colorHex}><b>{preview.ComboName.ToUpper()}</b></color>";
             }
         }
@@ -461,7 +540,9 @@ public class UIManager : MonoBehaviour
 
         if (PreviewTotalScoreText != null)
         {
-            PreviewTotalScoreText.text = preview.IsValid ? $"<color=#43B87A><b>= {preview.ProjectedScore} PTS</b></color>" : "<color=#96826F>--</color>";
+            PreviewTotalScoreText.text = preview.IsValid
+                ? $"<color={MalajongTheme.HexMalachite}><b>= {preview.ProjectedScore:N0} PTS</b></color>"
+                : $"<color={MalajongTheme.HexSmoke}>--</color>";
         }
 
         if (PlayButton != null)
@@ -514,7 +595,14 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        var (combo, comboTiles) = playable[0];
+        var comboTiles = playable.OrderByDescending(p => ScoreEngine.PreviewScore(p.tiles, gameManager.Hand.Tiles,
+            gameManager.Affinity, gameManager.EquippedSpirits, gameManager).ProjectedScore).First().tiles;
+        var fullPreview = ScoreEngine.PreviewScore(gameManager.Hand.Tiles, gameManager.Hand.Tiles,
+            gameManager.Affinity, gameManager.EquippedSpirits, gameManager);
+        var bestPreview = ScoreEngine.PreviewScore(comboTiles, gameManager.Hand.Tiles,
+            gameManager.Affinity, gameManager.EquippedSpirits, gameManager);
+        if (fullPreview.IsValid && fullPreview.ProjectedScore > bestPreview.ProjectedScore)
+            comboTiles = gameManager.Hand.Tiles.ToList();
         List<TileUI> remainingUIs = new List<TileUI>(spawnedTileUIs);
 
         foreach (var targetTile in comboTiles)
@@ -558,8 +646,12 @@ public class UIManager : MonoBehaviour
             if (tileUI != null)
             {
                 tileUI.TriggerScoreBounce();
-                FloatingBadge.Spawn(PlayingPanel.transform, tileUI.transform.position + new Vector3(0f, 70f, 0f),
-                    $"+{tileFu}", MalajongTheme.FuText, 24f);
+                // Each tile's number comes off in its own suit colour; the Fu total below stays blue.
+                Color badgeColor = tileUI.BoundTile != null && tileUI.BoundTile.Data != null
+                    ? MalajongTheme.ForSuit(tileUI.BoundTile.Suit)
+                    : MalajongTheme.FuText;
+                FloatingBadge.Spawn(PlayingPanel.transform, tileUI.transform.position + new Vector3(0f, 80f, 0f),
+                    $"+{tileFu}", badgeColor, MalajongTheme.TextCrisp2x);
             }
 
             // Sweep the full pitch range regardless of how many tiles were played, so a
@@ -567,7 +659,11 @@ public class UIManager : MonoBehaviour
             int pitchIndex = tileCount > 1 ? Mathf.RoundToInt((float)i / (tileCount - 1) * 6f) : 0;
             MalajongAudio.Instance?.PlayTileSelect(pitchIndex);
 
-            if (PreviewFuBoxText != null) PreviewFuBoxText.text = $"<b>{runningFu}</b>";
+            if (PreviewFuBoxText != null)
+            {
+                PreviewFuBoxText.text = $"<b>{runningFu}</b>";
+                UIJuice.Punch(PreviewFuBoxText.transform.parent, 1.14f);
+            }
 
             yield return new WaitForSeconds(0.09f);
         }
@@ -582,7 +678,11 @@ public class UIManager : MonoBehaviour
         while (currentTallyFan < targetFan)
         {
             currentTallyFan = Mathf.MoveTowards(currentTallyFan, targetFan, targetFan * 0.25f);
-            if (PreviewFanBoxText != null) PreviewFanBoxText.text = $"<b>{currentTallyFan:F1}</b>";
+            if (PreviewFanBoxText != null)
+            {
+                PreviewFanBoxText.text = $"<b>{currentTallyFan:F1}</b>";
+                UIJuice.Punch(PreviewFanBoxText.transform.parent, 1.14f);
+            }
             MalajongAudio.Instance?.PlayMultPop();
             yield return new WaitForSeconds(0.05f);
         }
@@ -602,8 +702,9 @@ public class UIManager : MonoBehaviour
 
         UIJuice.Hitstop(0.05f + impact * 0.06f);
         UIJuice.Shake(PlayingPanel != null ? PlayingPanel.transform as RectTransform : null, impact);
+        if (ComboPreviewBox != null) UIJuice.Punch(ComboPreviewBox.transform, 1.06f + impact * 0.08f, 0.22f);
 
-        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 130, 0), $"+{calculatedScore} PTS!", MalajongTheme.Gold, 34f);
+        FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 140, 0), $"+{calculatedScore:N0} PTS!", MalajongTheme.Gold, MalajongTheme.TextCrisp3x);
         yield return new WaitForSeconds(0.35f);
 
         // 5. Step 4: Smooth Score Bar Roll-Up
@@ -611,16 +712,29 @@ public class UIManager : MonoBehaviour
         int endScore = startScore + calculatedScore;
         float rollDuration = 0.45f;
         float rollElapsed = 0f;
+        // Crossing the quota is the moment the round is won, so it gets its own beat mid roll-up.
+        bool quotaAlreadyMet = gameManager.CurrentTargetScore > 0 && startScore >= gameManager.CurrentTargetScore;
+        Transform roundScoreBox = RoundScoreText != null ? RoundScoreText.transform.parent : null;
 
         while (rollElapsed < rollDuration)
         {
             rollElapsed += Time.deltaTime;
-            float t = rollElapsed / rollDuration;
+            float t = Mathf.Clamp01(rollElapsed / rollDuration);
             int displayScore = Mathf.RoundToInt(Mathf.Lerp(startScore, endScore, t));
-            if (RoundScoreText != null) RoundScoreText.text = $"Round score\n<size=160%><b>{displayScore}</b></size>";
+            if (RoundScoreText != null) RoundScoreText.text = RoundScoreLabel(displayScore);
             if (ScoreProgressBar != null && gameManager.CurrentTargetScore > 0)
             {
-                ScoreProgressBar.fillAmount = Mathf.Clamp01((float)displayScore / gameManager.CurrentTargetScore);
+                SetScoreProgress((float)displayScore / gameManager.CurrentTargetScore);
+            }
+
+            if (!quotaAlreadyMet && gameManager.CurrentTargetScore > 0 && displayScore >= gameManager.CurrentTargetScore)
+            {
+                quotaAlreadyMet = true;
+                UIJuice.Punch(roundScoreBox, 1.15f, 0.25f);
+                UIJuice.Shake(PlayingPanel != null ? PlayingPanel.transform as RectTransform : null, 0.6f, 0.35f);
+                FloatingBadge.Spawn(PlayingPanel.transform, HandContainer.position + new Vector3(0, 220, 0),
+                    "QUOTA CLEARED!", MalajongTheme.Gold, MalajongTheme.TextCrisp3x);
+                MalajongAudio.Instance?.PlayCashChime();
             }
             yield return null;
         }
@@ -715,7 +829,7 @@ public class UIManager : MonoBehaviour
         {
             ShopStatusText.text = $"<b>SPIRIT SHOP</b>   |   Your Yuan: <b><color=#D9A93A>¥{gameManager.Yuan}</color></b>   |   " +
                                   $"Spirits Owned: <b>{gameManager.EquippedSpirits.Count}/{gameManager.MaxSpirits}</b>\n" +
-                                  $"<size=85%>Purchase powerful spirits (¥5 each) to augment your mahjong hand combos!</size>";
+                                  $"Next: {gameManager.GetTargetScoreForRound(gameManager.CurrentRound + 1):N0} points  •  Choose a spirit to shape your next round.";
         }
 
         RefreshShopCards();
@@ -738,7 +852,7 @@ public class UIManager : MonoBehaviour
 
             if (cardText != null && spirit != null)
             {
-                cardText.text = $"<b><color=#D9A93A>{spirit.SpiritName}</color></b>\n\n<size=80%>{spirit.Description}</size>";
+                cardText.text = $"<b><color={MalajongTheme.HexOf(MalajongTheme.ForSpirit(spirit))}>{spirit.SpiritName}</color></b>\n{spirit.Description}";
             }
 
             if (buyBtn != null && spirit != null)
@@ -755,7 +869,8 @@ public class UIManager : MonoBehaviour
                 }
                 else
                 {
-                    if (buyText != null) buyText.text = "BUY (¥5)";
+                    if (buyText != null) buyText.text = gameManager.EquippedSpirits.Count >= gameManager.MaxSpirits
+                        ? "SPIRIT SLOTS FULL" : gameManager.Yuan < 5 ? "NEED ¥5" : "BUY (¥5)";
                     buyBtn.interactable = canAfford;
                     buyBtn.onClick.AddListener(() => BuyShopItem(index));
                 }
@@ -824,19 +939,21 @@ public class UIManager : MonoBehaviour
 
         var sb = new System.Text.StringBuilder();
         sb.AppendLine("<size=115%><b><color=#D9A93A>YAKU & COMBO SCORING GUIDE</color></b></size>");
-        sb.AppendLine("• <b>Pair (Toitsu)</b>: 2 Identical Tiles  >>  <b><color=#6FB8EE>+10 Fu</color></b> | <b><color=#D8402E>x1.0 Fan</color></b>");
-        sb.AppendLine("• <b>Chow (Shuntsu)</b>: 3 Consecutive Suit Tiles  >>  <b><color=#6FB8EE>+20 Fu</color></b> | <b><color=#D8402E>x1.5 Fan</color></b>");
-        sb.AppendLine("• <b>Pong (Koutsu)</b>: 3 Identical Tiles  >>  <b><color=#6FB8EE>+30 Fu</color></b> | <b><color=#D8402E>x2.0 Fan</color></b>");
-        sb.AppendLine("• <b>Kong (Kantsu)</b>: 4 Identical Tiles  >>  <b><color=#6FB8EE>+60 Fu</color></b> | <b><color=#D8402E>x3.0 Fan</color></b>");
-        sb.AppendLine("• <b>Pure Hand (Flush)</b>: All tiles in single suit  >>  <b><color=#6FB8EE>+150 Fu</color></b> | <b><color=#D8402E>+2.0 Fan</color></b>");
+        Combo[] examples = { new Pair(new List<Tile>()), new Chow(new List<Tile>()), new Pong(new List<Tile>()),
+            new Kong(new List<Tile>()), new ConcealedKong(new List<Tile>()) };
+        foreach (var combo in examples)
+            sb.AppendLine($"• <b>{combo.Name}</b>: {combo.BaseFu} Fu × {combo.BaseFan:0.0} Fan");
+        sb.AppendLine("Tile ranks add Fu. Suit affinity multiplies Fan after the play's boost.");
+        sb.AppendLine("14 tiles of one suit: +150 Fu, ×10 Fan. All Honors: +180 Fu, ×12 Fan.");
+        sb.AppendLine("Full Mahjong (4 triples + pair): 800 points; uses one hand and all 14 tiles.");
         sb.AppendLine();
 
         sb.AppendLine("<size=115%><b><color=#D9A93A>RUN MULTIPLIERS & SPIRITS</color></b></size>");
         if (gameManager.Affinity != null)
         {
-            sb.AppendLine($"<color=#43B87A>Bamboo: {gameManager.Affinity.GetMultiplier(TileSuit.Bamboo):F1}x</color>  |  " +
-                          $"<color=#D9A93A>Characters: {gameManager.Affinity.GetMultiplier(TileSuit.Characters):F1}x</color>  |  " +
-                          $"<color=#6FB8EE>Dots: {gameManager.Affinity.GetMultiplier(TileSuit.Dots):F1}x</color>");
+            sb.AppendLine($"<color={MalajongTheme.HexOf(MalajongTheme.SuitBamboo)}>Bamboo: {gameManager.Affinity.GetMultiplier(TileSuit.Bamboo):F1}x</color>  |  " +
+                          $"<color={MalajongTheme.HexOf(MalajongTheme.SuitCharacters)}>Characters: {gameManager.Affinity.GetMultiplier(TileSuit.Characters):F1}x</color>  |  " +
+                          $"<color={MalajongTheme.HexOf(MalajongTheme.SuitDots)}>Dots: {gameManager.Affinity.GetMultiplier(TileSuit.Dots):F1}x</color>");
         }
 
         sb.AppendLine();
@@ -923,6 +1040,8 @@ public class UIManager : MonoBehaviour
         {
             bool isCurrentlyMuted = MalajongAudio.Instance.MasterVolume <= 0.001f;
             MalajongAudio.Instance.MasterVolume = isCurrentlyMuted ? 0.8f : 0f;
+            PlayerPrefs.SetInt("Malajong.SfxMuted", isCurrentlyMuted ? 0 : 1);
+            PlayerPrefs.Save();
         }
         UpdateOptionsUI();
         MalajongAudio.Instance?.PlayTileSelect(0);
